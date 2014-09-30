@@ -1,3 +1,6 @@
+bin/
+VcalcParser.java
+Vcalc.tokens
 *.class
 
 # Mobile Tools for Java (J2ME)
