@@ -13,7 +13,9 @@ tokens {
   LOOP;
   PRINT;
   SLIST;
-  FI;
+  GENERATOR;
+  FILTER;
+  INDEX;
 }
 program 
   : declaration* statement* -> ^(PROGRAM declaration* statement*)
@@ -55,7 +57,17 @@ print
   : Print '(' expression ')' ';' -> ^(PRINT expression)
   ;
 
+//Expressions
+
 expression
+  :  equality (index^ equality ']'! )?  //Add plus if multiple indexes allowed... -> ^([ $vecExpr $ind)
+  ;
+
+index
+  : '[' -> INDEX
+  ;
+
+equality
   : comparison ((('=='^ | '!='^) comparison))*
   ;
 
@@ -72,14 +84,28 @@ mult
   ;
   
 range
-  : atom ('..'^ atom)?
+  : atom ('..'^ atom)? 
   ;
 
 atom
   : ID
   | '(' expression ')' -> expression
+  | generator
+  | filter
   | INTEGER
   ;
+  
+generator: 
+  | '[' ID In  vecExpr=expression '|' intExpr=expression ']' -> ^(GENERATOR ID $vecExpr $intExpr)
+  ; 
+  //TODO: expression 1 is anything that returns a vector.... type check at runtime, I guess
+  //TODO: expression 2 is int valued.... type check at runtime
+  
+filter
+  : Filter '(' ID In vecExpr=expression '|' predicate=expression ')' -> ^(FILTER ID $vecExpr $predicate)
+  ;
+  //TODO: expression 1 is anything that returns a vector.. runtime check
+  //TODO: expression 2 is anything that returns a predicate.. runtime check
 
 //LEXER RULES
 
