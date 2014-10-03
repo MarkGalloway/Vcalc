@@ -27,7 +27,8 @@ declaration
   ;
 
 type
-  : 'int' 
+  : Int 
+  | Vector
   ;
  
 statement
@@ -50,11 +51,12 @@ loop
   ;
 
 print
-  : ^(PRINT expression)
+  : ^(PRINT expression) 
   ;
 
 expression
-  : ^('==' expression expression)
+  : ^(INDEX expression expression)
+  | ^('==' expression expression)
   | ^('!=' expression expression)
   | ^('<' expression expression)
   | ^('>' expression expression)
@@ -64,4 +66,7 @@ expression
   | ^('/' expression expression)
   | ID { if(!variables.contains($ID.text)) {throw new RuntimeException("Use of undeclared variable " + $ID.text);}}
   | INTEGER
+  | ^(GENERATOR ID expression expression)
+  | ^(FILTER ID expression expression)
   ;
+  

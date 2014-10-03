@@ -3,19 +3,12 @@
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import org.antlr.runtime.ANTLRFileStream;
-import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.TokenStream;
-import org.antlr.runtime.tree.CommonTree;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class InterpreterTest {
@@ -40,28 +33,168 @@ public class InterpreterTest {
         SampleFileWriter.destroy("Tests/00dummytest.vcalc");
         SampleFileWriter.destroy("Tests/00temp.vcalc");
     }
+    
+    /**
+     * 
+     *          INTERPRETER TESTS
+     * 
+     * 
+     */
 
-    @Test //Just a dummy test to verify testing output actually works
+    @Test // Just a dummy test to verify testing output actually works
     public void dummyTest() throws IOException, RecognitionException {
         SampleFileWriter.createFile("Tests/00dummytest.vcalc", "print(256);");
         String[] args = new String[] {"Tests/00dummytest.vcalc","int"};
         
         Vcalc_Test.main(args);
-        assertEquals("256", outErrIntercept.toString().trim());
+        assertEquals("256\n", outErrIntercept.toString());
     }
     
-    @Test //Test simple addition and assignment
+    @Test // Expression Test: simple addition, brackets, and assignment
     public void additionTest() throws RecognitionException, IOException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 
                   "int x = 1 + 1;"
-                + "int y = 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1;"
+                + "int y = 1 + 1 + (1 + 1) + 1 + 1 + (((1))) + 1 + (1 + 1 + 1) + 0;"
                 + "int z = x + y;"
                 + "print(z);");
         String[] args = new String[] {"Tests/00temp.vcalc","int"};
         
         Vcalc_Test.main(args);
-        assertEquals("13", outErrIntercept.toString().trim());
+        assertEquals("13\n", outErrIntercept.toString());
     }
+    
+    @Test // Expression Test: simple subtraction, brackets and, assignment
+    public void subtractionTest() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                  "int x = 1 - 1;"
+                + "int y = 1 - 1 - (1 - 1) - 1 - 1 - (((1))) - 1 - (1 - 1 - 1) - 0;"
+                + "int z = x + y;"
+                + "print(z);"
+                + "x = 2 - 6;"
+                + "y = 4 - 7;"
+                + "z = y - x;"
+                + "print(z);");
+        String[] args = new String[] {"Tests/00temp.vcalc","int"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("-3\n" + "1\n", outErrIntercept.toString());
+    }
+    
+    @Test // Expression Test: simple multiplication, brackets, and assignment
+    public void multiplicationTest() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                  "int x = 1 * 1 * 1;"
+                + "int y = 10 * 0;"
+                + "int z = 6 * 2 - 6 * 2;" // Precedence
+                + "print(x);"
+                + "print(y);"
+                + "print(z);"
+                + "x = 2 - 6;"
+                + "y = 4 - 7;"
+                + "z = x * y;"
+                + "print(z);");
+        String[] args = new String[] {"Tests/00temp.vcalc","int"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("1\n" + "0\n" + "0\n" + "12\n", outErrIntercept.toString());
+    }
+    
+    @Test // Expression Test: simple multiplication, brackets, and assignment
+    public void divisionTest() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                  "int x = 1 / 1 / 1;"
+                + "int y = 100 / 100;"
+                + "int z = 9 / 3 - 9 / 3;" // Precedence
+                + "print(x);"
+                + "print(y);"
+                + "print(z);"
+                + "x = 2 - 6;"
+                + "y = 4 - 7;"
+                + "z = x / y;"
+                + "print(z);");
+        String[] args = new String[] {"Tests/00temp.vcalc","int"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("1\n" + "1\n" + "0\n" + "1\n", outErrIntercept.toString());
+    }
+    
+    @Test // Expression Test: simple comparison
+    public void comparisonTest() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                  "int x = 5;"
+                + "int y = 5;"
+                + "int z = 0;"
+                + "print(x == x);"
+                + "print(y == x);"
+                + "print(y == z);"
+                + "print(x != x);"
+                + "print(z != x);"
+                + "print(y != x);"
+                + "print(x < x);"
+                + "print(x < y);"
+                + "print(z < y);"
+                + "print(x > y);"
+                + "print( 1 < 2 > 2 < 1);" // Precedence
+                + "print( 1 == 2 != 0 == 0);"); // Precedence 
+        String[] args = new String[] {"Tests/00temp.vcalc","int"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("1\n" + "1\n" + "0\n" 
+                   + "0\n" + "1\n" + "0\n" 
+                   + "0\n" + "0\n" + "1\n"
+                   + "0\n" + "1\n" + "1\n", outErrIntercept.toString());
+    }
+    
+    @Test // Expression Test: simple nested ifs
+    public void ifTest() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                  "int x = 2;"
+                + "int y = 0;"
+                + "int z = 100;"
+                + "if ( x != 0)"
+                    + "print (x);"
+                    + "x = x - 1;"
+                    + "if( y == 0)"
+                        + "y = y + 1;"
+                        + "if(z < 0)"
+                            + "print(z);"
+                        + "fi;"
+                    + "fi;"
+                    + "print(y);"
+                + "fi;");
+        String[] args = new String[] {"Tests/00temp.vcalc","int"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("2\n" + "1\n", outErrIntercept.toString());
+    }
+    
+    @Test // Expression Test: simple nested loops
+    public void loopTest() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                  "int x = 2;"
+                + "int y = 0;"
+                + "int z = 100;"
+                + "loop ( x != 0)"
+                    + "print (x);"
+                    + "x = x - 1;"
+                    + "loop( y < 2)"
+                        + "y = y + 1;"
+                        + "loop(z > 0)"
+                            + "z = z - 5;"
+                        + "pool;"
+                    + "pool;"
+                    + "print(y);"
+                + "pool;");
+        String[] args = new String[] {"Tests/00temp.vcalc","int"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("2\n" + "2\n" + "1\n" + "2\n", outErrIntercept.toString());
+    }
+    
+    
+    //TODO: add test for vectors, vec addition, etc
+    
+    
     
     @Test
     public void primeTest() throws RecognitionException, IOException {
@@ -240,4 +373,207 @@ public class InterpreterTest {
               "997" , outErrIntercept.toString().trim());
     }
 
+
+    /**
+     * 
+     *         END INTERPRETER TESTS
+     * 
+     * 
+     */
+
+    
+    /**
+     * 
+     *         Lexer/Parser TESTS
+     * 
+     * 
+     */
+    @Test // Test simple print statements
+    public void astPrintTest() throws IOException, RecognitionException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", "print(128); print(256); print(512);");
+        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        
+        Vcalc_Test.main(args);
+        
+        assertEquals("(PROGRAM (PRINT 128) (PRINT 256) (PRINT 512))", outErrIntercept.toString().trim());
+    }
+    
+    @Test // AST Test: simple print statements
+    public void astComparisonTest() throws IOException, RecognitionException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "int x = 5;"
+              + "int y = 5;"
+              + "int z = 0;"
+              + "print(x == x);"
+              + "print(y == x);"
+              + "print(y == z);"
+              + "print(x != x);"
+              + "print(z != x);"
+              + "print(y != x);"
+              + "print(x < x);"
+              + "print(x < y);"
+              + "print(z < y);"
+              + "print(x > y);"
+              + "print( 1 < 2 > 2 < 1);" // Precedence
+              + "print( 1 == 2 != 0 == 0);"); // Precedence 
+        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        
+        Vcalc_Test.main(args);
+        
+        assertEquals("(PROGRAM (VAR int x 5) (VAR int y 5) (VAR int z 0) (PRINT (== x x)) " 
+                   + "(PRINT (== y x)) (PRINT (== y z)) (PRINT (!= x x)) (PRINT (!= z x)) " 
+                   + "(PRINT (!= y x)) (PRINT (< x x)) (PRINT (< x y)) (PRINT (< z y)) "
+                   + "(PRINT (> x y)) (PRINT (< (> (< 1 2) 2) 1)) (PRINT (== (!= (== 1 2) 0) 0)))", 
+                   outErrIntercept.toString().trim());
+    }
+    
+    @Test // AST Test: simple nested if
+    public void astIfTest() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                  "int x = 2;"
+                + "int y = 0;"
+                + "int z = 100;"
+                + "if ( x != 0)"
+                    + "print (x);"
+                    + "x = x - 1;"
+                    + "if( y == 0)"
+                        + "y = y + 1;"
+                        + "if(z < 0)"
+                            + "print(z);"
+                        + "fi;"
+                    + "fi;"
+                    + "print(y);"
+                + "fi;");
+        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("(PROGRAM (VAR int x 2) (VAR int y 0) (VAR int z 100) "+
+                     "(IF (!= x 0) " +
+                         "(SLIST (PRINT x) (= x (- x 1)) "+
+                         "(IF (== y 0) " + 
+                             "(SLIST (= y (+ y 1)) "+
+                             "(IF (< z 0) "+
+                                 "(SLIST (PRINT z))))) "+
+                     "(PRINT y))))\n", outErrIntercept.toString());
+    }
+    
+    @Test // AST Test: simple nested loops
+    public void astLoopTest() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                  "int x = 2;"
+                + "int y = 0;"
+                + "int z = 100;"
+                + "loop ( x != 0)"
+                    + "print (x);"
+                    + "x = x - 1;"
+                    + "loop( y < 2)"
+                        + "y = y + 1;"
+                        + "loop(z > 0)"
+                            + "z = z - 5;"
+                        + "pool;"
+                    + "pool;"
+                    + "print(y);"
+                + "pool;");
+        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("(PROGRAM (VAR int x 2) (VAR int y 0) (VAR int z 100) " 
+                    + "(LOOP (!= x 0) (SLIST (PRINT x) (= x (- x 1)) " + 
+                          "(LOOP (< y 2) " +
+                               "(SLIST (= y (+ y 1)) " +
+                               "(LOOP (> z 0) " +
+                                   "(SLIST (= z (- z 5)))))) "
+                        + "(PRINT y)))"
+                    + ")" 
+                , outErrIntercept.toString().trim());
+    }
+    
+    
+    @Test
+    public void astPrimeTest() throws RecognitionException, IOException {
+
+      String[] args = new String[] {"Tests/01prime.vcalc","astDebug"};
+      
+      Vcalc_Test.main(args);
+      System.out.println();
+      assertEquals("(PROGRAM (VAR int i 1) (VAR int p 1) (VAR int isPrime 1) " + 
+                       "(LOOP (< p 1000) (SLIST (= i 1) (= isPrime 1) (= p (+ p 1)) " + 
+                           "(LOOP (< i (/ p 2)) " + 
+                               "(SLIST (= i (+ i 1)) " + 
+                                   "(IF (== (* (/ p i) i) p) " + 
+                                       "(SLIST (= isPrime 0) (= i p))))) "+ 
+                           "(IF isPrime (SLIST (PRINT p)))"
+                          + ")"+ 
+                        ")" + 
+                    ")", outErrIntercept.toString().trim());
+    }
+    
+    @Test // Test simple vector statements
+    public void astRangeTest() throws IOException, RecognitionException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "vector v = 1..10;" +
+                "vector w = 100..200;" +
+                "vector z = v + w;"
+                );
+        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        
+        Vcalc_Test.main(args);
+        
+        assertEquals("(PROGRAM (VAR vector v (.. 1 10)) (VAR vector w (.. 100 200)) (VAR vector z (+ v w)))", 
+                outErrIntercept.toString().trim());
+    }
+    
+    @Test // Test simple vector statements
+    public void astGeneratorTest() throws IOException, RecognitionException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "vector z = 1..10;" +
+                "z = [i in 1..100 | i * i];" + // generator assignment
+                "z = [i in [j in 1..10 | 2 * j] | i * i];" // Nested Generator
+                );
+        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        
+        Vcalc_Test.main(args);
+        
+        assertEquals("(PROGRAM (VAR vector z (.. 1 10)) " +
+                    "(= z (GENERATOR i (.. 1 100) (* i i))) " + 
+                    "(= z (GENERATOR i (GENERATOR j (.. 1 10) (* 2 j)) (* i i)))" +
+                    ")", outErrIntercept.toString().trim());
+    }
+    
+    @Test // Test simple vector statements
+    public void astFilterTest() throws IOException, RecognitionException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "vector v = 1..10;" +
+                "v = filter(i in 1..10 | i > 5);" + //filter
+                "v = filter(i in filter(j in 1..20 | j < 11) | i > 5);" //nested filter
+                );
+        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        
+        Vcalc_Test.main(args);
+        
+        assertEquals("(PROGRAM (VAR vector v (.. 1 10)) " +
+                    "(= v (FILTER i (.. 1 10) (> i 5))) " +
+                    "(= v (FILTER i (FILTER j (.. 1 20) (< j 11)) (> i 5)))" +
+                    ")", outErrIntercept.toString().trim());
+    }
+    
+    @Test // Test simple vector statements
+    public void astVectorIndexTest() throws IOException, RecognitionException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "vector v = 1..10;" +
+                "print(v[5]);" +
+                "print([j in 1..3 | j * 2][1]);" + 
+                "print(filter(i in 1..10 | i > 5)[2]);"
+                );
+        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        
+        Vcalc_Test.main(args);
+        
+        assertEquals("(PROGRAM (VAR vector v (.. 1 10)) " +
+                     "(PRINT (INDEX v 5)) " +
+                     "(PRINT (INDEX (GENERATOR j (.. 1 3) (* j 2)) 1)) " +
+                     "(PRINT (INDEX (FILTER i (.. 1 10) (> i 5)) 2))" +
+                    ")", outErrIntercept.toString().trim());
+    }
+    
 }

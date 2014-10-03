@@ -32,7 +32,8 @@ declaration returns [VcalcNode node]
   ;
 
 type
-  : 'int' 
+  : Int 
+  | Vector
   ;
  
 statement returns [VcalcNode node]
@@ -65,7 +66,8 @@ block returns [VcalcNode node]
   ;
 
 expression returns [VcalcNode node]
-  : ^('==' op1=expression op2=expression) { $node = new EQNode($op1.node, $op2.node); }
+  : ^(INDEX expression expression)
+  | ^('==' op1=expression op2=expression) { $node = new EQNode($op1.node, $op2.node); }
   | ^('!=' op1=expression op2=expression) { $node = new NENode($op1.node, $op2.node); }
   | ^('<' op1=expression op2=expression)  { $node = new LTNode($op1.node, $op2.node); }
   | ^('>' op1=expression op2=expression)  { $node = new GTNode($op1.node, $op2.node); }
@@ -75,4 +77,6 @@ expression returns [VcalcNode node]
   | ^('/' op1=expression op2=expression)  { $node = new DivNode($op1.node, $op2.node); }
   | ID {$node = new VarNode($ID.text, global);}
   | INTEGER {$node = new IntNode(Integer.parseInt($INTEGER.text));}
+  | ^(GENERATOR ID expression expression)
+  | ^(FILTER ID expression expression)
   ;
