@@ -33,8 +33,12 @@ public class Vcalc_Test {
         VcalcParser parser = new VcalcParser(tokenStream);
         VcalcParser.program_return entry = parser.program();
         CommonTree ast = (CommonTree) entry.getTree();
-        //System.err.println(ast.toStringTree());
-
+        
+        if(args[1].equals("astDebug")) {
+            System.out.println(ast.toStringTree());
+            return;
+        }
+        
         // Pass over to verify no variable misuse
         CommonTreeNodeStream nodes = new CommonTreeNodeStream(ast);
         nodes.setTokenStream(tokenStream);
