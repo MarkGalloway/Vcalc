@@ -24,7 +24,8 @@ declaration
   ;
   
 type
-  : 'int' 
+  : Int
+  | Vector
   ; 
    
 statement
@@ -39,11 +40,11 @@ assignment
   ;
 
 ifStat
-  : 'if' '(' expression ')' block 'fi' ';' -> ^(IF expression block)
+  : If '(' expression ')' block Fi ';' -> ^(IF expression block)
   ;
   
 loop
-  : 'loop' '(' expression ')' block 'pool' ';' -> ^(LOOP expression block)
+  : Loop '(' expression ')' block Pool ';' -> ^(LOOP expression block)
   ;
   
 block
@@ -51,7 +52,7 @@ block
   ;
 
 print
-  : 'print' '(' expression ')' ';' -> ^(PRINT expression)
+  : Print '(' expression ')' ';' -> ^(PRINT expression)
   ;
 
 expression
@@ -67,7 +68,11 @@ add
   ;
 
 mult
-  : atom ((('*'^ | '/'^) atom))*
+  : range ((('*'^ | '/'^) range))*
+  ;
+  
+range
+  : atom ('..'^ atom)?
   ;
 
 atom
@@ -76,10 +81,25 @@ atom
   | INTEGER
   ;
 
-fragment DIGIT : '0'..'9';
-fragment LETTER : 'a'..'z' |'A'..'Z';
-WS : (' ' | '\t' | '\f')+ {$channel=HIDDEN;};
-NL : ('\r' '\n' | '\r' | '\n' | EOF) {$channel=HIDDEN;};
+//LEXER RULES
+
+// Reserved Words
+If : 'if';
+Fi : 'fi';
+Filter : 'filter';
+In : 'in';
+Int : 'int';
+Loop : 'loop';
+Pool : 'pool';
+Print : 'print';
+Vector : 'vector';
+
+
 ID : LETTER ((LETTER | DIGIT))*;
 INTEGER : DIGIT+;
 
+WS : (' ' | '\t' | '\f')+ {$channel=HIDDEN;};
+NL : ('\r' '\n' | '\r' | '\n' | EOF) {$channel=HIDDEN;};
+
+fragment DIGIT : '0'..'9';
+fragment LETTER : 'a'..'z' |'A'..'Z';

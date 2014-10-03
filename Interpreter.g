@@ -32,7 +32,8 @@ declaration returns [VcalcNode node]
   ;
 
 type
-  : 'int' 
+  : Int 
+  | Vector
   ;
  
 statement returns [VcalcNode node]

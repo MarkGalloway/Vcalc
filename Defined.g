@@ -27,7 +27,8 @@ declaration
   ;
 
 type
-  : 'int' 
+  : Int 
+  | Vector
   ;
  
 statement
