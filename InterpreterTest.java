@@ -509,14 +509,71 @@ public class InterpreterTest {
     }
     
     @Test // Test simple vector statements
-    public void astVectorTest() throws IOException, RecognitionException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", "vector v = 1..10; ");
+    public void astRangeTest() throws IOException, RecognitionException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "vector v = 1..10;" +
+                "vector w = 100..200;" +
+                "vector z = v + w;"
+                );
         String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
         
         Vcalc_Test.main(args);
         
-        assertEquals("(PROGRAM (VAR vector v (.. 1 10)))", outErrIntercept.toString().trim());
+        assertEquals("(PROGRAM (VAR vector v (.. 1 10)) (VAR vector w (.. 100 200)) (VAR vector z (+ v w)))", 
+                outErrIntercept.toString().trim());
     }
     
-    //todo AST tests for vectors, vec addition
+    @Test // Test simple vector statements
+    public void astGeneratorTest() throws IOException, RecognitionException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "vector z = 1..10;" +
+                "z = [i in 1..100 | i * i];" + // generator assignment
+                "z = [i in [j in 1..10 | 2 * j] | i * i];" // Nested Generator
+                );
+        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        
+        Vcalc_Test.main(args);
+        
+        assertEquals("(PROGRAM (VAR vector z (.. 1 10)) " +
+                    "(= z (GENERATOR i (.. 1 100) (* i i))) " + 
+                    "(= z (GENERATOR i (GENERATOR j (.. 1 10) (* 2 j)) (* i i)))" +
+                    ")", outErrIntercept.toString().trim());
+    }
+    
+    @Test // Test simple vector statements
+    public void astFilterTest() throws IOException, RecognitionException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "vector v = 1..10;" +
+                "v = filter(i in 1..10 | i > 5);" + //filter
+                "v = filter(i in filter(j in 1..20 | j < 11) | i > 5);" //nested filter
+                );
+        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        
+        Vcalc_Test.main(args);
+        
+        assertEquals("(PROGRAM (VAR vector v (.. 1 10)) " +
+                    "(= v (FILTER i (.. 1 10) (> i 5))) " +
+                    "(= v (FILTER i (FILTER j (.. 1 20) (< j 11)) (> i 5)))" +
+                    ")", outErrIntercept.toString().trim());
+    }
+    
+    @Test // Test simple vector statements
+    public void astVectorIndexTest() throws IOException, RecognitionException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "vector v = 1..10;" +
+                "print(v[5]);" +
+                "print([j in 1..3 | j * 2][1]);" + 
+                "print(filter(i in 1..10 | i > 5)[2]);"
+                );
+        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        
+        Vcalc_Test.main(args);
+        
+        assertEquals("(PROGRAM (VAR vector v (.. 1 10)) " +
+                     "(PRINT (INDEX v 5)) " +
+                     "(PRINT (INDEX (GENERATOR j (.. 1 3) (* j 2)) 1)) " +
+                     "(PRINT (INDEX (FILTER i (.. 1 10) (> i 5)) 2))" +
+                    ")", outErrIntercept.toString().trim());
+    }
+    
 }
