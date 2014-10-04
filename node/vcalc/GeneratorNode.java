@@ -1,30 +1,53 @@
 package node.vcalc;
 
+import symbol.vcalc.Scope;
 import symbol.vcalc.VcalcValue;
+import symbol.vcalc.VectorType;
 
 public class GeneratorNode implements VcalcNode {
 
-//    private final VcalcNode id;
-    private final VcalcNode op1;
-    private final VcalcNode op2;
+    private final String id;
+    private final VcalcNode domainNode;
+    private final VcalcNode exprNode;
+    private final Scope scope;
     
     
-    public GeneratorNode(/*VcalcNode id,*/ VcalcNode op1, VcalcNode op2) {
-//        this.id = id;
-        this.op1 = op1;
-        this.op2 = op2;
+    public GeneratorNode(String id, VcalcNode domainNode, VcalcNode exprNode, Scope scope) {
+        this.id = id;
+        this.domainNode = domainNode;
+        this.exprNode = exprNode;
+        this.scope = scope;
     }
 
     @Override
     public VcalcValue evaluate() {
-        VcalcValue vecExpr = op1.evaluate();
+        VcalcValue domainValue = domainNode.evaluate(); //get the domain vector
         
-        if(!vecExpr.isVector()) {
-            throw new RuntimeException("");
+        if(!domainValue.isVector()) {
+            throw new RuntimeException("The domain of a generator must be a vector or vector valued expression."
+                    + "Received: " + domainValue.value);
+        }
+  
+        VectorType domain = domainValue.asVector();
+        VectorType newVector = new VectorType();
+        
+        for(Integer element : domain.getVector()) {
+            // Update value of domain variable with corresponding vector variable
+            new AssignmentNode(id, new IntNode(element), scope);
+            
+            // Evaluate RHS expression
+            VcalcValue value = exprNode.evaluate();
+            
+            if(!value.isInt()) {
+                throw new RuntimeException("The right hand side expression of a generator must only create integer values."
+                        + "Received: " + value.value);
+            }
+            
+            // Add result entry to new vector
+            newVector.addElement(value.asInt().getValue());
         }
         
-        
-        return null;
+        return new VcalcValue(newVector);
     }
 
 }

@@ -212,6 +212,25 @@ public class InterpreterTest {
         assertEquals("[ 1 2 3 4 5 6 7 8 9 10 ]", outErrIntercept.toString().trim());
     }
     
+    @Test
+    public void generatorTest() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "int i = 666;" +  //global var should not be seen
+                "vector v = [i in 1..10 | 0];" + 
+                "vector s = [i in 1..10 | 2 + 3];" +
+                "vector z = [i in 1..10 | i];" +
+                "print(v);" +
+                "print(s);" +
+                "print(z);"
+                );
+        String[] args = new String[] {"Tests/00temp.vcalc","int"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("[ 0 0 0 0 0 0 0 0 0 0 ]\n" + 
+                     "[ 5 5 5 5 5 5 5 5 5 5 ]\n" + 
+                     "[ 1 2 3 4 5 6 7 8 9 10 ]" , outErrIntercept.toString().trim());
+    }
+    
     //TODO: add test for vectors, vec addition, etc
     
     

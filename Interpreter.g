@@ -78,6 +78,15 @@ expression returns [VcalcNode node]
   | ^('..' op1=expression op2=expression) { $node = new RangeNode($op1.node, $op2.node);}
   | ID {$node = new VarNode($ID.text, symTable.getCurrentScope());}
   | INTEGER {$node = new IntNode(Integer.parseInt($INTEGER.text));}
-  | ^(GENERATOR ID op1=expression op2=expression) {$node = new GeneratorNode($op1.node, $op2.node);}
+  | ^(GENERATOR ID op1=expression op2=expression) 
+      {
+        symTable.pushScope();
+        
+        new AssignmentNode($ID.text, new IntNode(0), symTable.getCurrentScope());
+        
+        $node = new GeneratorNode($ID.text, $op1.node, $op2.node, symTable.getCurrentScope());
+        
+        symTable.popScope();
+      }
   | ^(FILTER ID op1=expression op2=expression) {$node = new FilterNode($op1.node, $op2.node);}
   ;
