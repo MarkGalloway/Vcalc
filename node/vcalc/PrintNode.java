@@ -15,7 +15,7 @@ public class PrintNode implements VcalcNode {
         VcalcValue value = expr.evaluate();
         
         if(value.isInt()) {
-            System.out.println(value.asInt().toString()); //TODO: override vector to string
+            System.out.println(value.asInt().toString()); //TODO: override int to string
         }
         else if(value.isVector()) {
             System.out.println(value.asVector().toString()); //TODO: override vector to string

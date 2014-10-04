@@ -1,6 +1,7 @@
 package node.vcalc;
 
 import scope.vcalc.Scope;
+import symbol.vcalc.VcalcValue;
 
 public class AssignmentNode implements VcalcNode {
     private String id;
@@ -14,8 +15,8 @@ public class AssignmentNode implements VcalcNode {
     }
     
     @Override
-    public int evaluate() {
-        scope.assign(id, expr.evaluate());
-        return 0;
+    public VcalcValue evaluate() {
+        //scope.assign(id, expr.evaluate());
+        throw new RuntimeException("Assignment is not implemented.."); //TODO: Hook up with symbol table
     }
 }

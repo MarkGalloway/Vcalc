@@ -1,5 +1,8 @@
 package node.vcalc;
 
+import symbol.vcalc.IntType;
+import symbol.vcalc.VcalcValue;
+
 public class IntNode implements VcalcNode {
     private int value;
     
@@ -8,7 +11,7 @@ public class IntNode implements VcalcNode {
     }
     
     @Override
-    public int evaluate() {
-        return value;
+    public VcalcValue evaluate() {
+        return new IntType(value);
     }
 }
