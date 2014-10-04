@@ -1,6 +1,6 @@
 package node.vcalc;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import symbol.vcalc.VcalcValue;
 
 public class PrintNode implements VcalcNode {
     
@@ -11,20 +11,18 @@ public class PrintNode implements VcalcNode {
     }
     
     @Override
-    public int evaluate() {
-        VcalcValue expr = expr.evaluate();
+    public VcalcValue evaluate() {
+        VcalcValue value = expr.evaluate();
         
-        if(expr.isInteger()) {
-            System.out.println(expr.asInteger());
+        if(value.isInt()) {
+            System.out.println(value.asInt().toString()); //TODO: override vector to string
         }
-        else if(expr.isVector()) {
-
-            VcalcVector = expr.asVector();
-
+        else if(value.isVector()) {
+            System.out.println(value.asVector().toString()); //TODO: override vector to string
         }
         else {
-            throw new NotImplementedException();
+            throw new RuntimeException("Unable to print unknown type.");
         }
-        return 0; //TODO, Fix this return value to return something more useful...
+        return null; //TODO, Fix this return value to return something more useful...
     }
 }
