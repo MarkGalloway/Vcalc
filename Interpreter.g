@@ -80,13 +80,7 @@ expression returns [VcalcNode node]
   | INTEGER {$node = new IntNode(Integer.parseInt($INTEGER.text));}
   | ^(GENERATOR ID op1=expression op2=expression) 
       {
-        symTable.pushScope();
-        
-        new AssignmentNode($ID.text, new IntNode(0), symTable.getCurrentScope());
-        
-        $node = new GeneratorNode($ID.text, $op1.node, $op2.node, symTable.getCurrentScope());
-        
-        symTable.popScope();
+        $node = new GeneratorNode($ID.text, $op1.node, $op2.node, symTable);
       }
   | ^(FILTER ID op1=expression op2=expression) {$node = new FilterNode($op1.node, $op2.node);}
   ;
