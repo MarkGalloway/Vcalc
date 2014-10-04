@@ -215,7 +215,7 @@ public class InterpreterTest {
     @Test
     public void generatorTest() throws RecognitionException, IOException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 
-                //"int i = 666;" +  //global var should not be seen
+                "int i = 666;" +  //global var should not be seen
                 "vector v = [i in 1..10 | 0];" + 
                 "vector s = [i in 1..10 | 2 + 3];" +
                 "vector z = [i in 1..10 | i];" +
@@ -230,6 +230,21 @@ public class InterpreterTest {
                      "[ 5 5 5 5 5 5 5 5 5 5 ]\n" + 
                      "[ 1 2 3 4 5 6 7 8 9 10 ]" , outErrIntercept.toString().trim());
     }
+    
+    @Test
+    public void filterTest() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "vector v = filter(i in 1..10 | i > 5);" + 
+                "print(v);"
+                );
+        String[] args = new String[] {"Tests/00temp.vcalc","int"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("[ 6 7 8 9 10 ]"
+                    , outErrIntercept.toString().trim());
+    }
+    
+    
     
     //TODO: add test for vectors, vec addition, etc
     
