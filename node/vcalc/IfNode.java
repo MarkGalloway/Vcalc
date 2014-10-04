@@ -1,5 +1,7 @@
 package node.vcalc;
 
+import symbol.vcalc.VcalcValue;
+
 public class IfNode implements VcalcNode {
     private VcalcNode expression;
     private VcalcNode block;
@@ -10,11 +12,18 @@ public class IfNode implements VcalcNode {
     }
     
     @Override
-    public int evaluate() {
-        if(expression.evaluate() != 0) {
+    public VcalcValue evaluate() {
+        VcalcValue conditional = expression.evaluate();
+        
+        if(!conditional.isInt()) {
+            throw new RuntimeException("If condition expects integer 1 or 0. " +
+                    "Cannot evaluate " + conditional + " as 1 or 0.");
+        }
+        
+        if(conditional.asInt().getValue() != 0) {
             block.evaluate();
         }
-        return 0;
+        return null; //TODO, Fix this return value to return something more useful...
     }
 
 }
