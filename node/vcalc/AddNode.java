@@ -23,7 +23,7 @@ public class AddNode implements VcalcNode {
             return new VcalcValue(new IntType(left.asInt().getValue() + right.asInt().getValue()));
         }
         else {
-            throw new NotImplementedException();
+            throw new NotImplementedException(); //TODO: vector addition
         }
     }
 
