@@ -18,6 +18,8 @@ public class AddNode implements VcalcNode {
     public VcalcValue evaluate() {
         VcalcValue left = op1.evaluate();
         VcalcValue right = op2.evaluate();
+        System.out.println(left.getClass().getName());
+        System.out.println(right.getClass().getName());
         
         if(left.isInt() && right.isInt()) {
             return new VcalcValue(new IntType(left.asInt().getValue() + right.asInt().getValue()));

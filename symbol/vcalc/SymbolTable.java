@@ -4,8 +4,8 @@ import java.util.Stack;
 
 public class SymbolTable {
 
-	protected static SymbolTable symTable;
-    protected Stack<Scope> scopeStack;
+	private static SymbolTable symTable;
+    private Stack<Scope> scopeStack;
 
     private SymbolTable() {
     	// global base scope
@@ -34,6 +34,10 @@ public class SymbolTable {
 
     public void popScope() {
         scopeStack.pop();
+    }
+    
+    public Scope getCurrentScope() {
+    	return scopeStack.peek();
     }
 
     public String toString() {

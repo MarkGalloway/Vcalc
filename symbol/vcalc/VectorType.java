@@ -24,5 +24,17 @@ public class VectorType extends VcalcValue {
     public int getElement(int index) {
         return value.get(index);
     }
+    
+    @Override
+    public String toString() {
+    	StringBuilder stringbuilder = new StringBuilder();
+    	stringbuilder.append("[ ");
+    	for (Integer element : value) {
+    		stringbuilder.append(element.toString());
+    		stringbuilder.append(" ");
+    	}
+    	stringbuilder.append("]");
+    	return stringbuilder.toString();
+    }
 	
 }

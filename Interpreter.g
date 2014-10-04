@@ -8,15 +8,15 @@ options {
 
 @header {
   import node.vcalc.*;
-  import scope.vcalc.*;
+  import symbol.vcalc.*;
 }
 
 @members {
-  Scope global;
+  SymbolTable symTable;
   
   public Interpreter(CommonTreeNodeStream nodestream){
     super(nodestream);
-    global = new Scope();
+    symTable = SymbolTable.getInstance();
   }
 }
 
@@ -28,7 +28,7 @@ program returns [VcalcNode node]
   ;
 
 declaration returns [VcalcNode node]
-  : ^(VAR type ID expression) {$node = new AssignmentNode($ID.text, $expression.node, global);}
+  : ^(VAR type ID expression) {$node = new AssignmentNode($ID.text, $expression.node, symTable.getCurrentScope());}
   ;
 
 type
@@ -44,7 +44,7 @@ statement returns [VcalcNode node]
   ;
 
 assignment returns [VcalcNode node]
-  : ^('=' ID expression) {$node = new AssignmentNode($ID.text, $expression.node, global);}
+  : ^('=' ID expression) {$node = new AssignmentNode($ID.text, $expression.node, symTable.getCurrentScope());}
   ;
 
 ifStat returns [VcalcNode node]
@@ -76,7 +76,7 @@ expression returns [VcalcNode node]
   | ^('*' op1=expression op2=expression)  { $node = new MultNode($op1.node, $op2.node); }
   | ^('/' op1=expression op2=expression)  { $node = new DivNode($op1.node, $op2.node); }
   | ^('..' op1=expression op2=expression) { $node = new RangeNode($op1.node, $op2.node);}
-  | ID {$node = new VarNode($ID.text, global);}
+  | ID {$node = new VarNode($ID.text, symTable.getCurrentScope());}
   | INTEGER {$node = new IntNode(Integer.parseInt($INTEGER.text));}
   | ^(GENERATOR ID op1=expression op2=expression) {$node = new GeneratorNode($op1.node, $op2.node);}
   | ^(FILTER ID op1=expression op2=expression) {$node = new FilterNode($op1.node, $op2.node);}

@@ -1,4 +1,3 @@
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -8,7 +7,6 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
-import org.antlr.stringtemplate.StringTemplateGroup;
 
 public class Vcalc_Test {
 
@@ -45,7 +43,7 @@ public class Vcalc_Test {
         Defined defined = new Defined(nodes);
         defined.program();
         //defined.downup(ast);
-        //System.err.println(ast.toStringTree());
+        System.err.println(ast.toStringTree());
 
         if (args[1].equals("int")) {
             // Run it through the Interpreter

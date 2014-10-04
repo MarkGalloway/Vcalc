@@ -1,6 +1,6 @@
 package node.vcalc;
 
-import scope.vcalc.Scope;
+import symbol.vcalc.Scope;
 import symbol.vcalc.VcalcValue;
 
 public class VarNode implements VcalcNode {
@@ -14,7 +14,7 @@ public class VarNode implements VcalcNode {
     
     @Override
     public VcalcValue evaluate() {
-        //return scope.resolve(id);
-        throw new RuntimeException("VARS NOT IMPLEMENTED"); //TODO: hook up to Tamara symbol table stuff
+        scope.resolve(id);
+        return null;
     }
 }

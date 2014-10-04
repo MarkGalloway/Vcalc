@@ -27,7 +27,9 @@ public class VcalcValue {
 	}
 	
 	public boolean isInt() {
-		return (value instanceof IntType);
+		System.out.println(value.getClass().getName());
+		return (value.getClass().getName() == "symbol.vcalc.IntType");
+		//return (value instanceof IntType);
 	}
 	
 	public boolean isVector() {

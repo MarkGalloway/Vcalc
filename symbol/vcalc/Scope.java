@@ -35,7 +35,7 @@ public class Scope {
     
     // resolve a symbol in the current scope
     // if not found continue with outer scopes
-    private Symbol resolve(String id) {
+    public Symbol resolve(String id) {
         Symbol symbol = symbolMap.get(id);
         
         if (symbol != null) 
