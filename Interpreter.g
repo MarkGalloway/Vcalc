@@ -66,7 +66,7 @@ block returns [VcalcNode node]
   ;
 
 expression returns [VcalcNode node]
-  : ^(INDEX expression expression)
+  : ^(INDEX op1=expression op2=expression) {$node = new IndexNode($op1.node, $op2.node);}
   | ^('==' op1=expression op2=expression) { $node = new EQNode($op1.node, $op2.node); }
   | ^('!=' op1=expression op2=expression) { $node = new NENode($op1.node, $op2.node); }
   | ^('<' op1=expression op2=expression)  { $node = new LTNode($op1.node, $op2.node); }
@@ -75,8 +75,9 @@ expression returns [VcalcNode node]
   | ^('-' op1=expression op2=expression)  { $node = new SubNode($op1.node, $op2.node); }
   | ^('*' op1=expression op2=expression)  { $node = new MultNode($op1.node, $op2.node); }
   | ^('/' op1=expression op2=expression)  { $node = new DivNode($op1.node, $op2.node); }
+  | ^('..' op1=expression op2=expression) { $node = new RangeNode($op1.node, $op2.node);}
   | ID {$node = new VarNode($ID.text, global);}
   | INTEGER {$node = new IntNode(Integer.parseInt($INTEGER.text));}
-  | ^(GENERATOR ID expression expression)
-  | ^(FILTER ID expression expression)
+  | ^(GENERATOR ID op1=expression op2=expression) {$node = new GeneratorNode($op1.node, $op2.node);}
+  | ^(FILTER ID op1=expression op2=expression) {$node = new FilterNode($op1.node, $op2.node);}
   ;

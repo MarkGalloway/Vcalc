@@ -1,5 +1,7 @@
 package node.vcalc;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 public class SubNode implements VcalcNode {
     
     private final VcalcNode op1;
@@ -12,7 +14,15 @@ public class SubNode implements VcalcNode {
     
     @Override
     public int evaluate() {
-        return op1.evaluate() - op2.evaluate();
+        VcalcValue left = op1.evaluate();
+        VcalcValue right = op2.evaluate();
+        
+        if(left.isInteger() && right.isInteger()) {
+            return left - right;
+        }
+        else {
+            throw new NotImplementedException();
+        }
     }
 
 }
