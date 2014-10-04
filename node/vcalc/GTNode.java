@@ -1,6 +1,8 @@
 package node.vcalc;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import symbol.vcalc.IntType;
+import symbol.vcalc.VcalcValue;
 
 public class GTNode implements VcalcNode {
     
@@ -13,15 +15,17 @@ public class GTNode implements VcalcNode {
     }
     
     @Override
-    public int evaluate() {
+    public VcalcValue evaluate() {
         VcalcValue left = op1.evaluate();
         VcalcValue right = op2.evaluate();
         
-        if(left.isInteger() && right.isInteger()) {
-            return (left > right)? 1 : 0;
+        if(left.isInt() && right.isInt()) {
+            int leftValue = left.asInt().getValue();
+            int rightValue = right.asInt().getValue();
+            return (leftValue > rightValue)? new IntType(1) : new IntType(0);
         }
         else {
-            throw new NotImplementedException();
+            throw new NotImplementedException(); //TODO: Vector greaterthan
         }
     }
 }
