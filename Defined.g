@@ -64,6 +64,7 @@ expression
   | ^('-' expression expression)
   | ^('*' expression expression)
   | ^('/' expression expression)
+  | ^('..' op1=expression op2=expression)
   | ID { if(!variables.contains($ID.text)) {throw new RuntimeException("Use of undeclared variable " + $ID.text);}}
   | INTEGER
   | ^(GENERATOR ID expression expression)

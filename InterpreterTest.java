@@ -209,7 +209,7 @@ public class InterpreterTest {
         String[] args = new String[] {"Tests/00temp.vcalc","int"};
         
         Vcalc_Test.main(args);
-        assertEquals("[ 1 2 3 4 5 6 7 8 9 10 ]", outErrIntercept.toString());
+        assertEquals("[ 1 2 3 4 5 6 7 8 9 10 ]", outErrIntercept.toString().trim());
     }
     
     //TODO: add test for vectors, vec addition, etc
