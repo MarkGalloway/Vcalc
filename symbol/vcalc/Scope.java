@@ -8,6 +8,8 @@ public class Scope {
     private ScopeType type;
     private Scope parentScope;
     private Map<String, Symbol> symbolMap = new HashMap<String, Symbol>();
+    // for debugging
+    private int id; 
     
 	private enum ScopeType {
 	    GLOBAL,
@@ -15,15 +17,17 @@ public class Scope {
 	}
 	
 	// constructor for base global scope
-	public Scope() {
+	public Scope(int id) {
 		this.parentScope = null;
 		this.type = ScopeType.GLOBAL;
+		this.id = id;
 	}
 
 	// constructor for local scopes
-    public Scope(Scope parentScope) {
+    public Scope(Scope parentScope, int id) {
         this.parentScope = parentScope;
         this.type = ScopeType.LOCAL;
+        this.id = id;
     }
     
     //define a symbol in the current scope
@@ -51,8 +55,8 @@ public class Scope {
     public Scope getParentScope() {
         return parentScope;
     }
-
+    
     public String toString() {
-        return symbolMap.keySet().toString();
+        return id + ":" + symbolMap.keySet().toString();
     }
 }

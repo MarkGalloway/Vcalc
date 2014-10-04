@@ -6,10 +6,11 @@ public class SymbolTable {
 
 	private static SymbolTable symTable;
     private Stack<Scope> scopeStack;
+    private int generatedIdCounter = 0;
 
     private SymbolTable() {
     	// global base scope
-        Scope global = new Scope();
+        Scope global = new Scope(genId());
         
         // create a new base scope and add global
         scopeStack = new Stack<Scope>();
@@ -27,7 +28,7 @@ public class SymbolTable {
 
     public Scope pushScope() {
         Scope parentScope = scopeStack.peek();
-        Scope scope = new Scope(parentScope);
+        Scope scope = new Scope(parentScope, genId());
         scopeStack.push(scope);
         return scope;
     }
@@ -38,6 +39,10 @@ public class SymbolTable {
     
     public Scope getCurrentScope() {
     	return scopeStack.peek();
+    }
+    
+    private int genId() {
+    	return ++generatedIdCounter;
     }
 
     public String toString() {
