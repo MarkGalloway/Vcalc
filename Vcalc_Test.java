@@ -40,8 +40,8 @@ public class Vcalc_Test {
         // Pass over to verify no variable misuse
         CommonTreeNodeStream nodes = new CommonTreeNodeStream(ast);
         nodes.setTokenStream(tokenStream);
-        Defined defined = new Defined(nodes);
-        defined.program();
+//        Defined defined = new Defined(nodes);
+//        defined.program();
         //defined.downup(ast);
         //System.err.println(ast.toStringTree());
 
