@@ -22,7 +22,8 @@ public class GTNode implements VcalcNode {
         if(left.isInt() && right.isInt()) {
             int leftValue = left.asInt().getValue();
             int rightValue = right.asInt().getValue();
-            return (leftValue > rightValue)? new IntType(1) : new IntType(0);
+            IntType rval = (leftValue > rightValue)? new IntType(1) : new IntType(0);
+            return new VcalcValue(rval);
         }
         else {
             throw new NotImplementedException(); //TODO: Vector greaterthan
