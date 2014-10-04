@@ -1,6 +1,8 @@
 package node.vcalc;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import symbol.vcalc.IntType;
+import symbol.vcalc.VcalcValue;
 
 public class DivNode implements VcalcNode {
     
@@ -13,15 +15,21 @@ public class DivNode implements VcalcNode {
     }
     
     @Override
-    public int evaluate() {
+    public VcalcValue evaluate() {
         VcalcValue left = op1.evaluate();
         VcalcValue right = op2.evaluate();
         
-        if(left.isInteger() && right.isInteger()) {
-            return left / right;
+        if(left.isInt() && right.isInt()) {
+            int dividend = left.asInt().getValue();
+            int divisor = right.asInt().getValue();
+            if(divisor == 0) {
+                throw new RuntimeException("Division by zero is undefined.");
+            }
+            
+            return new VcalcValue(new IntType( dividend / divisor ));
         }
         else {
-            throw new NotImplementedException();
+            throw new NotImplementedException(); //TODO: Vector Division
         }
     }
 }
