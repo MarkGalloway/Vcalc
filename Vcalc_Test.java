@@ -43,7 +43,7 @@ public class Vcalc_Test {
         Defined defined = new Defined(nodes);
         defined.program();
         //defined.downup(ast);
-        System.err.println(ast.toStringTree());
+        //System.err.println(ast.toStringTree());
 
         if (args[1].equals("int")) {
             // Run it through the Interpreter

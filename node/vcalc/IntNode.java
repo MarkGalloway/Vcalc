@@ -12,6 +12,6 @@ public class IntNode implements VcalcNode {
     
     @Override
     public VcalcValue evaluate() {
-        return new IntType(value);
+        return new VcalcValue(new IntType(value));
     }
 }

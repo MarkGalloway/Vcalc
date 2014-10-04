@@ -13,7 +13,7 @@ public class VcalcValue {
 		this.value = value;
 		
 		// value is a Vector or IntValue
-		if(!isInt() || !isVector()) {
+		if(!isInt() && !isVector()) {
 		    throw new RuntimeException("Undefined data type. Int or Vector supported only.");
 		}
 	}
@@ -27,9 +27,7 @@ public class VcalcValue {
 	}
 	
 	public boolean isInt() {
-		System.out.println(value.getClass().getName());
-		return (value.getClass().getName() == "symbol.vcalc.IntType");
-		//return (value instanceof IntType);
+		return (value instanceof IntType);
 	}
 	
 	public boolean isVector() {

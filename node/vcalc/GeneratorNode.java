@@ -4,13 +4,26 @@ import symbol.vcalc.VcalcValue;
 
 public class GeneratorNode implements VcalcNode {
 
-    public GeneratorNode(VcalcNode op1, VcalcNode op2) {
-        // TODO Auto-generated constructor stub
+//    private final VcalcNode id;
+    private final VcalcNode op1;
+    private final VcalcNode op2;
+    
+    
+    public GeneratorNode(/*VcalcNode id,*/ VcalcNode op1, VcalcNode op2) {
+//        this.id = id;
+        this.op1 = op1;
+        this.op2 = op2;
     }
 
     @Override
     public VcalcValue evaluate() {
-        // TODO Auto-generated method stub
+        VcalcValue vecExpr = op1.evaluate();
+        
+        if(!vecExpr.isVector()) {
+            throw new RuntimeException("");
+        }
+        
+        
         return null;
     }
 

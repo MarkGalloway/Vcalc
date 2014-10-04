@@ -63,6 +63,16 @@ public class InterpreterTest {
         assertEquals("13\n", outErrIntercept.toString());
     }
     
+    @Test // Expression Test: simple assignment
+    public void assignmentTest() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                  "print(1 + 1);");
+        String[] args = new String[] {"Tests/00temp.vcalc","int"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("", outErrIntercept.toString());
+    }
+    
     @Test // Expression Test: simple subtraction, brackets and, assignment
     public void subtractionTest() throws RecognitionException, IOException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 

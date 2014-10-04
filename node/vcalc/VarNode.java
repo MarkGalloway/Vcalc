@@ -14,7 +14,6 @@ public class VarNode implements VcalcNode {
     
     @Override
     public VcalcValue evaluate() {
-        scope.resolve(id);
-        return null;
+        return scope.resolve(id).getValueType();
     }
 }
