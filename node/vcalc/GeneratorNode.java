@@ -10,16 +10,14 @@ public class GeneratorNode implements VcalcNode {
     private final String id;
     private final VcalcNode domainNode;
     private final VcalcNode exprNode;
-    private final SymbolTable symTable;
     private final Scope localScope;
     
     
-    public GeneratorNode(String id, VcalcNode domainNode, VcalcNode exprNode, SymbolTable symTable) {
+    public GeneratorNode(String id, VcalcNode domainNode, VcalcNode exprNode, Scope scope) {
         this.id = id;
         this.domainNode = domainNode;
         this.exprNode = exprNode;
-        this.symTable = symTable;
-        localScope = symTable.pushScope();
+        localScope = scope;
     }
 
     @Override
@@ -33,7 +31,6 @@ public class GeneratorNode implements VcalcNode {
   
         VectorType domain = domainValue.asVector();
         VectorType newVector = new VectorType();
-        
         for(Integer element : domain.getVector()) {
             // Update value of domain variable with corresponding vector variable
             new AssignmentNode(id, new IntNode(element), localScope).evaluate();
@@ -50,7 +47,6 @@ public class GeneratorNode implements VcalcNode {
             // Add result entry to new vector
             newVector.addElement(value.asInt().getValue());
         }
-        symTable.popScope();
         return new VcalcValue(newVector);
     }
 
