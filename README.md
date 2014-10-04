@@ -4,7 +4,8 @@ Vcalc
 Main:
 X Update Parser to Vcalc
   - Revisit operator precedence and such with some robust test cases
-X Add Symbol Table to interpreter and defined.g
+X Add Symbol Table to interpreter
+-- Add symbol table to defined.g and uncomment it
 X Update binary ops to handle new type system.
 - Vectors
   - Implement FilterNode
