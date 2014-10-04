@@ -2,28 +2,27 @@ package symbol.vcalc;
 
 import java.util.ArrayList;
 
-public class VcalcValue {
-	private Object value;
+public class VcalcValue<T> {
+	public T value;
 	
-	protected VcalcValue() {
-        // Do nothing
-    }
-	
-	public VcalcValue(Object value) {
-		this.value = value;
-		
+	public VcalcValue(T value) {
 		// value is a Vector or IntValue
+		this.value = value;
 		if(!isInt() && !isVector()) {
 		    throw new RuntimeException("Undefined data type. Int or Vector supported only.");
 		}
 	}
 
     public IntType asInt() {
-		return (IntType)this.value;
+    	if (value instanceof VectorType) {
+    		throw new RuntimeException("VectorTypes cannot be promoted to IntTypes.");
+    	}
+    	return (IntType)value;
 	}
 	
 	public VectorType asVector() {
-		return (VectorType)this.value;
+		// To Do: Write promotion logic for this in IntType
+		return (VectorType)value;
 	}
 	
 	public boolean isInt() {

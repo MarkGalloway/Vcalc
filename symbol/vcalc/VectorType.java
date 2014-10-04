@@ -2,7 +2,7 @@ package symbol.vcalc;
 
 import java.util.ArrayList;
 
-public class VectorType extends VcalcValue {
+public class VectorType {
 
     private final ArrayList<Integer> value;
     

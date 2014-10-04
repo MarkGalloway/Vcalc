@@ -12,8 +12,8 @@ public class PrintNode implements VcalcNode {
     
     @Override
     public VcalcValue evaluate() {
-        VcalcValue value = expr.evaluate();
-        System.out.println(value);
-        return null; //TODO, Fix this return value to return something more useful...
+        VcalcValue result = expr.evaluate();
+        System.out.println(result.value);
+        return null; 
     }
 }

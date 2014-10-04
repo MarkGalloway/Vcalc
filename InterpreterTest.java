@@ -201,6 +201,16 @@ public class InterpreterTest {
         assertEquals("2\n" + "2\n" + "1\n" + "2\n", outErrIntercept.toString());
     }
     
+    @Test // Vector Print Test
+    public void vectorPrintTest() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        		"vector v = 1..10;"
+        		 + "print(v);");
+        String[] args = new String[] {"Tests/00temp.vcalc","int"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("[ 1 2 3 4 5 6 7 8 9 10 ]", outErrIntercept.toString());
+    }
     
     //TODO: add test for vectors, vec addition, etc
     

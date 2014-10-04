@@ -1,6 +1,6 @@
 package symbol.vcalc;
 
-public class IntType extends VcalcValue {
+public class IntType {
 
     private final int value;
     
