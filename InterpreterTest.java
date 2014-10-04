@@ -70,7 +70,7 @@ public class InterpreterTest {
         String[] args = new String[] {"Tests/00temp.vcalc","int"};
         
         Vcalc_Test.main(args);
-        assertEquals("", outErrIntercept.toString());
+        assertEquals("2\n", outErrIntercept.toString());
     }
     
     @Test // Expression Test: simple subtraction, brackets and, assignment
