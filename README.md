@@ -1,5 +1,32 @@
 Vcalc
 =====
 
-- Add Symbol Table to interpreter and defined.g
-- Learn LLVM
+Main:
+X Update Parser to Vcalc
+  - Revisit operator precedence and such with some robust test cases
+X Add Symbol Table to interpreter and defined.g
+X Update binary ops to handle new type system.
+- Vectors
+  - Implement FilterNode
+  - Implement GeneratorNode
+  - Vector binary operations (arithmetic, comparison ...)
+  - Vector promotion for binary ops
+  - Test IndexNode, fix if needed
+
+
+- Ensure all constrains are being met by Interpreter, add walkers if needed
+  - Ensure all exceptions are thrown and are legibile
+- LLVM
+  - Create walkers if needed to preprocess constrains
+  - Modify Templater.g to handle new parser
+  - Create 
+
+
+
+
+
+
+
+Nice to haves:
+- Create a proper void return value for VcalcValue 
+- More tests. Edge cases. Constraints. etc
