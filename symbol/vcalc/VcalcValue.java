@@ -3,11 +3,15 @@ package symbol.vcalc;
 import java.util.ArrayList;
 
 public class VcalcValue {
-	protected Object value;
+	private Object value;
 	
 	public VcalcValue(Object value) {
-		// value is a Vector or IntValue
 		this.value = value;
+		
+		// value is a Vector or IntValue
+		if(!isInt() || !isVector()) {
+		    throw new RuntimeException("Undefined data type. Int or Vector supported only.");
+		}
 	}
 	
 	public IntType asInt() {

@@ -1,5 +1,7 @@
 package node.vcalc;
 
+import symbol.vcalc.VcalcValue;
+
 public interface VcalcNode {
-    int evaluate();
+    VcalcValue evaluate();
 }
