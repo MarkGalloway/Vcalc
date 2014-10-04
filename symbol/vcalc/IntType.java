@@ -2,9 +2,15 @@ package symbol.vcalc;
 
 public class IntType extends VcalcValue {
 
-    public IntType(Object value) {
-        super(value);
-        // TODO Auto-generated constructor stub
+    private final int value;
+    
+    public IntType(int value) {
+        super();
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
     }
     
 }

@@ -5,6 +5,10 @@ import java.util.ArrayList;
 public class VcalcValue {
 	private Object value;
 	
+	protected VcalcValue() {
+        // Do nothing
+    }
+	
 	public VcalcValue(Object value) {
 		this.value = value;
 		
@@ -13,8 +17,8 @@ public class VcalcValue {
 		    throw new RuntimeException("Undefined data type. Int or Vector supported only.");
 		}
 	}
-	
-	public IntType asInt() {
+
+    public IntType asInt() {
 		return (IntType)this.value;
 	}
 	
