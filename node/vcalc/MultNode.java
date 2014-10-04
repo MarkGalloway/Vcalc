@@ -1,6 +1,8 @@
 package node.vcalc;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import symbol.vcalc.IntType;
+import symbol.vcalc.VcalcValue;
 
 public class MultNode implements VcalcNode {
     
@@ -13,15 +15,15 @@ public class MultNode implements VcalcNode {
     }
     
     @Override
-    public int evaluate() {
+    public VcalcValue evaluate() {
         VcalcValue left = op1.evaluate();
         VcalcValue right = op2.evaluate();
         
-        if(left.isInteger() && right.isInteger()) {
-            return left * right;
+        if(left.isInt() && right.isInt()) {
+            return new VcalcValue(new IntType(left.asInt().getValue() * right.asInt().getValue()));
         }
         else {
-            throw new NotImplementedException();
+            throw new NotImplementedException(); //TODO: Vector Mult
         }
     }
 }
