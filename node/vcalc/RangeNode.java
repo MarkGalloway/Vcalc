@@ -1,15 +1,27 @@
 package node.vcalc;
 
+import symbol.vcalc.VcalcValue;
+import symbol.vcalc.VectorType;
+
 public class RangeNode implements VcalcNode {
 
+    private final VcalcNode op1;
+    private final VcalcNode op2;
+    
     public RangeNode(VcalcNode op1, VcalcNode op2) {
-        // TODO Auto-generated constructor stub
+        this.op1 = op1;
+        this.op2 = op2;
     }
 
     @Override
-    public int evaluate() {
-        // TODO Auto-generated method stub
-        return 0;
+    public VcalcValue evaluate() {
+        VcalcValue low = op1.evaluate();
+        VcalcValue high = op2.evaluate();
+        
+        if(!low.isInt() || !high.isInt()) {
+            throw new RuntimeException("Range operator can only accept integer arguments." +
+                    "Received " + low  + " and " + high);
+        }
+        return new VcalcValue(new VectorType(low.asInt().getValue(), high.asInt().getValue()));
     }
-
 }
