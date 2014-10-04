@@ -1,5 +1,7 @@
 package node.vcalc;
 
+import symbol.vcalc.VcalcValue;
+
 public class FilterNode implements VcalcNode {
 
     public FilterNode(VcalcNode op1, VcalcNode op2) {
@@ -7,9 +9,9 @@ public class FilterNode implements VcalcNode {
     }
 
     @Override
-    public int evaluate() {
+    public VcalcValue evaluate() {
         // TODO Auto-generated method stub
-        return 0;
+        return null;
     }
 
 }

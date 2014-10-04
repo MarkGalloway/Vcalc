@@ -1,20 +1,30 @@
 package node.vcalc;
 
+import symbol.vcalc.IntType;
+import symbol.vcalc.VcalcValue;
+
 public class IndexNode implements VcalcNode {
     VcalcNode expression;
-    VcalcNode index;
+    VcalcNode element;
     
-    public IndexNode(VcalcNode expression, VcalcNode index) {
+    public IndexNode(VcalcNode expression, VcalcNode element) {
         this.expression = expression;
-        this.index = index;
+        this.element = element;
     }
 
     @Override
-    public int evaluate() {
+    public VcalcValue evaluate() {
+        VcalcValue expr = expression.evaluate();
+        VcalcValue index = element.evaluate();
         
+        if(!expr.isVector()) {
+            throw new RuntimeException("Index operator can only index Vectors or expressions that return vectors." +
+                    "Could not index " + expr + ".");
+        }
         
+        int value = expr.asVector().getElement(index.asInt().getValue());
         
-        return 0;
+        return new VcalcValue(new IntType(value));
     }
 
 }

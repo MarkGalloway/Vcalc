@@ -20,5 +20,9 @@ public class VectorType extends VcalcValue {
             value.add(i);
         }
     }
+
+    public int getElement(int index) {
+        return value.get(index);
+    }
 	
 }
