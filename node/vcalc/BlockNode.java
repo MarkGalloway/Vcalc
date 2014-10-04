@@ -17,7 +17,7 @@ public class BlockNode implements VcalcNode {
     }
     
     @Override
-    public VcalcValue evaluate() {
+    public VcalcValue<?> evaluate() {
         for(VcalcNode stat : statements) {
             stat.evaluate();
         }

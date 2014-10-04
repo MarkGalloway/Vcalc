@@ -1,7 +1,6 @@
 package node.vcalc;
 
 import symbol.vcalc.Scope;
-import symbol.vcalc.SymbolTable;
 import symbol.vcalc.VcalcValue;
 import symbol.vcalc.VectorType;
 
@@ -21,8 +20,8 @@ public class GeneratorNode implements VcalcNode {
     }
 
     @Override
-    public VcalcValue evaluate() {
-        VcalcValue domainValue = domainNode.evaluate(); //get the domain vector
+    public VcalcValue<VectorType> evaluate() {
+        VcalcValue<?> domainValue = domainNode.evaluate(); //get the domain vector
         
         if(!domainValue.isVector()) {
             throw new RuntimeException("The domain of a generator must be a vector or vector valued expression."
@@ -37,7 +36,7 @@ public class GeneratorNode implements VcalcNode {
             //System.out.println(localScope.toString());
             
             // Evaluate RHS expression
-            VcalcValue value = exprNode.evaluate();
+            VcalcValue<?> value = exprNode.evaluate();
             
             if(!value.isInt()) {
                 throw new RuntimeException("The right hand side expression of a generator must only create integer values."
@@ -47,7 +46,7 @@ public class GeneratorNode implements VcalcNode {
             // Add result entry to new vector
             newVector.addElement(value.asInt().getValue());
         }
-        return new VcalcValue(newVector);
+        return new VcalcValue<VectorType>(newVector);
     }
 
 }

@@ -10,9 +10,10 @@ public class PrintNode implements VcalcNode {
         this.expr = expr;
     }
     
-    @Override
-    public VcalcValue evaluate() {
-        VcalcValue result = expr.evaluate();
+
+	@Override
+    public VcalcValue<?> evaluate() {
+        VcalcValue<?> result = expr.evaluate();
         System.out.println(result.value);
         return null; 
     }

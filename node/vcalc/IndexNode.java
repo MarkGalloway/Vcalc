@@ -13,9 +13,9 @@ public class IndexNode implements VcalcNode {
     }
 
     @Override
-    public VcalcValue evaluate() {
-        VcalcValue expr = expression.evaluate();
-        VcalcValue index = element.evaluate();
+    public VcalcValue<IntType> evaluate() {
+        VcalcValue<?> expr = expression.evaluate();
+        VcalcValue<?> index = element.evaluate();
         
         if(!expr.isVector()) {
             throw new RuntimeException("Index operator can only index Vectors or expressions that return vectors." +
@@ -24,7 +24,7 @@ public class IndexNode implements VcalcNode {
         
         int value = expr.asVector().getElement(index.asInt().getValue());
         
-        return new VcalcValue(new IntType(value));
+        return new VcalcValue<IntType>(new IntType(value));
     }
 
 }

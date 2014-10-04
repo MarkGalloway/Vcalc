@@ -12,8 +12,8 @@ public class LoopNode implements VcalcNode {
     }
     
     @Override
-    public VcalcValue evaluate() {
-        VcalcValue conditional = expression.evaluate();
+    public VcalcValue<?> evaluate() {
+        VcalcValue<?> conditional = expression.evaluate();
         
         if(!conditional.isInt()) {
             throw new RuntimeException("Loop condition expects integer 1 or 0. " +

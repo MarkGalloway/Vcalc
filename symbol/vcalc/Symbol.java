@@ -3,10 +3,10 @@ package symbol.vcalc;
 public class Symbol {
 
     private String id;
-    private VcalcValue valueType;
+	private VcalcValue<?> valueType;
     private Scope scope;
 
-    public Symbol(String id, VcalcValue valueType, Scope scope) {
+    public Symbol(String id, VcalcValue<?> valueType, Scope scope) {
         this.id = id;
         this.valueType = valueType;
         this.scope = scope;
@@ -16,7 +16,7 @@ public class Symbol {
         return id;
     }
 
-    public VcalcValue getValueType() {
+    public VcalcValue<?> getValueType() {
         return valueType;
     }
 

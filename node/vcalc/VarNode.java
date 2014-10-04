@@ -10,11 +10,10 @@ public class VarNode implements VcalcNode {
     public VarNode(String id, Scope scope) {
         this.id = id;
         this.scope = scope;
-        //System.out.println(scope.toString());
     }
     
-    @Override
-    public VcalcValue evaluate() {
+	@Override
+    public VcalcValue<?> evaluate() {
         return scope.resolve(id).getValueType();
     }
 }

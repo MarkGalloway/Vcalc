@@ -14,16 +14,17 @@ public class NENode implements VcalcNode {
         this.op2 = op2;
     }
     
-    @Override
-    public VcalcValue evaluate() {
-        VcalcValue left = op1.evaluate();
-        VcalcValue right = op2.evaluate();
+   
+	@Override
+    public VcalcValue<IntType> evaluate() {
+        VcalcValue<?> left = op1.evaluate();
+        VcalcValue<?> right = op2.evaluate();
         
         if(left.isInt() && right.isInt()) {
             int leftValue = left.asInt().getValue();
             int rightValue = right.asInt().getValue();
             IntType rval = (leftValue != rightValue)? new IntType(1) : new IntType(0);
-            return new VcalcValue(rval);
+            return new VcalcValue<IntType>(rval);
         }
         else {
             throw new NotImplementedException(); //TODO: Vector NE

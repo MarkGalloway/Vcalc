@@ -234,17 +234,55 @@ public class InterpreterTest {
     @Test
     public void filterTest() throws RecognitionException, IOException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 
-                "vector v = filter(i in 1..10 | i > 5);" + 
+        "vector v = filter(i in 1..10 | i > 5);" + 
                 "print(v);"
                 );
         String[] args = new String[] {"Tests/00temp.vcalc","int"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 6 7 8 9 10 ]"
-                    , outErrIntercept.toString().trim());
+                , outErrIntercept.toString().trim());
+}
+
+
+    // Test that we retrieve local scope variables correctly
+    @Test
+    public void nestedGeneratorTest() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "int i = 666;" +  
+                "vector v = [i in [i in 1..10 | 2 * i] | i * i];" +
+                "print(v);"
+                );
+        String[] args = new String[] {"Tests/00temp.vcalc","int"};
+        Vcalc_Test.main(args);
+        assertEquals("[ 4 16 36 64 100 144 196 256 324 400 ]" , outErrIntercept.toString().trim());
     }
     
+    // Test that we can access global variables if there are no corresponding local variables
+    @Test
+    public void scopeTestAccessEnclosingScope() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "int i = 5;" +  
+                "vector v = [k in [j in 1..10 | j*i] | k*i];" +
+                "print(v);"
+                );
+        String[] args = new String[] {"Tests/00temp.vcalc","int"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("[ 25 50 75 100 125 150 175 200 225 250 ]" , outErrIntercept.toString().trim());
+    }
     
+    // Should have a runtime exception, variable i is not defined in j
+    @Test(expected=RuntimeException.class)
+    public void scopeTestAccessUndefinedEnclosingScope() throws RecognitionException, IOException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "vector v = [i in [j in 1..2 | 1 * i] | i];" +
+                "print(v);"
+                );
+        String[] args = new String[] {"Tests/00temp.vcalc","int"};
+        
+        Vcalc_Test.main(args);
+    }
     
     //TODO: add test for vectors, vec addition, etc
     

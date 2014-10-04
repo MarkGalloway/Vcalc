@@ -15,7 +15,7 @@ public class AssignmentNode implements VcalcNode {
     }
     
     @Override
-    public VcalcValue evaluate() {
+    public VcalcValue<?> evaluate() {
         scope.assign(id, expr.evaluate());
         return null;
     }

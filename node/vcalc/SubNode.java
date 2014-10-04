@@ -15,12 +15,12 @@ public class SubNode implements VcalcNode {
     }
     
     @Override
-    public VcalcValue evaluate() {
-        VcalcValue left = op1.evaluate();
-        VcalcValue right = op2.evaluate();
+    public VcalcValue<?> evaluate() {
+        VcalcValue<?> left = op1.evaluate();
+        VcalcValue<?> right = op2.evaluate();
         
         if(left.isInt() && right.isInt()) {
-            return new VcalcValue(new IntType(left.asInt().getValue() - right.asInt().getValue()));
+            return new VcalcValue<IntType>(new IntType(left.asInt().getValue() - right.asInt().getValue()));
         }
         else {
             throw new NotImplementedException(); //TODO: vector subtraction

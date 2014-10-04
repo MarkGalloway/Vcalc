@@ -31,7 +31,7 @@ public class Scope {
     }
     
     //define a symbol in the current scope
-    public void assign(String id, VcalcValue valueType) {
+    public void assign(String id, VcalcValue<?> valueType) {
         Symbol symbol = new Symbol(id, valueType, this);
         symbolMap.put(symbol.getId(), symbol);
     }

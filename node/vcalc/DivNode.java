@@ -15,9 +15,9 @@ public class DivNode implements VcalcNode {
     }
     
     @Override
-    public VcalcValue evaluate() {
-        VcalcValue left = op1.evaluate();
-        VcalcValue right = op2.evaluate();
+    public VcalcValue<?> evaluate() {
+        VcalcValue<?> left = op1.evaluate();
+        VcalcValue<?> right = op2.evaluate();
         
         if(left.isInt() && right.isInt()) {
             int dividend = left.asInt().getValue();
@@ -26,7 +26,7 @@ public class DivNode implements VcalcNode {
                 throw new RuntimeException("Division by zero is undefined.");
             }
             
-            return new VcalcValue(new IntType( dividend / divisor ));
+            return new VcalcValue<IntType>(new IntType( dividend / divisor ));
         }
         else {
             throw new NotImplementedException(); //TODO: Vector Division

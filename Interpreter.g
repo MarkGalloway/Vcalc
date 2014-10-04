@@ -16,7 +16,7 @@ options {
   
   public Interpreter(CommonTreeNodeStream nodestream){
     super(nodestream);
-    symTable = SymbolTable.getInstance();
+    symTable = new SymbolTable();
   }
 }
 
