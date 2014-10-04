@@ -8,8 +8,10 @@ X Add Symbol Table to interpreter
 -- Add symbol table to defined.g and uncomment it
 X Update binary ops to handle new type system.
 - Vectors
-  - Implement FilterNode
-  - Implement GeneratorNode
+  X Implement FilterNode
+    -- test
+  X Implement GeneratorNode
+    -- test
   - Vector binary operations (arithmetic, comparison ...)
   - Vector promotion for binary ops
   - Test IndexNode, fix if needed
