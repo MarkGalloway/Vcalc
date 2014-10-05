@@ -68,7 +68,27 @@ public class InterpreterTest {
     @Test // Expression Test: simple assignment
     public void assignmentTest() throws RecognitionException, IOException, ParserException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 
-                  "print(1 + 1);");
+        		"int i = 1;"
+        		+ "i = 2;"
+                  + "print(i);");
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("2\n", outErrIntercept.toString());
+    }
+    
+    @Test(expected=RuntimeException.class)
+    public void assignmentVectorToInt() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc","vector i = 1;");
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("2\n", outErrIntercept.toString());
+    }
+    
+    @Test(expected=RuntimeException.class)
+    public void assignmentIntToVector() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc","int i = 1..10;");
         String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
@@ -218,9 +238,11 @@ public class InterpreterTest {
     public void generatorTest() throws RecognitionException, IOException, ParserException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 
                 "int i = 666;" +  //global var should not be seen
+                "int j = 1;" +
+                "int k = 10;" +
                 "vector v = [i in 1..10 | 0];" + 
                 "vector s = [i in 1..10 | 2 + 3];" +
-                "vector z = [i in 1..10 | i];" +
+                "vector z = [i in j..k | i];" +
                 "print(v);" +
                 "print(s);" +
                 "print(z);"
@@ -431,7 +453,7 @@ public class InterpreterTest {
     @Test
     public void testSubtractIntVector() throws RecognitionException, IOException, ParserException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 
-        	"vector v = 1;" +
+        	"int v = 1;" +
         	"vector j = [i in 1..5 | 6];"+
         	"print(j-v);" +
         	"print(v-j);"
@@ -445,7 +467,7 @@ public class InterpreterTest {
     @Test
     public void testMultVector() throws RecognitionException, IOException, ParserException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 
-        	"vector v = 2;" +
+        	"int v = 2;" +
         	"vector j = [i in 1..3 | i];"+ 
         	"vector p = [i in 1..5 | i];" +
         	"print(j*v);" +
@@ -464,7 +486,7 @@ public class InterpreterTest {
     @Test
     public void testDivideVector() throws RecognitionException, IOException, ParserException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 
-        	"vector v = 2;" +
+        	"int v = 2;" +
         	"vector j = [i in 1..3 | i];"+ 
         	"vector p = [i in 1..5 | i];" +
         	"print(j/v);" + // 0 1 1
@@ -528,32 +550,48 @@ public class InterpreterTest {
             "print(z<v);" +
             "print(v<z);" + 
             "print(x < v);" + 
-            "print(v < x);"
-        );
+            "print(v < x);"         );
+	        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+	        
+	        Vcalc_Test.main(args);
+	        assertEquals("0\n0\n0\n1\n1\n0" , outErrIntercept.toString().trim());
+	    }
+    
+    
+
+    @Test(expected=RuntimeException.class)
+    public void testTypeCheckGeneratorBothVectors() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        	"vector j = [i in 1..3 | i];"+ 
+        	"vector p = [i in 1..5 | i];" +
+        	"vector k = [i in j..p | i];");
         String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
-        assertEquals("0\n0\n0\n1\n1\n0" , outErrIntercept.toString().trim());
     }
     
-    @Test
-    public void greaterThanVectorTest() throws RecognitionException, IOException, ParserException {
+    @Test(expected=RuntimeException.class)
+    public void testTypeCheckGeneratorLeftVector() throws RecognitionException, IOException, ParserException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 
-                "vector v = 1..3;" + 
-                "vector s = 1..3;" +
-                "vector x = 1..2;" +
-                "vector z = 2..4;" +
-                "print(v > s);" +
-                "print(s > v);" +
-                "print(v > z);" + 
-                "print(z > v);" +
-                "print(x < v);" + 
-                "print(v < x);"
+        	"vector j = [i in 1..3 | i];"+ 
+        	"int p = 1;" +
+        	"vector k = [i in j..p | i];"
         );
         String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
-        assertEquals("0\n0\n0\n1\n1\n0" , outErrIntercept.toString().trim());
+    }
+    
+    @Test(expected=RuntimeException.class)
+    public void testTypeCheckGeneratorRightVector() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        	"vector j = 1;"+ 
+        	"int p = [i in 1..5 | i];" +
+        	"vector k = [i in j..p | i];"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
     }
     
     @Test(expected=RuntimeException.class)

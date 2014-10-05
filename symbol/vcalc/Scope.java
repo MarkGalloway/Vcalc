@@ -60,6 +60,19 @@ public class Scope {
         
         return false;
     }
+    
+    // check if variable has been declared in any scope
+    public boolean anyContains(String id) {
+        Symbol symbol = symbolMap.get(id);
+        
+        if (symbol != null) 
+        	return true;
+        
+        if (parentScope != null) 
+        	return parentScope.anyContains(id);
+        
+        return false;
+    }
 
     // get parent scope
     public Scope getParentScope() {

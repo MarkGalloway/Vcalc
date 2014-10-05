@@ -19,7 +19,7 @@ public class RangeNode implements VcalcNode {
         VcalcValue<?> low = op1.evaluate();
         VcalcValue<?> high = op2.evaluate();
         
-        if(!low.isInt() && !high.isInt()) {
+        if(low.isVector() || high.isVector()) {
             throw new RuntimeException("Range operator can only accept integer arguments." +
                     "Received " + low  + " and " + high);
         }

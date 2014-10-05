@@ -30,10 +30,6 @@ public class DivNode implements VcalcNode {
             return new VcalcValue<IntType>(new IntType( dividend / divisor ));
         }
         
-        if(left.isInt() && right.isInt()) {
-            return new VcalcValue<IntType>(new IntType(left.asInt().getValue() * right.asInt().getValue()));
-        }
-        
         VectorType leftvector = left.promoteToVector(right);
         //divisor should be padded with 1's instead of 0s
         VectorType rightvector = right.promoteToVector(left, 1);

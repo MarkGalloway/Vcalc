@@ -28,7 +28,11 @@ program returns [VcalcNode node]
   ;
 
 declaration returns [VcalcNode node]
-  : ^(VAR type ID expression) {$node = new AssignmentNode($ID.text, $expression.node, symTable.getCurrentScope());}
+  : ^(VAR type ID expression) {
+    if ($type.text.equals("int")) {symTable.getCurrentScope().assign($ID.text, new VcalcValue<IntType>(new IntType(0)));}
+    else {symTable.getCurrentScope().assign($ID.text, new VcalcValue<VectorType>(new VectorType()));}
+    $node = new AssignmentNode($ID.text, $expression.node, symTable.getCurrentScope());
+    }
   ;
 
 type
