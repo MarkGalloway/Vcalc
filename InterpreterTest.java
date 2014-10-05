@@ -420,12 +420,47 @@ public class InterpreterTest {
         	"print(j);" +
         	"print(v-j);" +
         	"print([i in 1..2 | 0-1] - [i in 1..5 | i]);"
+        	+ "print(j);"
         );
         String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
-        assertEquals("[ 1 2 3 4 5 6 7 8 9 10 ]\n[ 6 6 6 6 6 ]\n[ -5 -4 -3 -2 -1 6 7 8 9 10 ]\n[ -2 -3 -3 -4 -5 ]" , outErrIntercept.toString().trim());
+        assertEquals("[ 1 2 3 4 5 6 7 8 9 10 ]\n[ 6 6 6 6 6 ]\n[ -5 -4 -3 -2 -1 6 7 8 9 10 ]\n[ -2 -3 -3 -4 -5 ]\n[ 6 6 6 6 6 ]" , outErrIntercept.toString().trim());
     }
+    
+    @Test
+    public void testSubtractIntVector() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        	"vector v = 1;" +
+        	"vector j = [i in 1..5 | 6];"+
+        	"print(j-v);" +
+        	"print(v-j);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("[ 5 5 5 5 5 ]\n[ -5 -5 -5 -5 -5 ]" , outErrIntercept.toString().trim());
+    }
+    
+    @Test
+    public void testMultVector() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        	"vector v = 2;" +
+        	"vector j = [i in 1..3 | i];"+ 
+        	"vector p = [i in 1..5 | i];" +
+        	"print(j*v);" +
+        	"print(v*j);"
+        	+ "print(j);"
+        	+ "print(p);"
+        	+ "print(j*p);"
+        	+ "print(p*j);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("[ 2 4 6 ]\n[ 2 4 6 ]\n[ 1 2 3 ]\n[ 1 2 3 4 5 ]\n[ 1 4 9 0 0 ]\n[ 1 4 9 0 0 ]" , outErrIntercept.toString().trim());
+    }
+    
 
 
 

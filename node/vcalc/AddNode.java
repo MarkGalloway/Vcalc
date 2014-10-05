@@ -1,6 +1,5 @@
 package node.vcalc;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import symbol.vcalc.IntType;
 import symbol.vcalc.VcalcValue;
 import symbol.vcalc.VectorType;
@@ -31,14 +30,13 @@ public class AddNode implements VcalcNode {
         VectorType leftvector = left.promoteToVector(right);
         VectorType rightvector = right.promoteToVector(left);
         
-    	VectorType longerVector = leftvector.getLonger(rightvector);
-    	VectorType shorterVector = leftvector.equals(longerVector) ? rightvector : leftvector;
+    	VectorType newVector = new VectorType();
     	
-        for(int i = 0; i < shorterVector.getSize(); i++) {
-        	longerVector.setElement(i, shorterVector.getElement(i) + longerVector.getElement(i));
+        for(int i = 0; i < leftvector.getSize(); i++) {
+        	newVector.addElement(leftvector.getElement(i) + rightvector.getElement(i));
         }
         
-        return new VcalcValue<VectorType>(longerVector);
+        return new VcalcValue<VectorType>(newVector);
     }
 
 }

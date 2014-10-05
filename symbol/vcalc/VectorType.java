@@ -59,14 +59,6 @@ public class VectorType {
         value.add(element);
     }
     
-    public void setElement(int index, int element) {
-    	if (index >= value.size()) {
-    		throw new RuntimeException("Index out of bounds. Index: " + index + ", Size: " + value.size());
-    	}
-    	
-        value.set(index, element);
-    }
-    
     public int getSize() {
         return value.size();
     }
