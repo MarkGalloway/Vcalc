@@ -19,17 +19,18 @@ public class VcalcValue<T> {
 	}
 	
 	public VectorType asVector() {
-		// To Do: Write promotion logic for this in IntType
+		if (value instanceof IntType)
+			throw new RuntimeException("IntTypes cannot be promoted without VectorTypes");
 		return (VectorType)value;
 	}
 	
-	public VectorType getLonger(VectorType otherValue) {
-		if (!(value instanceof VectorType))
-			throw new RuntimeException("ReturnLonger check can only be done on two Vectors.");
-		
-		if (((VectorType)value).getSize() > otherValue.getSize())
-			return  (VectorType)value;
-		return otherValue;
+	public VectorType promoteToVector(VcalcValue<?> binaryOther) {
+		if (value instanceof IntType) {
+			if (binaryOther.isInt())
+				throw new RuntimeException("IntTypes require VectorTypes for Promotion");
+			return new VectorType(asInt(), binaryOther.asVector().getSize());
+		}
+		return (VectorType) value;
 	}
 	
 	public boolean isInt() {

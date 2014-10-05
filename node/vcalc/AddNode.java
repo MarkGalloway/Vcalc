@@ -15,16 +15,33 @@ public class AddNode implements VcalcNode {
         this.op2 = op2;
     }
     
+
     @Override
     public VcalcValue<?> evaluate() {
         VcalcValue<?> left = op1.evaluate();
         VcalcValue<?> right = op2.evaluate();
         
         if(left.isInt() && right.isInt()) {
-            return new VcalcValue<IntType>(new IntType(left.asInt().getValue() + right.asInt().getValue()));
+        	int leftvalue = left.asInt().getValue();
+        	int rightvalue = right.asInt().getValue();
+            return new VcalcValue<IntType>(new IntType(leftvalue + rightvalue));
         }
-        else {
-            throw new NotImplementedException(); //TODO: vector subtraction
+        
+        
+        VectorType leftvector = left.promoteToVector(right);
+        VectorType rightvector = right.promoteToVector(left);
+        
+    	VectorType longerVector = leftvector.getLonger(rightvector);
+    	VectorType shorterVector = leftvector.equals(longerVector) ? rightvector : leftvector;
+    	
+        for(int i = 0; i < shorterVector.getSize(); i++) {
+        	longerVector.setElement(i, shorterVector.getElement(i) + longerVector.getElement(i));
+        }
+        
+        return new VcalcValue<VectorType>(longerVector);
+
+
+        //throw new NotImplementedException(); //TODO: vector subtraction
             /*VectorType newVector = new VectorType();
         	VectorType longerVector = left.getLonger(right.asVector());
 
@@ -33,7 +50,6 @@ public class AddNode implements VcalcNode {
             }
             
             return new VcalcValue<VectorType>(newVector);*/
-        }
     }
 
 }

@@ -365,6 +365,53 @@ public class InterpreterTest {
         Vcalc_Test.main(args);
         assertEquals("[ 1 2 3 ]\n[ 1 0 ]\n[ 2 1 ]" , outErrIntercept.toString().trim());
     }
+    
+    @Test
+    public void testAddVectors() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        	"vector v = 1..5;" +
+        	"vector j = [i in 1..2 | 2 - i];"+
+        	"print(v);" +
+        	"print(j);" +
+        	"print(v + j);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("[ 1 2 3 4 5 ]\n[ 1 0 ]\n[ 2 2 3 4 5 ]" , outErrIntercept.toString().trim());
+    }
+    
+    @Test
+    public void testAddVectorToInt() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        	"vector v = 1..5;" +
+        	"int j = 5;"+
+        	"print(v);" +
+        	"print(j);" +
+        	"print(v + j);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("[ 1 2 3 4 5 ]\n5\n[ 6 7 8 9 10 ]" , outErrIntercept.toString().trim());
+    }
+    
+    @Test
+    public void testAddIntToVector() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        	"vector v = 1..5;" +
+        	"int j = 5;"+
+        	"print(v);" +
+        	"print(j);" +
+        	"print(j + v);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("[ 1 2 3 4 5 ]\n5\n[ 6 7 8 9 10 ]" , outErrIntercept.toString().trim());
+    }
+
+
 
     
     
