@@ -484,7 +484,81 @@ public class InterpreterTest {
 
 
 
+    @Test
+    public void equalityVectorTest() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+            "vector v = 1..3;" + 
+            "vector s = 1..3;" +
+            "vector x = 1..2;" +
+            "vector z = 2..4;" +
+            "print(v==s);" +
+            "print(v==z);" +
+            "print(x==v);" +
+            "print(v==x);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("1\n0\n0\n0" , outErrIntercept.toString().trim());
+    }
     
+    @Test
+    public void inequalityVectorTest() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+            "vector v = 1..3;" + 
+            "vector s = 1..3;" +
+            "vector x = 1..2;" +
+            "vector z = 2..4;" +
+            "print(v!=s);" +
+            "print(v!=z);" + 
+            "print(x != v);" +
+            "print(v != x);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("0\n1\n1\n1" , outErrIntercept.toString().trim());
+    }
+    
+    @Test
+    public void lessThanVectorTest() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+            "vector v = 1..3;" + 
+            "vector s = 1..3;" +
+            "vector x = 1..2;" +
+            "vector z = 2..4;" +
+            "print(v<s);" +
+            "print(s<v);" +
+            "print(z<v);" +
+            "print(v<z);" + 
+            "print(x < v);" + 
+            "print(v < x);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("0\n0\n0\n1\n1\n0" , outErrIntercept.toString().trim());
+    }
+    
+    @Test
+    public void greaterThanVectorTest() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+                "vector v = 1..3;" + 
+                "vector s = 1..3;" +
+                "vector x = 1..2;" +
+                "vector z = 2..4;" +
+                "print(v > s);" +
+                "print(s > v);" +
+                "print(v > z);" + 
+                "print(z > v);" +
+                "print(x < v);" + 
+                "print(v < x);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("0\n0\n0\n1\n1\n0" , outErrIntercept.toString().trim());
+    }
     
 
     //TODO: add test for vectors, vec addition, etc

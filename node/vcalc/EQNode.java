@@ -1,8 +1,11 @@
 package node.vcalc;
 
+import java.util.ArrayList;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import symbol.vcalc.IntType;
 import symbol.vcalc.VcalcValue;
+import symbol.vcalc.VectorType;
 
 public class EQNode implements VcalcNode {
     
@@ -25,8 +28,21 @@ public class EQNode implements VcalcNode {
             IntType rval = (leftValue == rightValue)? new IntType(1) : new IntType(0);
             return new VcalcValue<IntType>(rval);
         }
-        else {
-            throw new NotImplementedException(); //TODO: Vector equality
+            
+        VectorType leftVector = left.promoteToVector(right);
+        VectorType rightVector = right.promoteToVector(left);
+        
+        VectorType longerVector = leftVector.getLonger(rightVector);
+        VectorType shorterVector = leftVector.equals(longerVector) ? rightVector : leftVector;
+        
+        IntType rval = new IntType(1);
+        
+        for(int i = 0; i < leftVector.getSize(); i++) {
+            if(leftVector.getElement(i) != rightVector.getElement(i)) {
+                rval = new IntType(0);
+                break;
+            }
         }
+        return new VcalcValue<IntType>(rval);
     }
 }
