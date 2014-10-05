@@ -479,10 +479,6 @@ public class InterpreterTest {
         Vcalc_Test.main(args);
         assertEquals("[ 0 1 1 ]\n[ 2 1 0 ]\n[ 1 2 3 ]\n[ 1 1 1 0 0 ]\n[ 1 1 1 4 5 ]\n[ 1 2 3 4 5 ]" , outErrIntercept.toString().trim());
     }
-    
-    
-
-
 
     @Test
     public void equalityVectorTest() throws RecognitionException, IOException, ParserException {
@@ -560,10 +556,71 @@ public class InterpreterTest {
         assertEquals("0\n0\n0\n1\n1\n0" , outErrIntercept.toString().trim());
     }
     
-
-    //TODO: add test for vectors, vec addition, etc
+    @Test(expected=RuntimeException.class)
+    public void testFilterDomainVector() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        "int v = filter(i in (5+5) | i > 5);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("" , outErrIntercept.toString().trim());
+    }
     
+    @Test(expected=RuntimeException.class)
+    public void testGeneratorDomainVector() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        "int v = filter(i in (5+5) | i > 5);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("" , outErrIntercept.toString().trim());
+    }
     
+    @Test(expected=RuntimeException.class)
+    public void testFilterExpression() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        "int v = filter(i in 1..10 | (1..10));"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("" , outErrIntercept.toString().trim());
+    }
+    
+    @Test(expected=RuntimeException.class)
+    public void testGeneratorExpression() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        "int v = filter(i in 1..10 | (1..10));"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("" , outErrIntercept.toString().trim());
+    }
+    
+    @Test(expected=RuntimeException.class)
+    public void testLoopConditional() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        "loop(1..10) pool;"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("" , outErrIntercept.toString().trim());
+    }
+    
+    @Test(expected=RuntimeException.class)
+    public void testIfConditional() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        "if(1..10) fi;"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("" , outErrIntercept.toString().trim());
+    }
     
     @Test
     public void primeTest() throws RecognitionException, IOException, ParserException {

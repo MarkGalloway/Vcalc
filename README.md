@@ -7,13 +7,13 @@ X Update Parser to Vcalc
 X Add Symbol Table to interpreter  
 X Add symbol table to defined.g and uncomment it  
 X Update binary ops to handle new type system.  
-- Vectors  
+X Vectors  
   X Implement FilterNode  
     X test  
   X Implement GeneratorNode  
     X test  
-  - Vector binary operations (arithmetic, comparison ...)  
-  - Vector promotion for binary ops  
+  X Vector binary operations (arithmetic, comparison ...)  
+  X Vector promotion for binary ops  
   X Test IndexNode, fix if needed  
 
 
