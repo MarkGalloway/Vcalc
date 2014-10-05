@@ -451,15 +451,35 @@ public class InterpreterTest {
         	"print(j*v);" +
         	"print(v*j);"
         	+ "print(j);"
-        	+ "print(p);"
         	+ "print(j*p);"
         	+ "print(p*j);"
+        	+ "print(p);"
         );
         String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
-        assertEquals("[ 2 4 6 ]\n[ 2 4 6 ]\n[ 1 2 3 ]\n[ 1 2 3 4 5 ]\n[ 1 4 9 0 0 ]\n[ 1 4 9 0 0 ]" , outErrIntercept.toString().trim());
+        assertEquals("[ 2 4 6 ]\n[ 2 4 6 ]\n[ 1 2 3 ]\n[ 1 4 9 0 0 ]\n[ 1 4 9 0 0 ]\n[ 1 2 3 4 5 ]" , outErrIntercept.toString().trim());
     }
+    
+    @Test
+    public void testDivideVector() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        	"vector v = 2;" +
+        	"vector j = [i in 1..3 | i];"+ 
+        	"vector p = [i in 1..5 | i];" +
+        	"print(j/v);" + // 0 1 1
+        	"print(v/j);" // 2 1 0
+        	+ "print(j);"
+        	+ "print(j/p);" //1 1 1 0 0
+        	+ "print(p/j);" //1 1 1 4 5
+        	+ "print(p);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("[ 0 1 1 ]\n[ 2 1 0 ]\n[ 1 2 3 ]\n[ 1 1 1 0 0 ]\n[ 1 1 1 4 5 ]\n[ 1 2 3 4 5 ]" , outErrIntercept.toString().trim());
+    }
+    
     
 
 

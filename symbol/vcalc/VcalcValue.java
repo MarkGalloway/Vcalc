@@ -25,6 +25,10 @@ public class VcalcValue<T> {
 	}
 	
 	public VectorType promoteToVector(VcalcValue<?> binaryOther) {
+		return promoteToVector(binaryOther, 0);
+	}
+	
+	public VectorType promoteToVector(VcalcValue<?> binaryOther, int padwith) {
 		if (value instanceof IntType) {
 			if (binaryOther.isInt())
 				throw new RuntimeException("IntTypes require VectorTypes for Promotion");
@@ -35,7 +39,7 @@ public class VcalcValue<T> {
 			int otherSize = binaryOther.asVector().getSize();
 			int thisSize = asVector().getSize();
 				if ( otherSize > thisSize) {
-					return new VectorType((VectorType)value, otherSize);
+					return new VectorType((VectorType)value, otherSize, padwith);
 				}
 		}
 		return (VectorType) value;

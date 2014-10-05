@@ -21,7 +21,7 @@ public class VectorType {
     }
     
     //extended vector from vector constructor
-    public VectorType(VectorType vectorType, int newLength) {
+    public VectorType(VectorType vectorType, int newLength, int padwith) {
     	value = new ArrayList<Integer>();
     	
     	for (int i = 0; i < vectorType.getSize(); i++) {
@@ -29,7 +29,7 @@ public class VectorType {
     	}
     	
     	for (int i = 0; i < (newLength-vectorType.getSize()); i++) {
-    		value.add(0);
+    		value.add(padwith);
     	}
     }
     

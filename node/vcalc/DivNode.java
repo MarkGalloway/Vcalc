@@ -3,6 +3,7 @@ package node.vcalc;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import symbol.vcalc.IntType;
 import symbol.vcalc.VcalcValue;
+import symbol.vcalc.VectorType;
 
 public class DivNode implements VcalcNode {
     
@@ -28,8 +29,25 @@ public class DivNode implements VcalcNode {
             
             return new VcalcValue<IntType>(new IntType( dividend / divisor ));
         }
-        else {
-            throw new NotImplementedException(); //TODO: Vector Division
+        
+        if(left.isInt() && right.isInt()) {
+            return new VcalcValue<IntType>(new IntType(left.asInt().getValue() * right.asInt().getValue()));
         }
+        
+        VectorType leftvector = left.promoteToVector(right);
+        //divisor should be padded with 1's instead of 0s
+        VectorType rightvector = right.promoteToVector(left, 1);
+        
+    	VectorType newVector = new VectorType();
+    	
+        for(int i = 0; i < leftvector.getSize(); i++) {
+        	int divisor = rightvector.getElement(i);
+            if(divisor == 0) {
+                throw new RuntimeException("Division by zero is undefined.");
+            }
+        	newVector.addElement(leftvector.getElement(i) / divisor);
+        }
+        
+        return new VcalcValue<VectorType>(newVector);
     }
 }
