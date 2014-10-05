@@ -19,8 +19,8 @@ public class FilterNode implements VcalcNode {
     }
 
     @Override
-    public VcalcValue evaluate() {
-        VcalcValue domainValue = domainNode.evaluate(); //get the domain vector
+    public VcalcValue<VectorType> evaluate() {
+        VcalcValue<?> domainValue = domainNode.evaluate(); //get the domain vector
         
         if(!domainValue.isVector()) {
             throw new RuntimeException("The domain of a generator must be a vector or vector valued expression."
@@ -35,7 +35,7 @@ public class FilterNode implements VcalcNode {
             //System.out.println(localScope.toString());
             
             // Evaluate RHS expression
-            VcalcValue value = predNode.evaluate();
+            VcalcValue<?> value = predNode.evaluate();
             
             if(!value.isInt()) {
                 throw new RuntimeException("The right hand side expression of a filter must only evaluate to integer values."
@@ -50,7 +50,7 @@ public class FilterNode implements VcalcNode {
                 newVector.addElement(element);
             } 
         }
-        return new VcalcValue(newVector);
+        return new VcalcValue<VectorType>(newVector);
     }
 
 }

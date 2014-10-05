@@ -3,6 +3,7 @@ package node.vcalc;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import symbol.vcalc.IntType;
 import symbol.vcalc.VcalcValue;
+import symbol.vcalc.VectorType;
 
 public class AddNode implements VcalcNode {
     
@@ -23,7 +24,15 @@ public class AddNode implements VcalcNode {
             return new VcalcValue<IntType>(new IntType(left.asInt().getValue() + right.asInt().getValue()));
         }
         else {
-            throw new NotImplementedException(); //TODO: vector addition
+            throw new NotImplementedException(); //TODO: vector subtraction
+            /*VectorType newVector = new VectorType();
+        	VectorType longerVector = left.getLonger(right.asVector());
+
+            for(Integer i : longerVector.getVector()) {
+            	newVector.addElement(vectorExpr.getElement(i));
+            }
+            
+            return new VcalcValue<VectorType>(newVector);*/
         }
     }
 

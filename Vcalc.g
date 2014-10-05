@@ -17,12 +17,43 @@ tokens {
   FILTER;
   INDEX;
 }
+
+@header {
+  import java.util.Arrays;
+}
+
+@members {
+
+public void displayRecognitionError(String[] tokenNames,RecognitionException e) {
+        String hdr = getErrorHeader(e);
+        String msg = getErrorMessage(e, tokenNames);
+        String[] msglist = msg.split(" ");
+        
+        if (msg.equals("missing EOF at 'int'") || msg.equals("missing EOF at 'vector'")) {
+          System.err.println(hdr + " - declaration of variables must be at the top of the input file");
+          return;
+        }
+        
+        if (msglist[0].equals("missing") && msglist[1].equals("';'")) {
+           System.err.println(hdr + " - expected semicolon before " + msglist[3]);
+           return;
+        }
+        
+        System.err.println(hdr + " - " + msg);
+    }
+
+}
+
+
+
+
 program 
-  : declaration* statement* -> ^(PROGRAM declaration* statement*)
+  : declaration* statement* EOF -> ^(PROGRAM declaration* statement*)
   ;
 
 declaration
-  : type ID '=' expression ';' -> ^(VAR type ID expression)
+  : type ID '=' expression ';'
+    -> ^(VAR type ID expression)
   ;
   
 type
@@ -90,8 +121,8 @@ range
 atom
   : ID
   | '(' expression ')' -> expression
-  | generator
   | filter
+  | generator
   | INTEGER
   ;
   

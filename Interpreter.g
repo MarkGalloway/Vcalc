@@ -66,7 +66,7 @@ block returns [VcalcNode node]
   ;
 
 expression returns [VcalcNode node]
-  : ^(INDEX op1=expression op2=expression) {$node = new IndexNode($op1.node, $op2.node);}
+  : ^(INDEX op1=expression op2=expression) {$node = new IndexNode($op1.node, $op2.node, $INDEX.getLine(), $op1.text);}
   | ^('==' op1=expression op2=expression) { $node = new EQNode($op1.node, $op2.node); }
   | ^('!=' op1=expression op2=expression) { $node = new NENode($op1.node, $op2.node); }
   | ^('<' op1=expression op2=expression)  { $node = new LTNode($op1.node, $op2.node); }

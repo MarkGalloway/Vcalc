@@ -30,6 +30,17 @@ public class SymbolTable {
     	return scopeStack.peek();
     }
     
+    // check if variable has been declared in any scope
+    public boolean contains(String id) {
+        
+    	for(Scope scope : scopeStack) {
+    		if (scope.contains(id)) 
+    			return true;
+    	}
+        
+        return false;
+    }
+    
     private int genId() {
     	return ++generatedIdCounter;
     }

@@ -50,6 +50,16 @@ public class Scope {
         
         throw new RuntimeException("Variable "+ id +" not declared...");
     }
+    
+    // check if variable has been declared in the current scope
+    public boolean contains(String id) {
+        Symbol symbol = symbolMap.get(id);
+        
+        if (symbol != null) 
+        	return true;
+        
+        return false;
+    }
 
     // get parent scope
     public Scope getParentScope() {
@@ -59,4 +69,8 @@ public class Scope {
     public String toString() {
         return id + ":" + symbolMap.keySet().toString();
     }
+
+	public ScopeType getType() {
+		return type;
+	}
 }

@@ -1,4 +1,6 @@
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Arrays;
 
 import org.antlr.runtime.ANTLRFileStream;
@@ -7,11 +9,14 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
+import org.junit.Before;
+
+import errors.vcalc.ParserException;
 
 public class Vcalc_Test {
 
-    public static void main(String[] args) throws RecognitionException, IOException {
-        if (args.length != 2) {
+    public static void main(String[] args) throws RecognitionException, IOException, ParserException {
+        if (args.length != 2 && !(args.length == 3 && args[2].equals("test"))) {
             System.err.print("Insufficient arguments: ");
             System.err.println(Arrays.toString(args));
             System.exit(1);
@@ -26,10 +31,29 @@ public class Vcalc_Test {
             System.exit(1);
         }
 
+        PrintStream err_backup = System.err;
+        ByteArrayOutputStream outErrIntercept = new ByteArrayOutputStream();
+        System.setErr(new PrintStream(outErrIntercept));
+
         VcalcLexer lexer = new VcalcLexer(input);
         TokenStream tokenStream = new CommonTokenStream(lexer);
         VcalcParser parser = new VcalcParser(tokenStream);
         VcalcParser.program_return entry = parser.program();
+        
+        
+        String errors = outErrIntercept.toString().trim();
+        System.setErr(err_backup);
+        
+        if (errors.length() > 0) {
+        	System.err.println(args[0] + " has the following errors: ");
+        	System.err.println(errors);
+        	if ((args.length == 3 && args[2].equals("test")))
+        	{
+        		throw new ParserException("Invalid program syntax.");
+        	}
+        	return;
+        }
+        
         CommonTree ast = (CommonTree) entry.getTree();
         
         if(args[1].equals("astDebug")) {
@@ -40,8 +64,8 @@ public class Vcalc_Test {
         // Pass over to verify no variable misuse
         CommonTreeNodeStream nodes = new CommonTreeNodeStream(ast);
         nodes.setTokenStream(tokenStream);
-//        Defined defined = new Defined(nodes);
-//        defined.program();
+        Defined defined = new Defined(nodes);
+        defined.program();
         //defined.downup(ast);
         //System.err.println(ast.toStringTree());
 

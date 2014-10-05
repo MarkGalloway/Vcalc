@@ -28,7 +28,11 @@ public class VectorType {
     }
 
     public int getElement(int index) {
-        return value.get(index);
+    	if (index >= value.size()) {
+    		throw new RuntimeException("Index out of bounds. Index: " + index + ", Size: " + value.size());
+    	}
+    	
+    	return value.get(index);
     }
     
     public void addElement(int element) {
@@ -38,7 +42,7 @@ public class VectorType {
     public int getSize() {
         return value.size();
     }
-       
+    
     public ArrayList<Integer> getVector() {
         return value;
     }

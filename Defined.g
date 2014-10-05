@@ -8,11 +8,16 @@ options {
 
 
 @header {
-  import java.util.ArrayList;
+  import symbol.vcalc.*;
 }
 
 @members {
-  ArrayList<String> variables = new ArrayList<String>();
+  SymbolTable symTable;
+  
+  public Defined(CommonTreeNodeStream nodestream){
+    super(nodestream);
+    symTable = new SymbolTable();
+  }
 }
 
 program 
@@ -21,8 +26,8 @@ program
 
 declaration
   : ^(VAR type ID expression)
-    { if(variables.contains($ID.text)) { throw new RuntimeException("Variable " + $ID.text + " cannot be declared twice!");}
-      variables.add($ID.text); 
+    { if(symTable.getCurrentScope().contains($ID.text)) { throw new RuntimeException("Variable " + $ID.text + " declared twice in the same scope!");}
+      symTable.getCurrentScope().assign($ID.text, new VcalcValue(new IntType(0))); 
     }
   ;
 
@@ -65,9 +70,9 @@ expression
   | ^('*' expression expression)
   | ^('/' expression expression)
   | ^('..' op1=expression op2=expression)
-  | ID { if(!variables.contains($ID.text)) {throw new RuntimeException("Use of undeclared variable " + $ID.text);}}
+  | ID { if(!symTable.contains($ID.text)) {throw new RuntimeException("Undeclared Variable " + $ID.text);}}
   | INTEGER
-  | ^(GENERATOR ID expression expression)
-  | ^(FILTER ID expression expression)
+  | ^(GENERATOR ID {symTable.pushScope(); symTable.getCurrentScope().assign($ID.text, new VcalcValue(new IntType(0)));} expression expression {symTable.popScope();})
+  | ^(FILTER ID {symTable.pushScope(); symTable.getCurrentScope().assign($ID.text, new VcalcValue(new IntType(0)));} expression expression {symTable.popScope();})
   ;
   
