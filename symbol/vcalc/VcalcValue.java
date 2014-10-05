@@ -28,7 +28,15 @@ public class VcalcValue<T> {
 		if (value instanceof IntType) {
 			if (binaryOther.isInt())
 				throw new RuntimeException("IntTypes require VectorTypes for Promotion");
+			
 			return new VectorType(asInt(), binaryOther.asVector().getSize());
+		}
+		if (binaryOther.isVector()) {
+			int otherSize = binaryOther.asVector().getSize();
+			int thisSize = asVector().getSize();
+				if ( otherSize > thisSize) {
+					return new VectorType((VectorType)value, otherSize);
+				}
 		}
 		return (VectorType) value;
 	}

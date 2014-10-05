@@ -410,6 +410,22 @@ public class InterpreterTest {
         Vcalc_Test.main(args);
         assertEquals("[ 1 2 3 4 5 ]\n5\n[ 6 7 8 9 10 ]" , outErrIntercept.toString().trim());
     }
+    
+    @Test
+    public void testSubtractVectors() throws RecognitionException, IOException, ParserException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        	"vector v = 1..10;" +
+        	"vector j = [i in 1..5 | 6];"+
+        	"print(v);" +
+        	"print(j);" +
+        	"print(v-j);" +
+        	"print([i in 1..2 | 0-1] - [i in 1..5 | i]);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("[ 1 2 3 4 5 6 7 8 9 10 ]\n[ 6 6 6 6 6 ]\n[ -5 -4 -3 -2 -1 6 7 8 9 10 ]\n[ -2 -3 -3 -4 -5 ]" , outErrIntercept.toString().trim());
+    }
 
 
 

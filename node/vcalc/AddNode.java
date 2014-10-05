@@ -39,17 +39,6 @@ public class AddNode implements VcalcNode {
         }
         
         return new VcalcValue<VectorType>(longerVector);
-
-
-        //throw new NotImplementedException(); //TODO: vector subtraction
-            /*VectorType newVector = new VectorType();
-        	VectorType longerVector = left.getLonger(right.asVector());
-
-            for(Integer i : longerVector.getVector()) {
-            	newVector.addElement(vectorExpr.getElement(i));
-            }
-            
-            return new VcalcValue<VectorType>(newVector);*/
     }
 
 }

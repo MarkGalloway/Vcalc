@@ -3,6 +3,7 @@ package node.vcalc;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import symbol.vcalc.IntType;
 import symbol.vcalc.VcalcValue;
+import symbol.vcalc.VectorType;
 
 public class SubNode implements VcalcNode {
     
@@ -22,9 +23,18 @@ public class SubNode implements VcalcNode {
         if(left.isInt() && right.isInt()) {
             return new VcalcValue<IntType>(new IntType(left.asInt().getValue() - right.asInt().getValue()));
         }
-        else {
-            throw new NotImplementedException(); //TODO: vector subtraction
+
+        VectorType leftvector = left.promoteToVector(right);
+        VectorType rightvector = right.promoteToVector(left);
+        
+    	VectorType longerVector = leftvector.getLonger(rightvector);
+    	VectorType shorterVector = leftvector.equals(longerVector) ? rightvector : leftvector;
+    	
+        for(int i = 0; i < shorterVector.getSize(); i++) {
+        	longerVector.setElement(i, leftvector.getElement(i) - rightvector.getElement(i));
         }
+        
+        return new VcalcValue<VectorType>(longerVector);
     }
 
 }

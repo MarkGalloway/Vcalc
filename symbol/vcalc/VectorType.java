@@ -20,6 +20,19 @@ public class VectorType {
     	}
     }
     
+    //extended vector from vector constructor
+    public VectorType(VectorType vectorType, int newLength) {
+    	value = new ArrayList<Integer>();
+    	
+    	for (int i = 0; i < vectorType.getSize(); i++) {
+    		value.add(vectorType.getElement(i));
+    	}
+    	
+    	for (int i = 0; i < (newLength-vectorType.getSize()); i++) {
+    		value.add(0);
+    	}
+    }
+    
     //range constructor
     public VectorType(int to, int from) {
         if(to > from) {
