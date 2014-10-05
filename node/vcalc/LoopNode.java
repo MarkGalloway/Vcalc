@@ -1,5 +1,6 @@
 package node.vcalc;
 
+import errors.vcalc.InvalidAssignmentException;
 import symbol.vcalc.VcalcValue;
 
 public class LoopNode implements VcalcNode {
@@ -12,7 +13,7 @@ public class LoopNode implements VcalcNode {
     }
     
     @Override
-    public VcalcValue<?> evaluate() {
+    public VcalcValue<?> evaluate() throws InvalidAssignmentException {
         VcalcValue<?> conditional = expression.evaluate();
         
         if(!conditional.isInt()) {

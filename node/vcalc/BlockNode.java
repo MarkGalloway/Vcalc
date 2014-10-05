@@ -2,6 +2,7 @@ package node.vcalc;
 import java.util.ArrayList;
 import java.util.List;
 
+import errors.vcalc.InvalidAssignmentException;
 import symbol.vcalc.VcalcValue;
 
 
@@ -17,7 +18,7 @@ public class BlockNode implements VcalcNode {
     }
     
     @Override
-    public VcalcValue<?> evaluate() {
+    public VcalcValue<?> evaluate() throws InvalidAssignmentException {
         for(VcalcNode stat : statements) {
             stat.evaluate();
         }

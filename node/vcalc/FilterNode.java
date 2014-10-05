@@ -1,5 +1,6 @@
 package node.vcalc;
 
+import errors.vcalc.InvalidAssignmentException;
 import symbol.vcalc.Scope;
 import symbol.vcalc.VcalcValue;
 import symbol.vcalc.VectorType;
@@ -19,7 +20,7 @@ public class FilterNode implements VcalcNode {
     }
 
     @Override
-    public VcalcValue<VectorType> evaluate() {
+    public VcalcValue<VectorType> evaluate() throws InvalidAssignmentException {
         VcalcValue<?> domainValue = domainNode.evaluate(); //get the domain vector
         
         if(!domainValue.isVector()) {

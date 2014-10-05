@@ -2,6 +2,7 @@ package node.vcalc;
 
 import java.util.ArrayList;
 
+import errors.vcalc.InvalidAssignmentException;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import symbol.vcalc.IntType;
 import symbol.vcalc.VcalcValue;
@@ -18,7 +19,7 @@ public class EQNode implements VcalcNode {
     }
     
     @Override
-    public VcalcValue<IntType> evaluate() {
+    public VcalcValue<IntType> evaluate() throws InvalidAssignmentException {
         VcalcValue<?> left = op1.evaluate();
         VcalcValue<?> right = op2.evaluate();
         

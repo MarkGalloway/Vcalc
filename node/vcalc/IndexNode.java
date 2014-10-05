@@ -2,6 +2,7 @@ package node.vcalc;
 
 import java.util.ArrayList;
 
+import errors.vcalc.InvalidAssignmentException;
 import symbol.vcalc.IntType;
 import symbol.vcalc.VcalcValue;
 import symbol.vcalc.VectorType;
@@ -20,7 +21,7 @@ public class IndexNode implements VcalcNode {
     }
 
     @Override
-    public VcalcValue<?> evaluate() {
+    public VcalcValue<?> evaluate() throws InvalidAssignmentException {
         VcalcValue<?> expr = expression.evaluate();
         VcalcValue<?> index = element.evaluate();
         

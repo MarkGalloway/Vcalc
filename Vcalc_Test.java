@@ -11,11 +11,12 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.junit.Before;
 
+import errors.vcalc.InvalidAssignmentException;
 import errors.vcalc.ParserException;
 
 public class Vcalc_Test {
 
-    public static void main(String[] args) throws RecognitionException, IOException, ParserException {
+    public static void main(String[] args) throws RecognitionException, IOException, ParserException, InvalidAssignmentException {
         if (args.length != 2 && !(args.length == 3 && args[2].equals("test"))) {
             System.err.print("Insufficient arguments: ");
             System.err.println(Arrays.toString(args));

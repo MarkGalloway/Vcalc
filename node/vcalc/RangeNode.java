@@ -1,5 +1,6 @@
 package node.vcalc;
 
+import errors.vcalc.InvalidAssignmentException;
 import symbol.vcalc.VcalcValue;
 import symbol.vcalc.VectorType;
 import symbol.vcalc.IntType;
@@ -15,7 +16,7 @@ public class RangeNode implements VcalcNode {
     }
 
 	@Override
-    public VcalcValue<VectorType> evaluate() {
+    public VcalcValue<VectorType> evaluate() throws InvalidAssignmentException {
         VcalcValue<?> low = op1.evaluate();
         VcalcValue<?> high = op2.evaluate();
         
