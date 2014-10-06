@@ -511,14 +511,23 @@ public class InterpreterTest {
             "vector x = 1..2;" +
             "vector z = 2..4;" +
             "print(v==s);" +
+            "print(s==v);" +
             "print(v==z);" +
+            "print(z==v);" +
             "print(x==v);" +
-            "print(v==x);"
+            "print(v==x);" + 
+            "print([i in 1..5 | 1] == 1..5 == 2..6);" //left associativity test
         );
         String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
-        assertEquals("1\n0\n0\n0" , outErrIntercept.toString().trim());
+        assertEquals("[ 1 1 1 ]\n" + 
+                     "[ 1 1 1 ]\n" + 
+                     "[ 0 0 0 ]\n" +
+                     "[ 0 0 0 ]\n" + 
+                     "[ 1 1 0 ]\n" + 
+                     "[ 1 1 0 ]\n" + 
+                     "[ 0 0 0 0 0 ]", outErrIntercept.toString().trim());
     }
     
     @Test
@@ -529,14 +538,24 @@ public class InterpreterTest {
             "vector x = 1..2;" +
             "vector z = 2..4;" +
             "print(v!=s);" +
+            "print(s!=v);" +
             "print(v!=z);" + 
-            "print(x != v);" +
-            "print(v != x);"
+            "print(z!=v);" + 
+            "print(x!=v);" +
+            "print(v!=x);" + 
+            "print(1..3 != 1..3 != 5..7);" //left associativity test
         );
         String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
-        assertEquals("0\n1\n1\n1" , outErrIntercept.toString().trim());
+        assertEquals("[ 0 0 0 ]\n" + 
+                     "[ 0 0 0 ]\n" +
+                     "[ 1 1 1 ]\n" +
+                     "[ 1 1 1 ]\n" +
+                     "[ 0 0 1 ]\n" +
+                     "[ 0 0 1 ]\n" +
+                     "[ 1 1 1 ]" +
+                "", outErrIntercept.toString().trim());
     }
     
     @Test
@@ -550,13 +569,52 @@ public class InterpreterTest {
             "print(s<v);" +
             "print(z<v);" +
             "print(v<z);" + 
-            "print(x < v);" + 
-            "print(v < x);"         );
+            "print(x<v);" + 
+            "print(v<x);" +
+            "print(1..3 < 1..3 < [i in 1..3 | 1]);" //left associativity test
+            
+                );
 	        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
 	        
 	        Vcalc_Test.main(args);
-	        assertEquals("0\n0\n0\n1\n1\n0" , outErrIntercept.toString().trim());
+	        assertEquals("[ 0 0 0 ]\n" + 
+	                     "[ 0 0 0 ]\n" + 
+	                     "[ 0 0 0 ]\n" +
+	                     "[ 1 1 1 ]\n" + 
+	                     "[ 0 0 1 ]\n" + 
+	                     "[ 0 0 0 ]\n" + 
+	                     "[ 1 1 1 ]" + 
+	        "", outErrIntercept.toString().trim());
 	    }
+    
+    @Test
+    public void greaterThanVectorTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+            "vector v = 1..3;" + 
+            "vector s = 1..3;" +
+            "vector x = 1..2;" +
+            "vector z = 2..4;" +
+            "print(v>s);" +
+            "print(s>v);" +
+            "print(z>v);" +
+            "print(v>z);" + 
+            "print(x>v);" + 
+            "print(v>x);" +
+            "print(1..3 > 1..3 > [i in 1..3 | 1]);" //left associativity test
+            
+                );
+            String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+            
+            Vcalc_Test.main(args);
+            assertEquals("[ 0 0 0 ]\n" + 
+                         "[ 0 0 0 ]\n" +
+                         "[ 1 1 1 ]\n" +
+                         "[ 0 0 0 ]\n" + 
+                         "[ 0 0 0 ]\n" + 
+                         "[ 0 0 1 ]\n" + 
+                         "[ 0 0 0 ]" + 
+            "", outErrIntercept.toString().trim());
+        }
     
     
 

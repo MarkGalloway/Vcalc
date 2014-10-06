@@ -31,17 +31,13 @@ public class GTNode implements VcalcNode {
         VectorType leftVector = left.promoteToVector(right);
         VectorType rightVector = right.promoteToVector(left);
         
-        VectorType longerVector = leftVector.getLonger(rightVector);
-        VectorType shorterVector = leftVector.equals(longerVector) ? rightVector : leftVector;
         
-        IntType rval = new IntType(0);
+        VectorType newVector = new VectorType();
         
         for(int i = 0; i < leftVector.getSize(); i++) {
-            if(leftVector.getElement(i) > rightVector.getElement(i)) {
-                rval = new IntType(1);
-                break;
-            }
+            newVector.addElement((leftVector.getElement(i) > rightVector.getElement(i))? 1 : 0);
         }
-        return new VcalcValue<IntType>(rval);
+        
+        return new VcalcValue<VectorType>(newVector);
     }
 }
