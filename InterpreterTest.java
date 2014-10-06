@@ -707,6 +707,18 @@ public class InterpreterTest {
     }
     
     @Test
+    public void rangeOperatorForumsTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        "vector v = ([i in 1..3 | i * 2][1])..([j in 2..5 | j * 3][0]);"
+        + "print(v);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        
+        Vcalc_Test.main(args);
+        assertEquals("[ 4 5 6 ]" , outErrIntercept.toString().trim());
+    }
+    
+    @Test
     public void primeTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
 
       String[] args = new String[] {"Tests/01prime.vcalc","int"};
