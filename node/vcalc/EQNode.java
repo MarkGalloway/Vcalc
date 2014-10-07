@@ -26,15 +26,28 @@ public class EQNode implements VcalcNode {
             IntType rval = (leftValue == rightValue)? new IntType(1) : new IntType(0);
             return new VcalcValue<IntType>(rval);
         }
-            
-        VectorType leftVector = left.promoteToVector(right);
-        VectorType rightVector = right.promoteToVector(left);
+         
+        VectorType rightVector = null;
+        VectorType leftVector = null;
         
+        if(!left.isVector() || !right.isVector()) {
+            rightVector = right.promoteToVector(left);
+            leftVector = left.promoteToVector(right);
+        } else {
+            rightVector = right.asVector();
+            leftVector = left.asVector();
+        }
         
+        int longerSize = (rightVector.getSize() > leftVector.getSize()) ? rightVector.getSize() : leftVector.getSize();
+        int shorterSize = (rightVector.getSize() < leftVector.getSize()) ? rightVector.getSize() : leftVector.getSize();
         VectorType newVector = new VectorType();
         
-        for(int i = 0; i < leftVector.getSize(); i++) {
+        for(int i = 0; i < shorterSize; i++) {
             newVector.addElement((leftVector.getElement(i) == rightVector.getElement(i))? 1 : 0);
+        }
+        
+        while(newVector.getSize() < longerSize) {
+            newVector.addElement(0);
         }
         
         return new VcalcValue<VectorType>(newVector); 

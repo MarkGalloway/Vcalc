@@ -552,8 +552,8 @@ public class InterpreterTest {
                      "[ 0 0 0 ]\n" +
                      "[ 1 1 1 ]\n" +
                      "[ 1 1 1 ]\n" +
-                     "[ 0 0 1 ]\n" +
-                     "[ 0 0 1 ]\n" +
+                     "[ 0 0 0 ]\n" +
+                     "[ 0 0 0 ]\n" +
                      "[ 1 1 1 ]" +
                 "", outErrIntercept.toString().trim());
     }
@@ -581,7 +581,7 @@ public class InterpreterTest {
 	                     "[ 0 0 0 ]\n" + 
 	                     "[ 0 0 0 ]\n" +
 	                     "[ 1 1 1 ]\n" + 
-	                     "[ 0 0 1 ]\n" + 
+	                     "[ 0 0 0 ]\n" + 
 	                     "[ 0 0 0 ]\n" + 
 	                     "[ 1 1 1 ]" + 
 	        "", outErrIntercept.toString().trim());
@@ -611,7 +611,7 @@ public class InterpreterTest {
                          "[ 1 1 1 ]\n" +
                          "[ 0 0 0 ]\n" + 
                          "[ 0 0 0 ]\n" + 
-                         "[ 0 0 1 ]\n" + 
+                         "[ 0 0 0 ]\n" + 
                          "[ 0 0 0 ]" + 
             "", outErrIntercept.toString().trim());
         }
