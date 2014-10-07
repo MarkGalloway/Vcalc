@@ -1,4 +1,5 @@
 import java.io.ByteArrayOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -9,6 +10,7 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
+import org.antlr.stringtemplate.StringTemplateGroup;
 import org.junit.Before;
 
 import errors.vcalc.InvalidAssignmentException;
@@ -78,17 +80,17 @@ public class Vcalc_Test {
         }
         else {
             // Pass it all to the String templater!
-//            String templateFile = args[1] + ".stg";
-//
-//            //Load in string template from file
-//            FileReader groupFileR = new FileReader(templateFile);
-//            StringTemplateGroup stg = new StringTemplateGroup(groupFileR); 
-//            groupFileR.close();
-//            
-//            nodes.reset();
-//            Templater templater = new Templater(nodes);
-//            templater.setTemplateLib(stg);
-//            System.out.println(templater.program(defined.variables).getTemplate().toString());
+            String templateFile = args[1] + ".stg";
+
+            //Load in string template from file
+            FileReader groupFileR = new FileReader(templateFile);
+            StringTemplateGroup stg = new StringTemplateGroup(groupFileR); 
+            groupFileR.close();
+            
+            nodes.reset();
+            Templater templater = new Templater(nodes);
+            templater.setTemplateLib(stg);
+            System.out.println(templater.program().getTemplate().toString());
         }
     }
 
