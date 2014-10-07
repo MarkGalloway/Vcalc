@@ -7,6 +7,30 @@ target triple = "x86_64-unknown-linux-gnu"
 
 @.str = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
 
+; Function Attrs: nounwind readnone ssp uwtable
+define i32 @.addIntegers(i32 %op1, i32 %op2) #0 {
+  %1 = add nsw i32 %op2, %op1
+  ret i32 %1
+}
+
+; Function Attrs: nounwind readnone ssp uwtable
+define i32 @.subIntegers(i32 %op1, i32 %op2) #0 {
+  %1 = sub nsw i32 %op1, %op2
+  ret i32 %1
+}
+
+; Function Attrs: nounwind readnone ssp uwtable
+define i32 @.multIntegers(i32 %op1, i32 %op2) #0 {
+  %1 = mul nsw i32 %op2, %op1
+  ret i32 %1
+}
+
+; Function Attrs: nounwind readnone ssp uwtable
+define i32 @.divIntegers(i32 %op1, i32 %op2) #0 {
+  %1 = sdiv i32 %op1, %op2
+  ret i32 %1
+}
+
 define i32 @main() nounwind uwtable {
   <int_decls: {declaration | %<declaration> = alloca i32, align 4
   }>
@@ -68,20 +92,40 @@ lessThan(op1,op2,label) ::=
 div(op1,op2) ::=
 <<
 
+;load op1; here 5 for now
+;load op2; here 5 for now
+
+%6 = call i32 @.divIntegers(i32 5, i32 5)       ;div the two operands
+
 >>
 
 mult(op1,op2) ::=
 <<
+
+;load op1; here 5 for now
+;load op2; here 5 for now
+%5 = call i32 @.multIntegers(i32 5, i32 5)      ;mult the two operands
+; store result in some known var
 
 >>
 
 sub(op1,op2) ::=
 <<
 
+;load op1; here 5 for now
+;load op2; here 5 for now
+%4 = call i32 @.subIntegers(i32 5, i32 5)       ; sub the two operands
+; store result in some known var
+
 >>
 
 add(op1, op2) ::=
 <<
+
+;load op1; here 5 for now
+;load op2; here 5 for now
+%3 = call i32 @.addIntegers(i32 5, i32 5)        ; add the two operands
+; store result in some known var
 
 >>
 
