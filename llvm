@@ -1,13 +1,27 @@
 group llvm;
 
-mainSchema(decls, inits ,stats) ::= 
+mainSchema(int_decls, stats) ::= 
 <<
+target datalayout = "e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-v64:64:64-v128:128:128-a0:0:64-s0:64:64-f80:128:128-n8:16:32:64-S128"
+target triple = "x86_64-pc-linux-gnu"
 
+@.str = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+
+define i32 @main() nounwind uwtable {
+  <int_decls: {declaration | %<declaration> = alloca i32, align 4
+  }>
+  
+  <stats: {statement | <statement>
+  }
+
+  ret i32 0
+}
 >>
 
-assignment(expr, var) ::= 
+assignment(expr, var, exprlabel) ::= 
 <<
-
+	<expr>
+	store i32 %<exprlabel>, i32* %<var>, align 4
 >>
 
 if(expr, label, block) ::= 
@@ -20,9 +34,11 @@ loop(expr, label, block) ::=
 
 >>
 
-print(expr) ::= 
+print(expr, exprlabel) ::= 
 <<
-
+  %<expr>
+  %<exprlabel>a = load i32* %<exprlabel>, align 4
+  %<exprlabel>b = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([3 x i8]* @.str, i32 0, i32 0), i32 %<exprlabel>a)
 >>
 
 inequality(op1,op2,label) ::=
@@ -72,7 +88,7 @@ loadVariable(var) ::=
 
 >>
 
-loadConstant(value) ::=
+loadConstant(value, exprlabel) ::=
 <<
-
+	%<exprlabel> i32 %<exprlabel>, i32* %<value>, align 4
 >>
