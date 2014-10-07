@@ -1,6 +1,6 @@
 group llvm;
 
-mainSchema(int_decls, stats) ::= 
+mainSchema(intVars, decls, stats) ::= 
 <<
 ; ModuleID = 'tamarahasmoldypants.c'
 target datalayout = "e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-v64:64:64-v128:128:128-a0:0:64-s0:64:64-f80:128:128-n8:16:32:64-S128"
@@ -68,21 +68,21 @@ define void @printInteger(i32 %i) {
 declare i32 @printf(i8*, ...)
 
 define i32 @main() nounwind uwtable {
-  <int_decls: {declaration | %<declaration> = alloca i32, align 4
-  }>
-  
-  <stats: {statement | <statement>
-  }>
+  	<intVars: {var | %<var> = alloca i32, align 4}>
+<decls: {decl | <decl>}>
+<stats: {statement | <statement>
+}>
 
     ret i32 0
 }
 
 >>
 
-assignment(expr, var, exprlabel) ::= 
+intAssign(expr, var, oldcounter) ::= 
 <<
 	<expr>
-	store i32 %<exprlabel>, i32* %<var>, align 4
+	; assign int variable
+	store i32 %<oldcounter>, i32* %<var>, align 4
 >>
 
 if(expr, label, block) ::= 
@@ -95,11 +95,11 @@ loop(expr, label, block) ::=
 
 >>
 
-print(expr, oldcounter, counter) ::= 
+print(expr, oldcounter) ::= 
 <<
   <expr>
-  %<counter> = load i32* %<oldcounter>, align 4
-  tail call void @printInteger(i32 %<counter>)
+  ; print
+  tail call void @printInteger(i32 %<oldcounter>)
 >>
 
 inequality(op1,op2,label) ::=
@@ -160,24 +160,23 @@ sub(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 
 add(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 <<
-;load vars for addition
 <lhs>
 <rhs>
+; addition !
 %<counter> = call i32 @.addIntegers(i32 %<lhsLabel>, i32 %<rhsLabel>)
 
 >>
 
 loadVariable(var, counter) ::=
 <<
-
+; load variable
 %<counter> = load i32* %<var>, align 4
-
 >>
 
-loadConstant(value, counter) ::=
+loadConstant(value, counter, newcounter) ::=
 <<
-
+; store constant and load it into counter
 %<counter> = alloca i32, align 4
 store i32 <value>, i32* %<counter>, align 4
-
+%<newcounter> = load i32* %<counter>, align 4
 >>

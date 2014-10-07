@@ -9,14 +9,15 @@ options {
 
 @members {
   int counter = 0;
+  ArrayList<String> intVars = new ArrayList<String>();
 }
 
 program 
-  : ^(PROGRAM i+=declaration* s+=statement*)      -> mainSchema(decls = {$i}, stats = {$s})
+  : ^(PROGRAM i+=declaration* s+=statement*)      -> mainSchema(intVars={intVars}, decls = {$i}, stats = {$s})
   ;
 
 declaration
-  : ^(VAR Int    ID e+=expression)                -> assignment(var = {$ID.text}, expr = {$e})
+  : ^(VAR Int    ID e+=expression) {intVars.add($ID.text);} -> intAssign(var = {$ID.text}, expr = {$e}, oldcounter = {counter})
   | ^(VAR Vector ID e+=expression)                -> vectorDeclaration(var = {$ID.text}, expr = {$e})
   ;
  
@@ -24,7 +25,7 @@ statement
   : ^('=' ID e+=expression)                       -> assignment(var = {$ID.text}, expr = {$e})
   | ^(IF e+=expression ^(SLIST s+=statement*))    -> ifStat(expr = {$e}, stats = {$s})
   | ^(LOOP e+=expression ^(SLIST s+=statement*))  -> loopStat(expr = {$e}, stats = {$s})
-  | ^(PRINT e+=expression)                        -> print(expr = {$e}, oldcounter={counter}, counter={++counter})
+  | ^(PRINT e+=expression)                        -> print(expr = {$e}, oldcounter={counter})
   ;
 
 expression
@@ -33,13 +34,13 @@ expression
   | ^('!='  op1+=expression op2+=expression)      -> neComparison(lhs = {$op1}, rhs = {$op2})
   | ^('<'   op1+=expression op2+=expression)      -> ltComparison(lhs = {$op1}, rhs = {$op2})
   | ^('>'   op1+=expression op2+=expression)      -> gtComparison(lhs = {$op1}, rhs = {$op2})
-  | ^('+'   op1+=expression op2+=expression)      -> add(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-1}, rhsLabel={counter} ,counter={++counter})
-  | ^('-'   op1+=expression op2+=expression)      -> sub(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-1}, rhsLabel={counter} ,counter={++counter})
-  | ^('*'   op1+=expression op2+=expression)      -> mult(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-1}, rhsLabel={counter} ,counter={++counter})
-  | ^('/'   op1+=expression op2+=expression)      -> div(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-1}, rhsLabel={counter} ,counter={++counter})
+  | ^('+'   op1+=expression op2+=expression)      -> add(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-2}, rhsLabel={counter} ,counter={++counter})
+  | ^('-'   op1+=expression op2+=expression)      -> sub(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-2}, rhsLabel={counter} ,counter={++counter})
+  | ^('*'   op1+=expression op2+=expression)      -> mult(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-2}, rhsLabel={counter} ,counter={++counter})
+  | ^('/'   op1+=expression op2+=expression)      -> div(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-2}, rhsLabel={counter} ,counter={++counter})
   | ^('..'  op1+=expression op2+=expression)      -> range(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-1}, rhsLabel={counter} ,counter={++counter})
   | ID                                            -> loadVariable(var = {$ID.text}, counter={++counter})
-  | INTEGER                                       -> loadConstant(value = {$INTEGER.text}, counter={++counter})
+  | INTEGER                                       -> loadConstant(value = {$INTEGER.text}, counter={++counter}, newcounter={++counter})
   | ^(GENERATOR ID op1+=expression op2+=expression) -> generator(var = {$ID.text}, lhs = {$op1}, rhs = {$op2})
   | ^(FILTER ID op1+=expression op2+=expression)    -> filter(var = {$ID.text}, lhs = {$op1}, rhs = {$op2})
   ;
