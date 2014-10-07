@@ -8,54 +8,34 @@ options {
 }
 
 program 
-  : ^(PROGRAM declaration* statement*)
+  : ^(PROGRAM i+=declaration* s+=statement*)      -> mainSchema(decls = {$i}, stats = {$s})
   ;
 
 declaration
-  : ^(VAR type ID expression)
-  ;
-
-type
-  : Int 
-  | Vector
+  : ^(VAR Int    ID e+=expression)                -> integerDelcaration(var = {$ID.text}, expr = {$e})
+  | ^(VAR Vector ID e+=expression)                -> vectorDeclaration(var = {$ID.text}, expr = {$e})
   ;
  
 statement
-  : assignment
-  | ifStat
-  | loop
-  | print
-  ;
-
-assignment
-  : ^('=' ID expression)
-  ;
-
-ifStat
-  : ^(IF expression ^(SLIST statement*))
-  ;
-  
-loop
-  : ^(LOOP expression ^(SLIST statement*))
-  ;
-
-print
-  : ^(PRINT expression) 
+  : ^('=' ID e+=expression)                       -> assignment(var = {$ID.text}, expr = {$e})
+  | ^(IF e+=expression ^(SLIST s+=statement*))    -> ifStat(expr = {$e}, stats = {$s})
+  | ^(LOOP e+=expression ^(SLIST s+=statement*))  -> loopStat(expr = {$e}, stats = {$s})
+  | ^(PRINT e+=expression)                        -> print(expr = {$e})
   ;
 
 expression
-  : ^(INDEX expression expression)
-  | ^('==' expression expression)
-  | ^('!=' expression expression)
-  | ^('<' expression expression)
-  | ^('>' expression expression)
-  | ^('+' expression expression)
-  | ^('-' expression expression)
-  | ^('*' expression expression)
-  | ^('/' expression expression)
-  | ^('..' op1=expression op2=expression)
-  | ID 
-  | INTEGER
-  | ^(GENERATOR ID)
-  | ^(FILTER ID)
+  : ^(INDEX op1+=expression op2+=expression)      -> loadIndex(vector = {$op1}, index = {$op2})
+  | ^('=='  op1+=expression op2+=expression)      -> eqComparison(lhs = {$op1}, rhs = {$op2})
+  | ^('!='  op1+=expression op2+=expression)      -> neComparison(lhs = {$op1}, rhs = {$op2})
+  | ^('<'   op1+=expression op2+=expression)      -> ltComparison(lhs = {$op1}, rhs = {$op2})
+  | ^('>'   op1+=expression op2+=expression)      -> gtComparison(lhs = {$op1}, rhs = {$op2})
+  | ^('+'   op1+=expression op2+=expression)      -> add(lhs = {$op1}, rhs = {$op2})
+  | ^('-'   op1+=expression op2+=expression)      -> sub(lhs = {$op1}, rhs = {$op2})
+  | ^('*'   op1+=expression op2+=expression)      -> mult(lhs = {$op1}, rhs = {$op2})
+  | ^('/'   op1+=expression op2+=expression)      -> div(lhs = {$op1}, rhs = {$op2})
+  | ^('..'  op1+=expression op2+=expression)      -> range(lhs = {$op1}, rhs = {$op2})
+  | ID                                            -> loadVariable(var = {$ID.text})
+  | INTEGER                                       -> loadConstant(value = {$ID.text})
+  | ^(GENERATOR ID op1+=expression op2+=expression) -> generator(var = {$ID.text}, lhs = {$op1}, rhs = {$op2})
+  | ^(FILTER ID op1+=expression op2+=expression)    -> filter(var = {$ID.text}, lhs = {$op1}, rhs = {$op2})
   ;
