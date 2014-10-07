@@ -7,12 +7,16 @@ options {
   ASTLabelType = CommonTree;
 }
 
+@members {
+  int counter = 1;
+}
+
 program 
   : ^(PROGRAM i+=declaration* s+=statement*)      -> mainSchema(decls = {$i}, stats = {$s})
   ;
 
 declaration
-  : ^(VAR Int    ID e+=expression)                -> integerDelcaration(var = {$ID.text}, expr = {$e})
+  : ^(VAR Int    ID e+=expression)                -> assignment(var = {$ID.text}, expr = {$e})
   | ^(VAR Vector ID e+=expression)                -> vectorDeclaration(var = {$ID.text}, expr = {$e})
   ;
  
@@ -20,7 +24,7 @@ statement
   : ^('=' ID e+=expression)                       -> assignment(var = {$ID.text}, expr = {$e})
   | ^(IF e+=expression ^(SLIST s+=statement*))    -> ifStat(expr = {$e}, stats = {$s})
   | ^(LOOP e+=expression ^(SLIST s+=statement*))  -> loopStat(expr = {$e}, stats = {$s})
-  | ^(PRINT e+=expression)                        -> print(expr = {$e})
+  | ^(PRINT e+=expression)                        -> print(expr = {$e}, oldcounter={counter-1}, counter1={counter++}, counter2={counter++})
   ;
 
 expression
@@ -35,7 +39,7 @@ expression
   | ^('/'   op1+=expression op2+=expression)      -> div(lhs = {$op1}, rhs = {$op2})
   | ^('..'  op1+=expression op2+=expression)      -> range(lhs = {$op1}, rhs = {$op2})
   | ID                                            -> loadVariable(var = {$ID.text})
-  | INTEGER                                       -> loadConstant(value = {$ID.text})
+  | INTEGER                                       -> loadConstant(value = {$INTEGER.text}, counter={counter++})
   | ^(GENERATOR ID op1+=expression op2+=expression) -> generator(var = {$ID.text}, lhs = {$op1}, rhs = {$op2})
   | ^(FILTER ID op1+=expression op2+=expression)    -> filter(var = {$ID.text}, lhs = {$op1}, rhs = {$op2})
   ;

@@ -3,7 +3,7 @@ group llvm;
 mainSchema(int_decls, stats) ::= 
 <<
 target datalayout = "e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-v64:64:64-v128:128:128-a0:0:64-s0:64:64-f80:128:128-n8:16:32:64-S128"
-target triple = "x86_64-pc-linux-gnu"
+target triple = "x86_64-unknown-linux-gnu"
 
 @.str = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
 
@@ -12,10 +12,12 @@ define i32 @main() nounwind uwtable {
   }>
   
   <stats: {statement | <statement>
-  }
+  }>
 
-  ret i32 0
+    ret i32 0
 }
+
+declare i32 @printf(i8*, ...)
 >>
 
 assignment(expr, var, exprlabel) ::= 
@@ -34,11 +36,11 @@ loop(expr, label, block) ::=
 
 >>
 
-print(expr, exprlabel) ::= 
+print(expr, oldcounter, counter1, counter2) ::= 
 <<
-  %<expr>
-  %<exprlabel>a = load i32* %<exprlabel>, align 4
-  %<exprlabel>b = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([3 x i8]* @.str, i32 0, i32 0), i32 %<exprlabel>a)
+  <expr>
+  %<counter1> = load i32* %<oldcounter>, align 4
+  %<counter2> = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @.str, i32 0, i32 0), i32 %<counter1>)
 >>
 
 inequality(op1,op2,label) ::=
@@ -88,7 +90,8 @@ loadVariable(var) ::=
 
 >>
 
-loadConstant(value, exprlabel) ::=
+loadConstant(value, counter) ::=
 <<
-	%<exprlabel> i32 %<exprlabel>, i32* %<value>, align 4
+%<counter> = alloca i32, align 4
+store i32 <value>, i32* %<counter>
 >>
