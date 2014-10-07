@@ -366,12 +366,13 @@ public class InterpreterTest {
     @Test
     public void testIndexOutOfBounds() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 
-        "print(filter(i in 1..10 | i > 5)[5]);"
+        "print(filter(i in 1..10 | i > 5)[5]);" + 
+        "vector v = [i in 1..5 | i ][-3]);"
         );
         String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
-        assertEquals("0" , outErrIntercept.toString().trim());
+        assertEquals("0\n0" , outErrIntercept.toString().trim());
     }
     
     @Test
