@@ -35,7 +35,7 @@ expression
   | ^('/'   op1+=expression op2+=expression)      -> div(lhs = {$op1}, rhs = {$op2})
   | ^('..'  op1+=expression op2+=expression)      -> range(lhs = {$op1}, rhs = {$op2})
   | ID                                            -> loadVariable(var = {$ID.text})
-  | INTEGER                                       -> loadConstant(value = {$ID.text})
+  | INTEGER                                       -> loadConstant(value = {$INTEGER.text})
   | ^(GENERATOR ID op1+=expression op2+=expression) -> generator(var = {$ID.text}, lhs = {$op1}, rhs = {$op2})
   | ^(FILTER ID op1+=expression op2+=expression)    -> filter(var = {$ID.text}, lhs = {$op1}, rhs = {$op2})
   ;
