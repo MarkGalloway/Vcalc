@@ -1,0 +1,78 @@
+group llvm;
+
+mainSchema(decls, inits ,stats) ::= 
+<<
+
+>>
+
+assignment(expr, var) ::= 
+<<
+
+>>
+
+if(expr, label, block) ::= 
+<<
+
+>>
+
+loop(expr, label, block) ::= 
+<<
+
+>>
+
+print(expr) ::= 
+<<
+
+>>
+
+inequality(op1,op2,label) ::=
+<<
+
+>>
+
+equality(op1,op2,label) ::=
+<<
+
+
+>>
+
+greaterThan(op1,op2,label) ::=
+<<
+
+>>
+
+lessThan(op1,op2,label) ::=
+<<
+
+
+>>
+
+div(op1,op2) ::=
+<<
+
+>>
+
+mult(op1,op2) ::=
+<<
+
+>>
+
+sub(op1,op2) ::=
+<<
+
+>>
+
+add(op1, op2) ::=
+<<
+
+>>
+
+loadVariable(var) ::=
+<<
+
+>>
+
+loadConstant(value) ::=
+<<
+
+>>
