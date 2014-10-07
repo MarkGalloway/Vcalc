@@ -8,7 +8,7 @@ options {
 }
 
 @members {
-  int counter = 1;
+  int counter = 0;
 }
 
 program 
@@ -24,7 +24,7 @@ statement
   : ^('=' ID e+=expression)                       -> assignment(var = {$ID.text}, expr = {$e})
   | ^(IF e+=expression ^(SLIST s+=statement*))    -> ifStat(expr = {$e}, stats = {$s})
   | ^(LOOP e+=expression ^(SLIST s+=statement*))  -> loopStat(expr = {$e}, stats = {$s})
-  | ^(PRINT e+=expression)                        -> print(expr = {$e}, oldcounter={counter-1}, counter1={counter++}, counter2={counter++})
+  | ^(PRINT e+=expression)                        -> print(expr = {$e}, oldcounter={counter}, counter={++counter})
   ;
 
 expression
@@ -33,13 +33,13 @@ expression
   | ^('!='  op1+=expression op2+=expression)      -> neComparison(lhs = {$op1}, rhs = {$op2})
   | ^('<'   op1+=expression op2+=expression)      -> ltComparison(lhs = {$op1}, rhs = {$op2})
   | ^('>'   op1+=expression op2+=expression)      -> gtComparison(lhs = {$op1}, rhs = {$op2})
-  | ^('+'   op1+=expression op2+=expression)      -> add(lhs = {$op1}, rhs = {$op2})
-  | ^('-'   op1+=expression op2+=expression)      -> sub(lhs = {$op1}, rhs = {$op2})
-  | ^('*'   op1+=expression op2+=expression)      -> mult(lhs = {$op1}, rhs = {$op2})
-  | ^('/'   op1+=expression op2+=expression)      -> div(lhs = {$op1}, rhs = {$op2})
-  | ^('..'  op1+=expression op2+=expression)      -> range(lhs = {$op1}, rhs = {$op2})
-  | ID                                            -> loadVariable(var = {$ID.text})
-  | INTEGER                                       -> loadConstant(value = {$INTEGER.text}, counter={counter++})
+  | ^('+'   op1+=expression op2+=expression)      -> add(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-1}, rhsLabel={counter} ,counter={++counter})
+  | ^('-'   op1+=expression op2+=expression)      -> sub(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-1}, rhsLabel={counter} ,counter={++counter})
+  | ^('*'   op1+=expression op2+=expression)      -> mult(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-1}, rhsLabel={counter} ,counter={++counter})
+  | ^('/'   op1+=expression op2+=expression)      -> div(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-1}, rhsLabel={counter} ,counter={++counter})
+  | ^('..'  op1+=expression op2+=expression)      -> range(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-1}, rhsLabel={counter} ,counter={++counter})
+  | ID                                            -> loadVariable(var = {$ID.text}, counter={++counter})
+  | INTEGER                                       -> loadConstant(value = {$INTEGER.text}, counter={++counter})
   | ^(GENERATOR ID op1+=expression op2+=expression) -> generator(var = {$ID.text}, lhs = {$op1}, rhs = {$op2})
   | ^(FILTER ID op1+=expression op2+=expression)    -> filter(var = {$ID.text}, lhs = {$op1}, rhs = {$op2})
   ;

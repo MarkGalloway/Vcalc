@@ -2,34 +2,70 @@ group llvm;
 
 mainSchema(int_decls, stats) ::= 
 <<
+; ModuleID = 'tamarahasmoldypants.c'
 target datalayout = "e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-v64:64:64-v128:128:128-a0:0:64-s0:64:64-f80:128:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
 
 @.str = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
 
-; Function Attrs: nounwind readnone ssp uwtable
-define i32 @.addIntegers(i32 %op1, i32 %op2) #0 {
-  %1 = add nsw i32 %op2, %op1
-  ret i32 %1
+; Function Attrs: nounwind ssp uwtable
+define i32 @.addIntegers(i32 %op1, i32 %op2) {
+  %1 = alloca i32, align 4
+  %2 = alloca i32, align 4
+  store i32 %op1, i32* %1, align 4
+  store i32 %op2, i32* %2, align 4
+  %3 = load i32* %1, align 4
+  %4 = load i32* %2, align 4
+  %5 = add nsw i32 %3, %4
+  ret i32 %5
 }
 
-; Function Attrs: nounwind readnone ssp uwtable
-define i32 @.subIntegers(i32 %op1, i32 %op2) #0 {
-  %1 = sub nsw i32 %op1, %op2
-  ret i32 %1
+; Function Attrs: nounwind ssp uwtable
+define i32 @.subIntegers(i32 %op1, i32 %op2) {
+  %1 = alloca i32, align 4
+  %2 = alloca i32, align 4
+  store i32 %op1, i32* %1, align 4
+  store i32 %op2, i32* %2, align 4
+  %3 = load i32* %1, align 4
+  %4 = load i32* %2, align 4
+  %5 = sub nsw i32 %3, %4
+  ret i32 %5
 }
 
-; Function Attrs: nounwind readnone ssp uwtable
-define i32 @.multIntegers(i32 %op1, i32 %op2) #0 {
-  %1 = mul nsw i32 %op2, %op1
-  ret i32 %1
+; Function Attrs: nounwind ssp uwtable
+define i32 @.multIntegers(i32 %op1, i32 %op2) {
+  %1 = alloca i32, align 4
+  %2 = alloca i32, align 4
+  store i32 %op1, i32* %1, align 4
+  store i32 %op2, i32* %2, align 4
+  %3 = load i32* %1, align 4
+  %4 = load i32* %2, align 4
+  %5 = mul nsw i32 %3, %4
+  ret i32 %5
 }
 
-; Function Attrs: nounwind readnone ssp uwtable
-define i32 @.divIntegers(i32 %op1, i32 %op2) #0 {
-  %1 = sdiv i32 %op1, %op2
-  ret i32 %1
+; Function Attrs: nounwind ssp uwtable
+define i32 @.divIntegers(i32 %op1, i32 %op2) {
+  %1 = alloca i32, align 4
+  %2 = alloca i32, align 4
+  store i32 %op1, i32* %1, align 4
+  store i32 %op2, i32* %2, align 4
+  %3 = load i32* %1, align 4
+  %4 = load i32* %2, align 4
+  %5 = sdiv i32 %3, %4
+  ret i32 %5
 }
+
+; Function Attrs: nounwind ssp uwtable
+define void @printInteger(i32 %i) {
+  %1 = alloca i32, align 4
+  store i32 %i, i32* %1, align 4
+  %2 = load i32* %1, align 4
+  %3 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @.str, i32 0, i32 0), i32 %2)
+  ret void
+}
+
+declare i32 @printf(i8*, ...)
 
 define i32 @main() nounwind uwtable {
   <int_decls: {declaration | %<declaration> = alloca i32, align 4
@@ -41,7 +77,6 @@ define i32 @main() nounwind uwtable {
     ret i32 0
 }
 
-declare i32 @printf(i8*, ...)
 >>
 
 assignment(expr, var, exprlabel) ::= 
@@ -60,11 +95,11 @@ loop(expr, label, block) ::=
 
 >>
 
-print(expr, oldcounter, counter1, counter2) ::= 
+print(expr, oldcounter, counter) ::= 
 <<
   <expr>
-  %<counter1> = load i32* %<oldcounter>, align 4
-  %<counter2> = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @.str, i32 0, i32 0), i32 %<counter1>)
+  %<counter> = load i32* %<oldcounter>, align 4
+  tail call void @printInteger(i32 %<counter>)
 >>
 
 inequality(op1,op2,label) ::=
@@ -89,53 +124,60 @@ lessThan(op1,op2,label) ::=
 
 >>
 
-div(op1,op2) ::=
+div(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 <<
 
-;load op1; here 5 for now
-;load op2; here 5 for now
-
-%6 = call i32 @.divIntegers(i32 5, i32 5)       ;div the two operands
+;load vars for div
+<lhs>
+<rhs>
+;div
+%<counter> = call i32 @.divIntegers(i32 %<lhsLabel>, i32 %<rhsLabel>)
 
 >>
 
-mult(op1,op2) ::=
+mult(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 <<
 
-;load op1; here 5 for now
-;load op2; here 5 for now
-%5 = call i32 @.multIntegers(i32 5, i32 5)      ;mult the two operands
+;load vars for mult
+<lhs>
+<rhs>
+;mult
+%<counter> = call i32 @.multIntegers(i32 %<lhsLabel>, i32 %<rhsLabel>)
 ; store result in some known var
 
 >>
 
-sub(op1,op2) ::=
+sub(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 <<
-
-;load op1; here 5 for now
-;load op2; here 5 for now
-%4 = call i32 @.subIntegers(i32 5, i32 5)       ; sub the two operands
+;load vars for subtraction
+<lhs>
+<rhs>
+;subtraction
+%<counter> = call i32 @.subIntegers(i32 %<lhsLabel>, i32 %<rhsLabel>) 
 ; store result in some known var
 
 >>
 
-add(op1, op2) ::=
+add(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 <<
-
-;load op1; here 5 for now
-;load op2; here 5 for now
-%3 = call i32 @.addIntegers(i32 5, i32 5)        ; add the two operands
-; store result in some known var
+;load vars for addition
+<lhs>
+<rhs>
+%<counter> = call i32 @.addIntegers(i32 %<lhsLabel>, i32 %<rhsLabel>)
 
 >>
 
-loadVariable(var) ::=
+loadVariable(var, counter) ::=
 <<
+
+%<counter> = load i32* %<var>, align 4
 
 >>
 
 loadConstant(value, counter) ::=
 <<
+
 %<counter> = alloca i32, align 4
-store i32 <value>, i32* %<counter>
+store i32 <value>, i32* %<counter>, align 4
+
 >>
