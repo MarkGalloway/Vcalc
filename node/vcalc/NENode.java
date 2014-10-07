@@ -49,7 +49,7 @@ public class NENode implements VcalcNode {
         }
         
         while(newVector.getSize() < longerSize) {
-            newVector.addElement(0);
+            newVector.addElement(1);
         }
         
         return new VcalcValue<VectorType>(newVector); 

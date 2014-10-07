@@ -363,7 +363,7 @@ public class InterpreterTest {
         assertEquals("10" , outErrIntercept.toString().trim());
     }
     
-    @Test(expected=RuntimeException.class)
+    @Test
     public void testIndexOutOfBounds() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 
         "print(filter(i in 1..10 | i > 5)[5]);"
@@ -371,7 +371,7 @@ public class InterpreterTest {
         String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
-        assertEquals("10" , outErrIntercept.toString().trim());
+        assertEquals("0" , outErrIntercept.toString().trim());
     }
     
     @Test
@@ -552,8 +552,8 @@ public class InterpreterTest {
                      "[ 0 0 0 ]\n" +
                      "[ 1 1 1 ]\n" +
                      "[ 1 1 1 ]\n" +
-                     "[ 0 0 0 ]\n" +
-                     "[ 0 0 0 ]\n" +
+                     "[ 0 0 1 ]\n" +
+                     "[ 0 0 1 ]\n" +
                      "[ 1 1 1 ]" +
                 "", outErrIntercept.toString().trim());
     }
