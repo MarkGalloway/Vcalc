@@ -53,52 +53,28 @@ define i32 @.gtIntegers(i32 %op1, i32 %op2) {
   ret i32 %6
 }
 
-; Function Attrs: nounwind ssp uwtable
+; Function Attrs: nounwind readnone ssp uwtable
 define i32 @.addIntegers(i32 %op1, i32 %op2) {
-  %1 = alloca i32, align 4
-  %2 = alloca i32, align 4
-  store i32 %op1, i32* %1, align 4
-  store i32 %op2, i32* %2, align 4
-  %3 = load i32* %1, align 4
-  %4 = load i32* %2, align 4
-  %5 = add nsw i32 %3, %4
-  ret i32 %5
+  %1 = add nsw i32 %op2, %op1
+  ret i32 %1
 }
 
 ; Function Attrs: nounwind ssp uwtable
 define i32 @.subIntegers(i32 %op1, i32 %op2) {
-  %1 = alloca i32, align 4
-  %2 = alloca i32, align 4
-  store i32 %op1, i32* %1, align 4
-  store i32 %op2, i32* %2, align 4
-  %3 = load i32* %1, align 4
-  %4 = load i32* %2, align 4
-  %5 = sub nsw i32 %3, %4
-  ret i32 %5
+  %1 = sub nsw i32 %op1, %op2
+  ret i32 %1
 }
 
 ; Function Attrs: nounwind ssp uwtable
 define i32 @.multIntegers(i32 %op1, i32 %op2) {
-  %1 = alloca i32, align 4
-  %2 = alloca i32, align 4
-  store i32 %op1, i32* %1, align 4
-  store i32 %op2, i32* %2, align 4
-  %3 = load i32* %1, align 4
-  %4 = load i32* %2, align 4
-  %5 = mul nsw i32 %3, %4
-  ret i32 %5
+  %1 = mul nsw i32 %op2, %op1
+  ret i32 %1
 }
 
 ; Function Attrs: nounwind ssp uwtable
 define i32 @.divIntegers(i32 %op1, i32 %op2) {
-  %1 = alloca i32, align 4
-  %2 = alloca i32, align 4
-  store i32 %op1, i32* %1, align 4
-  store i32 %op2, i32* %2, align 4
-  %3 = load i32* %1, align 4
-  %4 = load i32* %2, align 4
-  %5 = sdiv i32 %3, %4
-  ret i32 %5
+  %1 = sdiv i32 %op1, %op2
+  ret i32 %1
 }
 
 ; Function Attrs: nounwind ssp uwtable
