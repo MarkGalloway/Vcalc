@@ -2,11 +2,54 @@ group llvm;
 
 mainSchema(intVars, decls, stats) ::= 
 <<
-; ModuleID = 'tamarahasmoldypants.c'
+; ModuleID = 'tamaraisthebest.c'
 target datalayout = "e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-v64:64:64-v128:128:128-a0:0:64-s0:64:64-f80:128:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
 
 @.str = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+@.str1 = private unnamed_addr constant [3 x i8] c"[ \00", align 1
+@.str2 = private unnamed_addr constant [4 x i8] c"%d \00", align 1
+@.str3 = private unnamed_addr constant [2 x i8] c"]\00", align 1
+%struct.vector = type { [32 x i32], i32 }
+
+; Function Attrs: nounwind ssp uwtable
+define i32 @.eqIntegers(i32 %op1, i32 %op2) {
+  %1 = alloca i32, align 4
+  %2 = alloca i32, align 4
+  store i32 %op1, i32* %1, align 4
+  store i32 %op2, i32* %2, align 4
+  %3 = load i32* %1, align 4
+  %4 = load i32* %2, align 4
+  %5 = icmp eq i32 %3, %4
+  %6 = zext i1 %5 to i32
+  ret i32 %6
+}
+
+; Function Attrs: nounwind ssp uwtable
+define i32 @.neIntegers(i32 %op1, i32 %op2) {
+  %1 = alloca i32, align 4
+  %2 = alloca i32, align 4
+  store i32 %op1, i32* %1, align 4
+  store i32 %op2, i32* %2, align 4
+  %3 = load i32* %1, align 4
+  %4 = load i32* %2, align 4
+  %5 = icmp ne i32 %3, %4
+  %6 = zext i1 %5 to i32
+  ret i32 %6
+}
+
+; Function Attrs: nounwind ssp uwtable
+define i32 @.gtIntegers(i32 %op1, i32 %op2) {
+  %1 = alloca i32, align 4
+  %2 = alloca i32, align 4
+  store i32 %op1, i32* %1, align 4
+  store i32 %op2, i32* %2, align 4
+  %3 = load i32* %1, align 4
+  %4 = load i32* %2, align 4
+  %5 = icmp sgt i32 %3, %4
+  %6 = zext i1 %5 to i32
+  ret i32 %6
+}
 
 ; Function Attrs: nounwind ssp uwtable
 define i32 @.addIntegers(i32 %op1, i32 %op2) {
@@ -57,7 +100,7 @@ define i32 @.divIntegers(i32 %op1, i32 %op2) {
 }
 
 ; Function Attrs: nounwind ssp uwtable
-define void @printInteger(i32 %i) {
+define void @.printInteger(i32 %i) {
   %1 = alloca i32, align 4
   store i32 %i, i32* %1, align 4
   %2 = load i32* %1, align 4
@@ -65,69 +108,119 @@ define void @printInteger(i32 %i) {
   ret void
 }
 
+
+define void @.printVector(%struct.vector* %x) nounwind uwtable {
+	  %1 = alloca %struct.vector*, align 8
+	  %i = alloca i32, align 4
+	  store %struct.vector* %x, %struct.vector** %1, align 8
+	  %2 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([3 x i8]* @.str1, i32 0, i32 0))
+	  store i32 0, i32* %i, align 4
+	  br label %3
+	
+	; <label>:3                                       ; preds = %17, %0
+	  %4 = load i32* %i, align 4
+	  %5 = load %struct.vector** %1, align 8
+	  %6 = getelementptr inbounds %struct.vector* %5, i32 0, i32 1
+	  %7 = load i32* %6, align 4
+	  %8 = icmp slt i32 %4, %7
+	  br i1 %8, label %9, label %20
+	
+	; <label>:9                                       ; preds = %3
+	  %10 = load i32* %i, align 4
+	  %11 = sext i32 %10 to i64
+	  %12 = load %struct.vector** %1, align 8
+	  %13 = getelementptr inbounds %struct.vector* %12, i32 0, i32 0
+	  %14 = getelementptr inbounds [32 x i32]* %13, i32 0, i64 %11
+	  %15 = load i32* %14, align 4
+	  %16 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @.str2, i32 0, i32 0), i32 %15)
+	  br label %17
+	
+	; <label>:17                                      ; preds = %9
+	  %18 = load i32* %i, align 4
+	  %19 = add nsw i32 %18, 1
+	  store i32 %19, i32* %i, align 4
+	  br label %3
+	
+	; <label>:20                                      ; preds = %3
+	  %21 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([2 x i8]* @.str3, i32 0, i32 0))
+	  ret void
+}
+
+
+
+; Function Attrs: nounwind
+declare void @llvm.memset.p0i8.i64(i8* nocapture, i8, i64, i32, i1) nounwind
+
 declare i32 @printf(i8*, ...)
 
 define i32 @main() nounwind uwtable {
-  	<intVars: {var | %<var> = alloca i32, align 4}>
-<decls: {decl | <decl>}>
+%1 = alloca i32, align 4
+<intVars: {var | %<var> = alloca i32, align 4
+}>
+<vecVars: { var |   %<var> = alloca %struct.vector, align 4
+}>
+store i32 0, i32* %1
+<decls: {decl | <decl>
+}>
 <stats: {statement | <statement>
 }>
-
-    ret i32 0
+	%<label> = load i32* %1
+    ret i32 %<label>
 }
-
 >>
 
-intAssign(expr, var, oldcounter) ::= 
+
+vecAssign(expr, var, size, label, label2, label3, labels, integers) ::= 
+<<
+  <expr>
+  %<label> = bitcast %struct.vector* %<var> to i8*
+  call void @llvm.memset.p0i8.i64(i8* %<label>, i8 0, i64 128, i32 4, i1 false
+  %<label2> = bitcast i8* %<label> to %struct.vector*
+  %<label3> = getelementptr %struct.vector* %<label2>, i32 0, i32 1
+  store i32 <size>, i32* %<label3>
+>>
+
+intAssign(expr, var, label) ::= 
 <<
 	<expr>
 	; assign int variable
-	store i32 %<oldcounter>, i32* %<var>, align 4
+	store i32 %<label>, i32* %<var>, align 4
 >>
 
-if(expr, label, block) ::= 
+loopStat(expr, stats, looplabel, exprlabel, condition, loopbody, loopend) ::= 
 <<
-
+	; loop
+	br label %<looplabel>
+	<expr>
+	%<condition> = icmp ne i32 %<exprlabel>, 0
+  	br i1 %<condition>, label %<loopbody>, label %<loopend>
+  	
+  	<stats>
+  	br label %<looplabel>
+  	; pool
 >>
 
-loop(expr, label, block) ::= 
+ifStat(expr, stats, exprlabel, condition, ifbody, ifend) ::= 
 <<
-
+	; if
+	<expr>
+	%<condition> = icmp ne i32 %<exprlabel>, 0
+  	br i1 %<condition>, label %<ifbody>, label %<ifend>
+  	
+  	<stats>
+  	br label %<ifend>
+  	; fi
 >>
 
-print(expr, oldcounter) ::= 
+printInteger(expr, counter) ::= 
 <<
   <expr>
   ; print
-  tail call void @printInteger(i32 %<oldcounter>)
+  tail call void @.printInteger(i32 %<counter>)
 >>
 
-inequality(op1,op2,label) ::=
+divIntegers(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 <<
-
->>
-
-equality(op1,op2,label) ::=
-<<
-
-
->>
-
-greaterThan(op1,op2,label) ::=
-<<
-
->>
-
-lessThan(op1,op2,label) ::=
-<<
-
-
->>
-
-div(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
-<<
-
-;load vars for div
 <lhs>
 <rhs>
 ;div
@@ -135,10 +228,8 @@ div(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 
 >>
 
-mult(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
+multIntegers(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 <<
-
-;load vars for mult
 <lhs>
 <rhs>
 ;mult
@@ -147,9 +238,8 @@ mult(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 
 >>
 
-sub(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
+subIntegers(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 <<
-;load vars for subtraction
 <lhs>
 <rhs>
 ;subtraction
@@ -158,7 +248,7 @@ sub(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 
 >>
 
-add(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
+addIntegers(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 <<
 <lhs>
 <rhs>
@@ -167,16 +257,49 @@ add(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 
 >>
 
+gtIntegers(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
+<<
+<lhs>
+<rhs>
+; addition !
+%<counter> = call i32 @.gtIntegers(i32 %<lhsLabel>, i32 %<rhsLabel>)
+>>
+
+ltIntegers(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
+<<
+<lhs>
+<rhs>
+; addition !
+%<counter> = call i32 @.gtIntegers(i32 %<rhsLabel>, i32 %<lhsLabel>)
+>>
+
+eqIntegers(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
+<<
+<lhs>
+<rhs>
+; addition !
+%<counter> = call i32 @.eqIntegers(i32 %<rhsLabel>, i32 %<lhsLabel>)
+>>
+
+neIntegers(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
+<<
+<lhs>
+<rhs>
+; addition !
+%<counter> = call i32 @.neIntegers(i32 %<rhsLabel>, i32 %<lhsLabel>)
+>>
+
+
 loadVariable(var, counter) ::=
 <<
 ; load variable
 %<counter> = load i32* %<var>, align 4
 >>
 
-loadConstant(value, counter, newcounter) ::=
+loadConstant(value, storecounter, loadcounter) ::=
 <<
 ; store constant and load it into counter
-%<counter> = alloca i32, align 4
-store i32 <value>, i32* %<counter>, align 4
-%<newcounter> = load i32* %<counter>, align 4
+%<storecounter> = alloca i32, align 4
+store i32 <value>, i32* %<storecounter>, align 4
+%<loadcounter> = load i32* %<storecounter>, align 4
 >>

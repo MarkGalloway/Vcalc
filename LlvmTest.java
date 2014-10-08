@@ -68,7 +68,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -93,7 +93,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -117,7 +117,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -141,7 +141,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -165,7 +165,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -190,7 +190,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -200,5 +200,382 @@ public class LlvmTest {
         
         assertEquals("", errors.trim());
         assertEquals("5\n-1", input.trim());
+    }
+    
+    
+    @Test // First llvm test, error stream should be empty
+    public void gtTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        		"int w = 4;"
+        		+ "int x = 5;"
+        		+ "int y = 0-1;"
+        		+ "int z = 0-2;"
+        		+ "print(x>4);" // 5 > 4 = 1
+        		+ "print(4>x);" // 4 > 5 = 0
+        		+ "print(x>w);" // 1
+        		+ "print(w>x);" // 0
+        		+ "print(y>z);" // -1 > -2 = 1
+        		+ "print(z>y);" // -2 > -1 = 0
+        		+ "print(z>w>x);" // -2 > 4 > 5 // 0
+        		
+        				);
+        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        Vcalc_Test.main(args);
+        SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
+
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
+        p.waitFor();
+        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        
+        while ((line = reader.readLine()) != null) {input += line + "\n";}
+        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
+        
+        assertEquals("", errors.trim());
+        assertEquals("1\n0\n1\n0\n1\n0\n0", input.trim());
+    }
+    
+    @Test // First llvm test, error stream should be empty
+    public void ltTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        		"int w = 4;"
+        		+ "int x = 5;"
+        		+ "int y = 0-1;"
+        		+ "int z = 0-2;"
+        		+ "print(x<4);" // 0
+        		+ "print(4<x);" // 1
+        		+ "print(x<w);" // 0
+        		+ "print(w<x);" // 1
+        		+ "print(y<z);" // 0
+        		+ "print(z<y);" // 1
+        		+ "print(z<w<x);" // 1
+        		
+        				);
+        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        Vcalc_Test.main(args);
+        SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
+
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
+        p.waitFor();
+        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        
+        while ((line = reader.readLine()) != null) {input += line + "\n";}
+        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
+        
+        assertEquals("", errors.trim());
+        assertEquals("0\n1\n0\n1\n0\n1\n1", input.trim());
+    }
+    
+    @Test // First llvm test, error stream should be empty
+    public void eqTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        		"int w = 4;"
+        		+ "int x = 4;"
+        		+ "int y = 0-1;"
+        		+ "int z = 0-1;"
+        		+ "print(4==4);" // 1
+        		+ "print(0==0);" // 1
+        		+ "print(w==x);" // 1
+        		+ "print(x==w);" // 1
+        		+ "print(y==z);" // 1
+        		+ "print(z==y);" // 1
+        		+ "print(y==x);" // 0
+        		+ "print(y==x==z);" // 0
+        		+ "print(y==x==0);" // 1
+        		
+        				);
+        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        Vcalc_Test.main(args);
+        SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
+
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
+        p.waitFor();
+        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        
+        while ((line = reader.readLine()) != null) {input += line + "\n";}
+        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
+        
+        assertEquals("", errors.trim());
+        assertEquals("1\n1\n1\n1\n1\n1\n0\n0\n1", input.trim());
+    }
+    
+    @Test // First llvm test, error stream should be empty
+    public void neTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        		"int w = 4;"
+        		+ "int x = 4;"
+        		+ "int y = 0-1;"
+        		+ "int z = 0-1;"
+        		+ "print(4!=(4-8));" // 1
+        		+ "print((4-5)!=0);" // 1
+        		+ "print(w!=x);" // 0
+        		+ "print(x!=w);" // 0
+        		+ "print(y!=z);" // 0
+        		+ "print(y!=4);" // 1
+        		+ "print(4!=y);" // 1
+        		+ "print(y!=x!=z);" // 1
+        		+ "print(y!=x!=1);" // 0
+        		
+        				);
+        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        Vcalc_Test.main(args);
+        SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
+
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
+        p.waitFor();
+        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        
+        while ((line = reader.readLine()) != null) {input += line + "\n";}
+        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
+        
+        assertEquals("", errors.trim());
+        assertEquals("1\n1\n0\n0\n0\n1\n1\n1\n0", input.trim());
+    }
+    
+    @Test // First llvm test, error stream should be empty
+    public void whileTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        		"int x = 4;"
+        		+ "loop (x>0)"
+        		+ "print(x);"
+        		+ "x = x - 1;"
+        		+ "loop (x>2)"
+        			+ "print(x);"
+        			+ "x = x - 1;"
+        		+ "pool;"
+        		+ "pool;" 
+        				);
+        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        Vcalc_Test.main(args);
+        SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
+
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
+        p.waitFor();
+        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        
+        while ((line = reader.readLine()) != null) {input += line + "\n";}
+        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
+        
+        assertEquals("", errors.trim());
+        assertEquals("4\n3\n2\n1", input.trim());
+    }
+    
+    
+    @Test // First llvm test, error stream should be empty
+    public void ifTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        		"int x = 4;"
+        		+ "if (x)"
+	        		+ "print(x);"
+	        		+ "if(x)"
+	        			+ "print(3);"
+	        			+ "if(x==0)"
+	        				+ "print(4);"
+	    				+ "fi;"
+					+ "fi;"
+        		+ "fi;");
+        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        Vcalc_Test.main(args);
+        SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
+
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
+        p.waitFor();
+        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        
+        while ((line = reader.readLine()) != null) {input += line + "\n";}
+        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
+        
+        assertEquals("", errors.trim());
+        assertEquals("4\n3", input.trim());
+    }
+    
+    @Test // First llvm test, error stream should be empty
+    public void primeTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
+        String[] args = new String[] {"Tests/01prime.vcalc","llvm", "test"};
+        Vcalc_Test.main(args);
+        SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
+
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
+        p.waitFor();
+        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        
+        while ((line = reader.readLine()) != null) {input += line + "\n";}
+        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
+        
+        assertEquals("", errors.trim());
+        assertEquals("2\n" + 
+                "3\n" + 
+                "5\n" + 
+                "7\n" + 
+                "11\n" + 
+                "13\n" + 
+                "17\n" + 
+                "19\n" + 
+                "23\n" + 
+                "29\n" + 
+                "31\n" + 
+                "37\n" + 
+                "41\n" + 
+                "43\n" + 
+                "47\n" + 
+                "53\n" + 
+                "59\n" + 
+                "61\n" + 
+                "67\n" + 
+                "71\n" + 
+                "73\n" + 
+                "79\n" + 
+                "83\n" + 
+                "89\n" + 
+                "97\n" + 
+                "101\n" + 
+                "103\n" + 
+                "107\n" + 
+                "109\n" + 
+                "113\n" + 
+                "127\n" + 
+                "131\n" + 
+                "137\n" + 
+                "139\n" + 
+                "149\n" + 
+                "151\n" + 
+                "157\n" + 
+                "163\n" + 
+                "167\n" + 
+                "173\n" + 
+                "179\n" + 
+                "181\n" + 
+                "191\n" + 
+                "193\n" + 
+                "197\n" + 
+                "199\n" + 
+                "211\n" + 
+                "223\n" + 
+                "227\n" + 
+                "229\n" + 
+                "233\n" + 
+                "239\n" + 
+                "241\n" + 
+                "251\n" + 
+                "257\n" + 
+                "263\n" + 
+                "269\n" + 
+                "271\n" + 
+                "277\n" + 
+                "281\n" + 
+                "283\n" + 
+                "293\n" + 
+                "307\n" + 
+                "311\n" + 
+                "313\n" + 
+                "317\n" + 
+                "331\n" + 
+                "337\n" + 
+                "347\n" + 
+                "349\n" + 
+                "353\n" + 
+                "359\n" + 
+                "367\n" + 
+                "373\n" + 
+                "379\n" + 
+                "383\n" + 
+                "389\n" + 
+                "397\n" + 
+                "401\n" + 
+                "409\n" + 
+                "419\n" + 
+                "421\n" + 
+                "431\n" + 
+                "433\n" + 
+                "439\n" + 
+                "443\n" + 
+                "449\n" + 
+                "457\n" + 
+                "461\n" + 
+                "463\n" + 
+                "467\n" + 
+                "479\n" + 
+                "487\n" + 
+                "491\n" + 
+                "499\n" + 
+                "503\n" + 
+                "509\n" + 
+                "521\n" + 
+                "523\n" + 
+                "541\n" + 
+                "547\n" + 
+                "557\n" + 
+                "563\n" + 
+                "569\n" + 
+                "571\n" + 
+                "577\n" + 
+                "587\n" + 
+                "593\n" + 
+                "599\n" + 
+                "601\n" + 
+                "607\n" + 
+                "613\n" + 
+                "617\n" + 
+                "619\n" + 
+                "631\n" + 
+                "641\n" + 
+                "643\n" + 
+                "647\n" + 
+                "653\n" + 
+                "659\n" + 
+                "661\n" + 
+                "673\n" + 
+                "677\n" + 
+                "683\n" + 
+                "691\n" + 
+                "701\n" + 
+                "709\n" + 
+                "719\n" + 
+                "727\n" + 
+                "733\n" + 
+                "739\n" + 
+                "743\n" + 
+                "751\n" + 
+                "757\n" + 
+                "761\n" + 
+                "769\n" + 
+                "773\n" + 
+                "787\n" + 
+                "797\n" + 
+                "809\n" + 
+                "811\n" + 
+                "821\n" + 
+                "823\n" + 
+                "827\n" + 
+                "829\n" + 
+                "839\n" + 
+                "853\n" + 
+                "857\n" + 
+                "859\n" + 
+                "863\n" + 
+                "877\n" + 
+                "881\n" + 
+                "883\n" + 
+                "887\n" + 
+                "907\n" + 
+                "911\n" + 
+                "919\n" + 
+                "929\n" + 
+                "937\n" + 
+                "941\n" + 
+                "947\n" + 
+                "953\n" + 
+                "967\n" + 
+                "971\n" + 
+                "977\n" + 
+                "983\n" + 
+                "991\n" + 
+                "997" , input.trim());
     }
 }

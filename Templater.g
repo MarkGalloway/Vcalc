@@ -8,39 +8,61 @@ options {
 }
 
 @members {
-  int counter = 0;
+  int counter = 1;
   ArrayList<String> intVars = new ArrayList<String>();
+  ArrayList<String> vecVars = new ArrayList<String>();
 }
 
-program 
-  : ^(PROGRAM i+=declaration* s+=statement*)      -> mainSchema(intVars={intVars}, decls = {$i}, stats = {$s})
+program
+  : ^(PROGRAM i+=declaration* s+=statement*)      -> mainSchema(intVars={intVars}, vecVars={vecVars}, decls = {$i}, stats = {$s}, label={++counter})
   ;
 
 declaration
-  : ^(VAR Int    ID e+=expression) {intVars.add($ID.text);} -> intAssign(var = {$ID.text}, expr = {$e}, oldcounter = {counter})
+  : ^(VAR Int    ID e+=expression) {intVars.add($ID.text);} -> intAssign(var = {$ID.text}, expr = {$e}, label = {counter})
   | ^(VAR Vector ID e+=expression)                -> vectorDeclaration(var = {$ID.text}, expr = {$e})
   ;
  
 statement
-  : ^('=' ID e+=expression)                       -> assignment(var = {$ID.text}, expr = {$e})
-  | ^(IF e+=expression ^(SLIST s+=statement*))    -> ifStat(expr = {$e}, stats = {$s})
-  | ^(LOOP e+=expression ^(SLIST s+=statement*))  -> loopStat(expr = {$e}, stats = {$s})
-  | ^(PRINT e+=expression)                        -> print(expr = {$e}, oldcounter={counter})
+  : ^('=' ID e=expression)
+    -> intAssign(var = {$ID.text}, expr = {$e.st}, label = {counter})
+  | ^(IF e=expression {counter+=2;} ^(SLIST s+=statement*) {++counter;})   
+    -> ifStat(expr = {$e.st}, stats = {$s}, exprlabel={$e.label}, condition={$e.label+1}, ifbody={$e.label+2}, ifend={counter} )
+  | ^(LOOP  {int looplabel = ++counter;} e=expression {counter+=2;} ^(SLIST s+=statement*) {++counter;})  
+      -> loopStat(expr = {$e.st}, stats = {$s}, looplabel={looplabel}, exprlabel={$e.label}, condition={$e.label+1}, loopbody={$e.label+2}, loopend={counter} )
+  | ^(PRINT e=expression)                        
+    -> printInteger(expr = {$e.st}, counter={counter})
   ;
 
-expression
-  : ^(INDEX op1+=expression op2+=expression)      -> loadIndex(vector = {$op1}, index = {$op2})
-  | ^('=='  op1+=expression op2+=expression)      -> eqComparison(lhs = {$op1}, rhs = {$op2})
-  | ^('!='  op1+=expression op2+=expression)      -> neComparison(lhs = {$op1}, rhs = {$op2})
-  | ^('<'   op1+=expression op2+=expression)      -> ltComparison(lhs = {$op1}, rhs = {$op2})
-  | ^('>'   op1+=expression op2+=expression)      -> gtComparison(lhs = {$op1}, rhs = {$op2})
-  | ^('+'   op1+=expression op2+=expression)      -> add(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-2}, rhsLabel={counter} ,counter={++counter})
-  | ^('-'   op1+=expression op2+=expression)      -> sub(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-2}, rhsLabel={counter} ,counter={++counter})
-  | ^('*'   op1+=expression op2+=expression)      -> mult(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-2}, rhsLabel={counter} ,counter={++counter})
-  | ^('/'   op1+=expression op2+=expression)      -> div(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-2}, rhsLabel={counter} ,counter={++counter})
-  | ^('..'  op1+=expression op2+=expression)      -> range(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-1}, rhsLabel={counter} ,counter={++counter})
-  | ID                                            -> loadVariable(var = {$ID.text}, counter={++counter})
-  | INTEGER                                       -> loadConstant(value = {$INTEGER.text}, counter={++counter}, newcounter={++counter})
-  | ^(GENERATOR ID op1+=expression op2+=expression) -> generator(var = {$ID.text}, lhs = {$op1}, rhs = {$op2})
-  | ^(FILTER ID op1+=expression op2+=expression)    -> filter(var = {$ID.text}, lhs = {$op1}, rhs = {$op2})
+// expressions should return the instruction index their result is loaded
+expression returns [int label]
+
+ // equality binary ops
+  : ^('=='  op1=expression op2=expression) {$label = ++counter;}
+        -> eqIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})
+  | ^('!='  op1=expression op2=expression) {$label = ++counter;}
+        -> neIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})
+  | ^('<'   op1=expression op2=expression) {$label = ++counter;}
+        -> ltIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})
+  
+  | ^('>'   op1=expression op2=expression) {$label = ++counter;}
+        -> gtIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})
+
+  // binary ops
+  | ^('+'   op1=expression op2=expression) {$label = ++counter;}
+        -> addIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})      
+  | ^('-'   op1=expression op2=expression) {$label = ++counter;}
+        -> subIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,counter={$label}) 
+  | ^('*'   op1=expression op2=expression) {$label = ++counter;}
+        -> multIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,counter={$label}) 
+  | ^('/'   op1=expression op2=expression) {$label = ++counter;}      
+        -> divIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,counter={$label}) 
+        
+  //| ^('..'  op1+=expression op2+=expression)      -> range(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-1}, rhsLabel={counter} ,counter={++counter}) // to do
+  //  | ^(INDEX op1=expression op+=expression)      -> loadIndex(vector = {$op1.text}, index = {$op2.text}) //to do
+  
+  | ID {$label = ++counter;}                        -> loadVariable(var = {$ID.text}, counter={$label})
+  | INTEGER {counter+=2; $label = counter;}         -> loadConstant(value = {$INTEGER.text}, storecounter={$label-1}, loadcounter={$label})
+  
+ // | ^(GENERATOR ID op1+=expression op2+=expression) -> generator(var = {$ID.text}, lhs = {$op1}, rhs = {$op2}) // to do 
+//  | ^(FILTER ID op1+=expression op2+=expression)    -> filter(var = {$ID.text}, lhs = {$op1}, rhs = {$op2}) // to do
   ;

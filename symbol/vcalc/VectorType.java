@@ -48,8 +48,8 @@ public class VectorType {
     }
 
     public int getElement(int index) {
-    	if (index >= value.size()) {
-    		throw new RuntimeException("Index out of bounds. Index: " + index + ", Size: " + value.size());
+    	if (index >= value.size() || index < 0) {
+    		return 0;
     	}
     	
     	return value.get(index);
