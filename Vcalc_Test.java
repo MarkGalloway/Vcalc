@@ -7,17 +7,45 @@ import java.util.Arrays;
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.Token;
+import org.antlr.runtime.TokenRewriteStream;
 import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.CommonTreeAdaptor;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
+import org.antlr.runtime.tree.TreeAdaptor;
 import org.antlr.stringtemplate.StringTemplateGroup;
 import org.junit.Before;
 
+import ast.vcalc.VcalcAST;
+import ast.vcalc.VcalcErrorNode;
+import symbol2.vcalc.SymbolTable;
 import errors.vcalc.InvalidAssignmentException;
 import errors.vcalc.ParserException;
 
 public class Vcalc_Test {
 
+    /** An adaptor that tells ANTLR to build VcalcAST nodes */
+    public static TreeAdaptor VcalcAdaptor = new CommonTreeAdaptor() {
+        public Object create(Token token) {
+            return new VcalcAST(token);
+        }
+        public Object dupNode(Object t) {
+            if ( t==null ) {
+                return null;
+            }
+            return create(((VcalcAST)t).token);
+        }
+
+        public Object errorNode(TokenStream input,
+                                Token start,
+                                Token stop,
+                                RecognitionException e)
+        {
+            return new VcalcErrorNode(input,start,stop,e);
+        }
+    };
+    
     public static void main(String[] args) throws RecognitionException, IOException, ParserException, InvalidAssignmentException {
         if (args.length != 2 && !(args.length == 3 && args[2].equals("test"))) {
             System.err.print("Insufficient arguments: ");
@@ -39,8 +67,10 @@ public class Vcalc_Test {
         System.setErr(new PrintStream(outErrIntercept));
 
         VcalcLexer lexer = new VcalcLexer(input);
-        TokenStream tokenStream = new CommonTokenStream(lexer);
-        VcalcParser parser = new VcalcParser(tokenStream);
+        final TokenRewriteStream tokens = new TokenRewriteStream(lexer);
+        //TokenStream tokenStream = new CommonTokenStream(lexer);
+        VcalcParser parser = new VcalcParser(tokens);
+        parser.setTreeAdaptor(VcalcAdaptor);
         VcalcParser.program_return entry = parser.program();
         
         
@@ -64,11 +94,15 @@ public class Vcalc_Test {
             return;
         }
         
-        // Pass over to verify no variable misuse
         CommonTreeNodeStream nodes = new CommonTreeNodeStream(ast);
-        nodes.setTokenStream(tokenStream);
-        Defined defined = new Defined(nodes);
+        nodes.setTokenStream(tokens);
+        nodes.setTreeAdaptor(VcalcAdaptor); 
+        SymbolTable symTable = new SymbolTable();
+        Defined defined = new Defined(nodes, symTable);
+        
+        // Pass over to verify no variable misuse && Define Symbols
         defined.program();
+        
         //defined.downup(ast);
         //System.err.println(ast.toStringTree());
 
@@ -79,7 +113,13 @@ public class Vcalc_Test {
             interpreter.program().evaluate();
         }
         else {
-        	//Pass it all to the String templater!
+        	
+            // RESOLVE SYMBOLS, COMPUTE EXPRESSION TYPES
+            nodes.reset();
+            Types types = new Types(nodes, symTable);
+            types.program(); // trigger resolve/type computation actions
+            
+            //Pass it all to the String templater!
             String templateFile = args[1];
 
               // Load in string template from file

@@ -3,20 +3,23 @@ tree grammar Defined;
 options {
   language = Java;
   tokenVocab = Vcalc;
-  ASTLabelType = CommonTree;
+  ASTLabelType = VcalcAST;
 }
 
 
 @header {
-  import symbol.vcalc.*;
+  import symbol2.vcalc.*;
+  import ast.vcalc.*;
 }
 
 @members {
   SymbolTable symTable;
+  Scope currentScope;
   
-  public Defined(CommonTreeNodeStream nodestream){
-    super(nodestream);
-    symTable = new SymbolTable();
+  public Defined(CommonTreeNodeStream nodestream, SymbolTable symTable){
+    this(nodestream);
+    this.symTable = symTable;
+    currentScope = symTable.globals;
   }
 }
 
@@ -26,12 +29,29 @@ program
 
 declaration
   : ^(VAR type ID expression)
-    { if(symTable.getCurrentScope().contains($ID.text)) { throw new RuntimeException("Variable " + $ID.text + " declared twice in the same scope!");}
-      symTable.getCurrentScope().assign($ID.text, new VcalcValue(new IntType(0))); 
+    { 
+      Symbol s = currentScope.resolve($ID.text);
+      if(s != null) {
+        throw new RuntimeException("Variable " + $ID.text + " declared twice in the same scope.");
+      }
+
+      VariableSymbol vs = new VariableSymbol($ID.text, $type.type);
+      vs.def = $ID;            // track AST location of def's ID
+      $ID.symbol = vs;         // track in AST
+      $ID.scope = currentScope; //track scope
+      currentScope.define(vs);
     }
   ;
 
-type
+type returns [Type type]
+@init {
+  VcalcAST t = (VcalcAST)input.LT(1);
+}
+@after {
+    t.symbol = currentScope.resolve(t.getText());
+    t.scope = currentScope;
+    $type = (Type)t.symbol;
+}
   : Int 
   | Vector
   ;
@@ -44,7 +64,16 @@ statement
   ;
 
 assignment
-  : ^('=' ID expression)
+  : ^('=' ID expression) 
+    {
+      VariableSymbol vs = (VariableSymbol)currentScope.resolve($ID.text);
+      if(vs == null) {
+        throw new RuntimeException("Variable" + $ID.text + "must be declared before being used in assignment.");
+      }
+      $ID.symbol = vs; // track in AST
+      $ID.scope = currentScope; // track scope
+      
+    }
   ;
 
 ifStat
@@ -69,10 +98,38 @@ expression
   | ^('-' expression expression)
   | ^('*' expression expression)
   | ^('/' expression expression)
-  | ^('..' op1=expression op2=expression)
-  | ID { if(!symTable.contains($ID.text)) {throw new RuntimeException("Undeclared Variable " + $ID.text);}}
+  | ^('..' expression expression)
+  | ID  { 
+          Symbol s = currentScope.resolve($ID.text); 
+          if(s == null) throw new RuntimeException("Unknown Variable " + $ID.text + ". Variables must be declared before use in Vcalc."); 
+          //$ID.scope = currentScope; I think this is bad. What if we reference a global from local scope? fucks it up
+        }  
   | INTEGER
-  | ^(GENERATOR ID {symTable.pushScope(); symTable.getCurrentScope().assign($ID.text, new VcalcValue(new IntType(0)));} expression expression {symTable.popScope();})
-  | ^(FILTER ID {symTable.pushScope(); symTable.getCurrentScope().assign($ID.text, new VcalcValue(new IntType(0)));} expression expression {symTable.popScope();})
+  | ^(GENERATOR ID {
+                    currentScope = new LocalScope(currentScope); //push scope
+                    VariableSymbol vs = new VariableSymbol($ID.text, (Type)currentScope.resolve("int"));
+                    vs.def = $ID;            // track AST location of def's ID
+                    $ID.symbol = vs;         // track in AST
+                    $ID.scope = currentScope; // track scope
+                    currentScope.define(vs);
+                   } 
+       expression expression 
+                   {
+                    currentScope = currentScope.getEnclosingScope(); //pop scope
+                   }
+     )
+  | ^(FILTER ID {
+                 currentScope = new LocalScope(currentScope); //push scope
+                 VariableSymbol vs = new VariableSymbol($ID.text, (Type)currentScope.resolve("int"));
+                 vs.def = $ID;            // track AST location of def's ID
+                 $ID.symbol = vs;         // track in AST
+                 $ID.scope = currentScope; // track scope
+                 currentScope.define(vs);
+                } 
+       expression expression 
+                {
+                 currentScope = currentScope.getEnclosingScope(); //pop scope
+                }
+     )
   ;
   

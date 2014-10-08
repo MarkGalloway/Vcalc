@@ -3,7 +3,7 @@ grammar Vcalc;
 options {
   language = Java;
   output = AST;
-  ASTLabelType = CommonTree;
+  ASTLabelType = VcalcAST;
 }
 
 tokens {
@@ -20,6 +20,7 @@ tokens {
 
 @header {
   import java.util.Arrays;
+  import ast.vcalc.*;
 }
 
 @members {

@@ -3,12 +3,13 @@ tree grammar Interpreter;
 options {
   language = Java;
   tokenVocab = Vcalc;
-  ASTLabelType = CommonTree;
+  ASTLabelType = VcalcAST;
 }
 
 @header {
   import node.vcalc.*;
   import symbol.vcalc.*;
+  import ast.vcalc.*;
 }
 
 @members {
