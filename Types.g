@@ -4,7 +4,6 @@ options {
   language = Java;
   tokenVocab = Vcalc;
   ASTLabelType = VcalcAST;
-  filter = true;
 }
 
 @header {
@@ -69,7 +68,7 @@ loop
 
 print
   : ^(PRINT expression)
-    {
+    { 
       $start.evalType = $expression.start.evalType;
     }
   ;

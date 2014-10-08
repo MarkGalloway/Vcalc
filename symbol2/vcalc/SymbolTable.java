@@ -111,5 +111,7 @@ public class SymbolTable {
     public Type print(VcalcAST a) {
         return a.evalType;
     }
+    
+    public String toString() { return globals.toString(); }
 
 }

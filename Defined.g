@@ -36,6 +36,7 @@ declaration
       }
 
       VariableSymbol vs = new VariableSymbol($ID.text, $type.type);
+      
       vs.def = $ID;            // track AST location of def's ID
       $ID.symbol = vs;         // track in AST
       $ID.scope = currentScope; //track scope
@@ -68,7 +69,7 @@ assignment
     {
       VariableSymbol vs = (VariableSymbol)currentScope.resolve($ID.text);
       if(vs == null) {
-        throw new RuntimeException("Variable" + $ID.text + "must be declared before being used in assignment.");
+        throw new RuntimeException("Variable " + $ID.text + " must be declared before being used in assignment.");
       }
       $ID.symbol = vs; // track in AST
       $ID.scope = currentScope; // track scope
@@ -102,7 +103,7 @@ expression
   | ID  { 
           Symbol s = currentScope.resolve($ID.text); 
           if(s == null) throw new RuntimeException("Unknown Variable " + $ID.text + ". Variables must be declared before use in Vcalc."); 
-          //$ID.scope = currentScope; I think this is bad. What if we reference a global from local scope? fucks it up
+          $ID.scope = currentScope; //I think this is bad. What if we reference a global from local scope? Does it ruin it?
         }  
   | INTEGER
   | ^(GENERATOR ID {
