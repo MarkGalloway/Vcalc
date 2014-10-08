@@ -13,6 +13,7 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.stringtemplate.StringTemplateGroup;
 import org.junit.Before;
 
+import symbol2.vcalc.SymbolTable;
 import errors.vcalc.InvalidAssignmentException;
 import errors.vcalc.ParserException;
 
@@ -67,7 +68,8 @@ public class Vcalc_Test {
         // Pass over to verify no variable misuse
         CommonTreeNodeStream nodes = new CommonTreeNodeStream(ast);
         nodes.setTokenStream(tokenStream);
-        Defined defined = new Defined(nodes);
+        SymbolTable symTable = new SymbolTable();
+        Defined defined = new Defined(nodes, symTable);
         defined.program();
         //defined.downup(ast);
         //System.err.println(ast.toStringTree());
