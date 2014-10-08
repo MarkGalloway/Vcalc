@@ -202,7 +202,6 @@ public class LlvmTest {
         assertEquals("5\n-1", input.trim());
     }
     
-    
     @Test // First llvm test, error stream should be empty
     public void gtTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 
@@ -363,7 +362,6 @@ public class LlvmTest {
         assertEquals("", errors.trim());
         assertEquals("4\n3\n2\n1", input.trim());
     }
-    
     
     @Test // First llvm test, error stream should be empty
     public void ifTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
@@ -578,4 +576,30 @@ public class LlvmTest {
                 "991\n" + 
                 "997" , input.trim());
     }
+
+    @Test
+    public void vectorPrintTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        		"print(1..2);"
+        		+ "print(10..106);"
+        				);
+        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        Vcalc_Test.main(args);
+        SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
+
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
+        p.waitFor();
+        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        
+        while ((line = reader.readLine()) != null) {input += line + "\n";}
+        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
+        
+        assertEquals("", errors.trim());
+        assertEquals("[ 1 2 ]\n", input.trim());
+    }
+    
+    // reassign vector with a smaller size
+    // should generator through an error if start > end?
+
 }

@@ -6,11 +6,14 @@ mainSchema(intVars, decls, stats) ::=
 target datalayout = "e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-v64:64:64-v128:128:128-a0:0:64-s0:64:64-f80:128:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
 
+%struct.vector = type { [32 x i32], i32 }
+
 @.str = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
 @.str1 = private unnamed_addr constant [3 x i8] c"[ \00", align 1
 @.str2 = private unnamed_addr constant [4 x i8] c"%d \00", align 1
 @.str3 = private unnamed_addr constant [2 x i8] c"]\00", align 1
-%struct.vector = type { [32 x i32], i32 }
+@init = constant %struct.vector { [32 x i32] [i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0], i32 32 }, align 4
+
 
 ; Function Attrs: nounwind ssp uwtable
 define i32 @.eqIntegers(i32 %op1, i32 %op2) {
@@ -146,10 +149,97 @@ define void @.printVector(%struct.vector* %x) nounwind uwtable {
 	  ret void
 }
 
+define void @.range(%struct.vector* %x, i32 %start, i32 %end) nounwind uwtable {
+  %1 = alloca %struct.vector*, align 8
+  %2 = alloca i32, align 4
+  %3 = alloca i32, align 4
+  %i = alloca i32, align 4
+  %tmp = alloca i32, align 4
+  %j = alloca i32, align 4
+  store %struct.vector* %x, %struct.vector** %1, align 8
+  store i32 %start, i32* %2, align 4
+  store i32 %end, i32* %3, align 4
+  store i32 0, i32* %i, align 4
+  %4 = load i32* %3, align 4
+  %5 = load i32* %2, align 4
+  %6 = sub nsw i32 %4, %5
+  %7 = add nsw i32 %6, 1
+  store i32 %7, i32* %tmp, align 4
+  %8 = load i32* %2, align 4
+  store i32 %8, i32* %j, align 4
+  br label %9
+
+; <label>:9                                       ; preds = %29, %0
+  %10 = load i32* %j, align 4
+  %11 = load i32* %3, align 4
+  %12 = icmp sle i32 %10, %11
+  br i1 %12, label %13, label %32
+
+; <label>:13                                      ; preds = %9
+  %14 = load i32* %i, align 4
+  %15 = load %struct.vector** %1, align 8
+  %16 = getelementptr inbounds %struct.vector* %15, i32 0, i32 1
+  %17 = load i32* %16, align 4
+  %18 = icmp sge i32 %14, %17
+  br i1 %18, label %19, label %20
+
+; <label>:19                                      ; preds = %13
+  br label %32
+
+; <label>:20                                      ; preds = %13
+  %21 = load i32* %j, align 4
+  %22 = load i32* %i, align 4
+  %23 = sext i32 %22 to i64
+  %24 = load %struct.vector** %1, align 8
+  %25 = getelementptr inbounds %struct.vector* %24, i32 0, i32 0
+  %26 = getelementptr inbounds [32 x i32]* %25, i32 0, i64 %23
+  store i32 %21, i32* %26, align 4
+  %27 = load i32* %i, align 4
+  %28 = add nsw i32 %27, 1
+  store i32 %28, i32* %i, align 4
+  br label %29
+
+; <label>:29                                      ; preds = %20
+  %30 = load i32* %j, align 4
+  %31 = add nsw i32 %30, 1
+  store i32 %31, i32* %j, align 4
+  br label %9
+
+; <label>:32                                      ; preds = %19, %9
+  %33 = load i32* %tmp, align 4
+  %34 = icmp slt i32 %33, 32
+  br i1 %34, label %35, label %39
+
+; <label>:35                                      ; preds = %32
+  %36 = load i32* %tmp, align 4
+  %37 = load %struct.vector** %1, align 8
+  %38 = getelementptr inbounds %struct.vector* %37, i32 0, i32 1
+  store i32 %36, i32* %38, align 4
+  br label %42
+
+; <label>:39                                      ; preds = %32
+  %40 = load %struct.vector** %1, align 8
+  %41 = getelementptr inbounds %struct.vector* %40, i32 0, i32 1
+  store i32 32, i32* %41, align 4
+  br label %42
+
+; <label>:42                                      ; preds = %39, %35
+  ret void
+}
 
 
-; Function Attrs: nounwind
-declare void @llvm.memset.p0i8.i64(i8* nocapture, i8, i64, i32, i1) nounwind
+
+
+define void @.initVector(%struct.vector* %x) nounwind uwtable {
+  %1 = alloca %struct.vector*, align 8
+  store %struct.vector* %x, %struct.vector** %1, align 8
+  %2 = load %struct.vector** %1, align 8
+  %3 = bitcast %struct.vector* %2 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %3, i8* bitcast (%struct.vector* @init to i8*), i64 132, i32 4, i1 false)
+  ret void
+}
+
+declare void @llvm.memcpy.p0i8.p0i8.i64(i8* nocapture, i8* nocapture, i64, i32, i1) nounwind
 
 declare i32 @printf(i8*, ...)
 
@@ -172,12 +262,8 @@ store i32 0, i32* %1
 
 vecAssign(expr, var, size, label, label2, label3, labels, integers) ::= 
 <<
-  <expr>
-  %<label> = bitcast %struct.vector* %<var> to i8*
-  call void @llvm.memset.p0i8.i64(i8* %<label>, i8 0, i64 128, i32 4, i1 false
-  %<label2> = bitcast i8* %<label> to %struct.vector*
-  %<label3> = getelementptr %struct.vector* %<label2>, i32 0, i32 1
-  store i32 <size>, i32* %<label3>
+  ; clear the vector
+  call void @initVector(%struct.vector* %<var>)
 >>
 
 intAssign(expr, var, label) ::= 
@@ -218,6 +304,14 @@ printInteger(expr, counter) ::=
   ; print
   tail call void @.printInteger(i32 %<counter>)
 >>
+
+printVector(expr, counter) ::= 
+<<
+  <expr>
+  ; print
+  call void @.printVector(%struct.vector* %_<counter>)
+>>
+
 
 divIntegers(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 <<
@@ -288,6 +382,16 @@ neIntegers(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 ; addition !
 %<counter> = call i32 @.neIntegers(i32 %<rhsLabel>, i32 %<lhsLabel>)
 >>
+
+range(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
+<<
+<lhs>
+<rhs>
+%_<counter> = alloca %struct.vector, align 4
+call void @.initVector(%struct.vector* %_<counter>)
+call void @.range(%struct.vector* %_<counter>, i32 %<lhsLabel>, i32 %<rhsLabel>)
+>>
+
 
 
 loadVariable(var, counter) ::=

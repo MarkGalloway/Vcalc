@@ -21,7 +21,7 @@ declaration
   : ^(VAR Int    ID e+=expression) {intVars.add($ID.text);} -> intAssign(var = {$ID.text}, expr = {$e}, label = {counter})
   | ^(VAR Vector ID e+=expression)                -> vectorDeclaration(var = {$ID.text}, expr = {$e})
   ;
- 
+ //
 statement
   : ^('=' ID e=expression)
     -> intAssign(var = {$ID.text}, expr = {$e.st}, label = {counter})
@@ -29,8 +29,9 @@ statement
     -> ifStat(expr = {$e.st}, stats = {$s}, exprlabel={$e.label}, condition={$e.label+1}, ifbody={$e.label+2}, ifend={counter} )
   | ^(LOOP  {int looplabel = ++counter;} e=expression {counter+=2;} ^(SLIST s+=statement*) {++counter;})  
       -> loopStat(expr = {$e.st}, stats = {$s}, looplabel={looplabel}, exprlabel={$e.label}, condition={$e.label+1}, loopbody={$e.label+2}, loopend={counter} )
-  | ^(PRINT e=expression)                        
-    -> printInteger(expr = {$e.st}, counter={counter})
+  | ^(PRINT e=expression)
+   // -> printVector(expr = {$e.st}, counter={e.label})                        
+    -> printInteger(expr = {$e.st}, counter={e.label})
   ;
 
 // expressions should return the instruction index their result is loaded
@@ -57,12 +58,14 @@ expression returns [int label]
   | ^('/'   op1=expression op2=expression) {$label = ++counter;}      
         -> divIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,counter={$label}) 
         
-  //| ^('..'  op1+=expression op2+=expression)      -> range(lhs = {$op1}, rhs = {$op2}, lhsLabel={counter-1}, rhsLabel={counter} ,counter={++counter}) // to do
+  | ^('..'  op1=expression op2=expression) {$label = counter;}      
+    -> range(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,counter={$label}) // to do
   //  | ^(INDEX op1=expression op+=expression)      -> loadIndex(vector = {$op1.text}, index = {$op2.text}) //to do
   
   | ID {$label = ++counter;}                        -> loadVariable(var = {$ID.text}, counter={$label})
   | INTEGER {counter+=2; $label = counter;}         -> loadConstant(value = {$INTEGER.text}, storecounter={$label-1}, loadcounter={$label})
   
- // | ^(GENERATOR ID op1+=expression op2+=expression) -> generator(var = {$ID.text}, lhs = {$op1}, rhs = {$op2}) // to do 
+//  | ^(GENERATOR ID op1+=expression op2+=expression) {$label = counter;}
+ //     -> generator(var = {$ID.text}, lhs = {$op1}, rhs = {$op2}) // to do 
 //  | ^(FILTER ID op1+=expression op2+=expression)    -> filter(var = {$ID.text}, lhs = {$op1}, rhs = {$op2}) // to do
   ;
