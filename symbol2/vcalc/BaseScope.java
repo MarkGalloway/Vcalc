@@ -1,21 +1,21 @@
 package symbol2.vcalc;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class BaseScope implements Scope {
-    private Map<String, Symbol> symbolMap = new HashMap<String, Symbol>();
-    private String scopeName;
+    private Map<String, Symbol> symbolMap = new LinkedHashMap<String, Symbol>();
+    private ScopeType scopeType;
     private Scope enclosingScope;
     
-    public BaseScope(String scopeName, Scope enclosingScope) {
-        this.scopeName = scopeName;
+    public BaseScope(ScopeType scopeType, Scope enclosingScope) {
+        this.scopeType = scopeType;
         this.enclosingScope = enclosingScope;
     }
     
     @Override
-    public String getScopeName() {
-        return scopeName;
+    public ScopeType getScopeType() {
+        return scopeType;
     }
 
     @Override
