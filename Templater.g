@@ -34,12 +34,16 @@ declaration
   ;
  //
 statement
-  : ^('=' ID e=expression)
+  : ^(EQ='=' ID e=expression)
+    -> {$EQ.evalType == SymbolTable._vector}? vecAssign(var = {$ID.text}, expr = {$e.st}, label = {counter}) //TODO: fix args
     -> intAssign(var = {$ID.text}, expr = {$e.st}, label = {counter})
+    
   | ^(IF e=expression {counter+=2;} ^(SLIST s+=statement*) {++counter;})   
     -> ifStat(expr = {$e.st}, stats = {$s}, exprlabel={$e.label}, condition={$e.label+1}, ifbody={$e.label+2}, ifend={counter} )
+    
   | ^(LOOP  {int looplabel = ++counter;} e=expression {counter+=2;} ^(SLIST s+=statement*) {++counter;})  
       -> loopStat(expr = {$e.st}, stats = {$s}, looplabel={looplabel}, exprlabel={$e.label}, condition={$e.label+1}, loopbody={$e.label+2}, loopend={counter} )
+  
   | ^(PRINT e=expression)
      -> {$PRINT.evalType == SymbolTable._vector}? printVector(expr = {$e.st}, counter={e.label})        
      -> printInteger(expr = {$e.st}, counter={e.label})    
