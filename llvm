@@ -1,18 +1,17 @@
 group llvm;
 
 mainSchema(intVars, decls, stats) ::= 
-<<
-; ModuleID = 'tamaraisthebest.c'
+<<; ModuleID = 'tamaraisthebest.c'
 target datalayout = "e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-v64:64:64-v128:128:128-a0:0:64-s0:64:64-f80:128:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
 
-%struct.vector = type { [32 x i32], i32 }
+%struct.vector = type { \<32 x i32\>, i32 }
 
 @.str = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
 @.str1 = private unnamed_addr constant [3 x i8] c"[ \00", align 1
 @.str2 = private unnamed_addr constant [4 x i8] c"%d \00", align 1
-@.str3 = private unnamed_addr constant [2 x i8] c"]\00", align 1
-@init = constant %struct.vector { [32 x i32] [i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0], i32 32 }, align 4
+@.str3 = private unnamed_addr constant [3 x i8] c"]\0A\00", align 1
+@init = constant %struct.vector { \<32 x i32\> \<i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0\>, i32 32 }, align 4
 
 
 ; Function Attrs: nounwind ssp uwtable
@@ -133,7 +132,7 @@ define void @.printVector(%struct.vector* %x) nounwind uwtable {
 	  %11 = sext i32 %10 to i64
 	  %12 = load %struct.vector** %1, align 8
 	  %13 = getelementptr inbounds %struct.vector* %12, i32 0, i32 0
-	  %14 = getelementptr inbounds [32 x i32]* %13, i32 0, i64 %11
+	  %14 = getelementptr inbounds \<32 x i32\>* %13, i32 0, i64 %11
 	  %15 = load i32* %14, align 4
 	  %16 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @.str2, i32 0, i32 0), i32 %15)
 	  br label %17
@@ -145,7 +144,7 @@ define void @.printVector(%struct.vector* %x) nounwind uwtable {
 	  br label %3
 	
 	; <label>:20                                      ; preds = %3
-	  %21 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([2 x i8]* @.str3, i32 0, i32 0))
+	  %21 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([3 x i8]* @.str3, i32 0, i32 0))
 	  ret void
 }
 
@@ -192,7 +191,7 @@ define void @.range(%struct.vector* %x, i32 %start, i32 %end) nounwind uwtable {
   %23 = sext i32 %22 to i64
   %24 = load %struct.vector** %1, align 8
   %25 = getelementptr inbounds %struct.vector* %24, i32 0, i32 0
-  %26 = getelementptr inbounds [32 x i32]* %25, i32 0, i64 %23
+  %26 = getelementptr inbounds \<32 x i32\>* %25, i32 0, i64 %23
   store i32 %21, i32* %26, align 4
   %27 = load i32* %i, align 4
   %28 = add nsw i32 %27, 1

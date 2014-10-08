@@ -41,8 +41,8 @@ statement
   | ^(LOOP  {int looplabel = ++counter;} e=expression {counter+=2;} ^(SLIST s+=statement*) {++counter;})  
       -> loopStat(expr = {$e.st}, stats = {$s}, looplabel={looplabel}, exprlabel={$e.label}, condition={$e.label+1}, loopbody={$e.label+2}, loopend={counter} )
   | ^(PRINT e=expression)
-    //{$PRINT.evalType == SymbolTable._vector}?=> -> printVector(expr = {$e.st}, counter={e.label})        
-    //{$PRINT.evalType == SymbolTable._int}?=>    -> printInteger(expr = {$e.st}, counter={e.label})    
+     -> {$PRINT.evalType == SymbolTable._vector}? printVector(expr = {$e.st}, counter={e.label})        
+     -> printInteger(expr = {$e.st}, counter={e.label})    
   ;
 
 // expressions should return the instruction index their result is loaded
