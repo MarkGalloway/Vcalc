@@ -46,8 +46,8 @@ public class LlvmTest {
         System.setErr(err_backup);
         SampleFileWriter.destroy("Tests/00temp.vcalc");
         SampleFileWriter.destroy("Tests/00temp.ll");
-        reader.close();
-        errorReader.close();
+        if(reader != null) reader.close();
+        if(errorReader != null) errorReader.close();
     }
     
     /**
@@ -390,6 +390,48 @@ public class LlvmTest {
         
         assertEquals("", errors.trim());
         assertEquals("4\n3", input.trim());
+    }
+    
+    @Test(expected=RuntimeException.class)
+    public void testLoopConditional() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        "loop(1..10)pool;print(2);"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        
+        Vcalc_Test.main(args);
+        SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
+
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
+        p.waitFor();
+        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        
+        while ((line = reader.readLine()) != null) {input += line + "\n";}
+        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
+        assertEquals("" , errors.trim());
+        assertEquals("2", input.trim());
+    }
+    
+    @Test(expected=RuntimeException.class)
+    public void testIfConditional() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
+        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+        "vector x = 1..10; if(x) fi;"
+        );
+        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        
+        Vcalc_Test.main(args);
+        Vcalc_Test.main(args);
+        SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
+
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
+        p.waitFor();
+        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        
+        while ((line = reader.readLine()) != null) {input += line + "\n";}
+        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
+        assertEquals("", errors.trim());
     }
     
     @Test // First llvm test, error stream should be empty
