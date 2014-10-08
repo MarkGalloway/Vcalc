@@ -132,7 +132,7 @@ public class Vcalc_Test {
 			groupFileR.close();
 			
 			nodes.reset();
-			Templater templater = new Templater(nodes);
+			Templater templater = new Templater(nodes, symTable);
 			templater.setTemplateLib(stg);
 			System.out.println(templater.program().getTemplate().toString());
         }

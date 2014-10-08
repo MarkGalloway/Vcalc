@@ -4,13 +4,24 @@ options {
   language = Java;
   output = template;
   tokenVocab = Vcalc;
-  ASTLabelType = CommonTree;
+  ASTLabelType = VcalcAST;
+}
+
+@header {
+  import symbol2.vcalc.*;
+  import ast.vcalc.*;
 }
 
 @members {
   int counter = 1;
   ArrayList<String> intVars = new ArrayList<String>();
   ArrayList<String> vecVars = new ArrayList<String>();
+  
+  SymbolTable symTable;
+	public Templater(TreeNodeStream input, SymbolTable symTable) {
+	    this(input);
+	    this.symTable = symTable;
+	}
 }
 
 program
@@ -30,8 +41,8 @@ statement
   | ^(LOOP  {int looplabel = ++counter;} e=expression {counter+=2;} ^(SLIST s+=statement*) {++counter;})  
       -> loopStat(expr = {$e.st}, stats = {$s}, looplabel={looplabel}, exprlabel={$e.label}, condition={$e.label+1}, loopbody={$e.label+2}, loopend={counter} )
   | ^(PRINT e=expression)
-   // -> printVector(expr = {$e.st}, counter={e.label})                        
-    -> printInteger(expr = {$e.st}, counter={e.label})
+    //{$PRINT.evalType == SymbolTable._vector}?=> -> printVector(expr = {$e.st}, counter={e.label})        
+    //{$PRINT.evalType == SymbolTable._int}?=>    -> printInteger(expr = {$e.st}, counter={e.label})    
   ;
 
 // expressions should return the instruction index their result is loaded
