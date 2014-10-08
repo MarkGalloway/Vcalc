@@ -101,9 +101,10 @@ expression
   | ^('/' expression expression)
   | ^('..' expression expression)
   | ID  { 
-          Symbol s = currentScope.resolve($ID.text); 
-          if(s == null) throw new RuntimeException("Unknown Variable " + $ID.text + ". Variables must be declared before use in Vcalc."); 
-          $ID.scope = currentScope; //I think this is bad. What if we reference a global from local scope? Does it ruin it?
+          Symbol vs = currentScope.resolve($ID.text); 
+          if(vs == null) throw new RuntimeException("Unknown Variable " + $ID.text + ". Variables must be declared before use in Vcalc."); 
+          $ID.symbol = vs;
+          $ID.scope = currentScope;
         }  
   | INTEGER
   | ^(GENERATOR ID {
