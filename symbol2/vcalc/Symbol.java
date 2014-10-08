@@ -20,4 +20,11 @@ public class Symbol {
     public String getName() {
         return name;
     }
+    
+    public String toString() {
+        String s = "";
+        if ( scope!=null ) s = "Scope: " +scope.getScopeType()+".";
+        if ( type!=null ) return '<'+s+getName()+"  TYPE:"+type+'>' + "\n";
+        return s+getName();
+    }
 }

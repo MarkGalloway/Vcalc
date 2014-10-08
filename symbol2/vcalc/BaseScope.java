@@ -26,6 +26,7 @@ public class BaseScope implements Scope {
     @Override
     public void define(Symbol sym) {
         symbolMap.put(sym.getName(), sym);
+        sym.scope = this; // track the scope in each symbol
     }
 
     @Override
@@ -39,4 +40,6 @@ public class BaseScope implements Scope {
         
         return null;
     }
+    
+    public String toString() { return symbolMap.keySet().toString(); }
 }

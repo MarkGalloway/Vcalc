@@ -103,6 +103,8 @@ public class Vcalc_Test {
         // Pass over to verify no variable misuse && Define Symbols
         defined.program();
         
+        
+        
         //defined.downup(ast);
         //System.err.println(ast.toStringTree());
 
@@ -118,6 +120,8 @@ public class Vcalc_Test {
             nodes.reset();
             Types types = new Types(nodes, symTable);
             types.program(); // trigger resolve/type computation actions
+            
+            //System.out.println(symTable.toString());
             
             //Pass it all to the String templater!
             String templateFile = args[1];
