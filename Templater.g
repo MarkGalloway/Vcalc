@@ -65,8 +65,15 @@ expression returns [int label]
         -> gtIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})
 
   // binary ops
-  | ^('+'   op1=expression op2=expression) {$label = ++counter;}
-        -> addIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})      
+  | ^(PLUS='+'   op1=expression op2=expression) {$label = ++counter;}
+        
+        -> {$PLUS.evalType == SymbolTable._int }? addIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})   
+        -> {$op1.start.evalType == SymbolTable._vector  && $op2.start.evalType == SymbolTable._int  }? addVectorAndInt()
+        -> {$op2.start.evalType == SymbolTable._vector  && $op1.start.evalType == SymbolTable._int  }? addIntAndVector()
+        -> addVectors(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})
+        
+        
+           
   | ^('-'   op1=expression op2=expression) {$label = ++counter;}
         -> subIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,counter={$label}) 
   | ^('*'   op1=expression op2=expression) {$label = ++counter;}
