@@ -421,7 +421,6 @@ public class LlvmTest {
         String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
         
         Vcalc_Test.main(args);
-        Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
         Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
@@ -622,11 +621,8 @@ public class LlvmTest {
     @Test
     public void vectorPrintTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
         SampleFileWriter.createFile("Tests/00temp.vcalc", 
-        		"print(1..20);" +
-        		"print(1..100);" );
-        
-        SampleFileWriter.destroy("Tests/00vector.ll");
-        
+        		"print(2..5);" +
+        		"print(50..65);" );
         String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
 
