@@ -58,7 +58,7 @@ public class LlvmTest {
      * 
      */
 
-    @Test // First llvm test, error stream should be empty
+ @Test // First llvm test, error stream should be empty
     public void printTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
     	SampleFileWriter.destroy("Tests/01LLVMtest.vcalc");
         SampleFileWriter.createFile("Tests/01LLVMtest.vcalc", 
@@ -69,7 +69,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -95,7 +95,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -120,7 +120,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -145,7 +145,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -170,7 +170,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -196,7 +196,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -229,7 +229,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -262,7 +262,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -297,7 +297,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -332,7 +332,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -362,7 +362,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -392,7 +392,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -415,7 +415,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -437,7 +437,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -446,14 +446,15 @@ public class LlvmTest {
         while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
         assertEquals("", errors.trim());
     }
-    
+
+
     @Test // First llvm test, error stream should be empty
     public void primeTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        String[] args = new String[] {"Tests/01prime.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/LLVMprimes.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -643,7 +644,7 @@ public class LlvmTest {
         SampleFileWriter.destroy("Tests/00vector.ll");
         SampleFileWriter.createFile("Tests/00vector.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00vector.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00vector.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -674,7 +675,7 @@ public class LlvmTest {
         SampleFileWriter.destroy("Tests/02vector.ll");
         SampleFileWriter.createFile("Tests/02vector.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/02vector.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/02vector.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -702,7 +703,7 @@ public class LlvmTest {
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/00temp.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
