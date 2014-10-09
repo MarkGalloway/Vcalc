@@ -124,7 +124,7 @@ public class Vcalc_Test {
             //System.out.println(symTable.toString());
             
             //Pass it all to the String templater!
-            String templateFile = args[1];
+            String templateFile = args[1] +".stg";
 
               // Load in string template from file
 			FileReader groupFileR = new FileReader(templateFile);

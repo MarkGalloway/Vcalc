@@ -5,14 +5,12 @@ mainSchema(intVars, decls, stats) ::=
 target datalayout = "e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-v64:64:64-v128:128:128-a0:0:64-s0:64:64-f80:128:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
 
-%struct.vector = type { \<32 x i32\>, i32 }
-
+%struct.vector = type { i64, i64, \<32 x i32\>* }
 @.str = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
 @.str1 = private unnamed_addr constant [3 x i8] c"[ \00", align 1
 @.str2 = private unnamed_addr constant [4 x i8] c"%d \00", align 1
 @.str3 = private unnamed_addr constant [3 x i8] c"]\0A\00", align 1
-@init = constant %struct.vector { \<32 x i32\> \<i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0\>, i32 32 }, align 4
-
+declare i32 @printf(i8*, ...)
 
 ; Function Attrs: nounwind ssp uwtable
 define i32 @.eqIntegers(i32 %op1, i32 %op2) {
@@ -65,143 +63,151 @@ define void @.printInteger(i32 %i) {
   ret void
 }
 
+define i64 @getIndex(i32 %x) nounwind uwtable readnone {
+  %1 = sdiv i32 %x, 32
+  %2 = sext i32 %1 to i64
+  ret i64 %2
+}
 
-define void @.printVector(%struct.vector* %x) nounwind uwtable {
-	  %1 = alloca %struct.vector*, align 8
-	  %i = alloca i32, align 4
-	  store %struct.vector* %x, %struct.vector** %1, align 8
-	  %2 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([3 x i8]* @.str1, i32 0, i32 0))
-	  store i32 0, i32* %i, align 4
-	  br label %3
-	
-	; <label>:3                                       ; preds = %17, %0
-	  %4 = load i32* %i, align 4
-	  %5 = load %struct.vector** %1, align 8
-	  %6 = getelementptr inbounds %struct.vector* %5, i32 0, i32 1
-	  %7 = load i32* %6, align 4
-	  %8 = icmp slt i32 %4, %7
-	  br i1 %8, label %9, label %20
-	
-	; <label>:9                                       ; preds = %3
-	  %10 = load i32* %i, align 4
-	  %11 = sext i32 %10 to i64
-	  %12 = load %struct.vector** %1, align 8
-	  %13 = getelementptr inbounds %struct.vector* %12, i32 0, i32 0
-	  %14 = getelementptr inbounds \<32 x i32\>* %13, i32 0, i64 %11
-	  %15 = load i32* %14, align 4
-	  %16 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @.str2, i32 0, i32 0), i32 %15)
-	  br label %17
-	
-	; <label>:17                                      ; preds = %9
-	  %18 = load i32* %i, align 4
-	  %19 = add nsw i32 %18, 1
-	  store i32 %19, i32* %i, align 4
-	  br label %3
-	
-	; <label>:20                                      ; preds = %3
-	  %21 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([3 x i8]* @.str3, i32 0, i32 0))
-	  ret void
+define i64 @getPos(i32 %x) nounwind uwtable readnone {
+  %1 = srem i32 %x, 32
+  %2 = sext i32 %1 to i64
+  ret i64 %2
+}
+
+
+define void @.printVector(%struct.vector* nocapture %x) nounwind uwtable {
+  %1 = alloca %struct.vector*, align 8
+  %temp = alloca i32, align 4
+  %i = alloca i32, align 4
+  store %struct.vector* %x, %struct.vector** %1, align 8
+  %2 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([3 x i8]* @.str1, i32 0, i32 0))
+  store i32 0, i32* %i, align 4
+  br label %3
+
+  %4 = load i32* %i, align 4
+  %5 = sext i32 %4 to i64
+  %6 = load %struct.vector** %1, align 8
+  %7 = getelementptr inbounds %struct.vector* %6, i32 0, i32 0
+  %8 = load i64* %7, align 8
+  %9 = icmp ult i64 %5, %8
+  br i1 %9, label %10, label %27
+
+  %11 = load i32* %i, align 4
+  %12 = call i64 @getIndex(i32 %11)
+  %13 = load %struct.vector** %1, align 8
+  %14 = getelementptr inbounds %struct.vector* %13, i32 0, i32 2
+  %15 = load \<32 x i32\>** %14, align 8
+  %16 = getelementptr inbounds \<32 x i32\>* %15, i64 %12
+  %17 = load \<32 x i32\>* %16
+  %18 = load i32* %i, align 4
+  %19 = call i64 @getPos(i32 %18)
+  %20 = trunc i64 %19 to i32
+  %21 = extractelement \<32 x i32\> %17, i32 %20
+  store i32 %21, i32* %temp, align 4
+  %22 = load i32* %temp, align 4
+  %23 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @.str2, i32 0, i32 0), i32 %22)
+  br label %24
+
+  %25 = load i32* %i, align 4
+  %26 = add nsw i32 %25, 1
+  store i32 %26, i32* %i, align 4
+  br label %3
+
+  %28 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([3 x i8]* @.str3, i32 0, i32 0))
+  ret void
 }
 
 define void @.range(%struct.vector* %x, i32 %start, i32 %end) nounwind uwtable {
   %1 = alloca %struct.vector*, align 8
   %2 = alloca i32, align 4
   %3 = alloca i32, align 4
+  %additional = alloca i32, align 4
   %i = alloca i32, align 4
-  %tmp = alloca i32, align 4
-  %j = alloca i32, align 4
   store %struct.vector* %x, %struct.vector** %1, align 8
   store i32 %start, i32* %2, align 4
   store i32 %end, i32* %3, align 4
-  store i32 0, i32* %i, align 4
   %4 = load i32* %3, align 4
   %5 = load i32* %2, align 4
   %6 = sub nsw i32 %4, %5
   %7 = add nsw i32 %6, 1
-  store i32 %7, i32* %tmp, align 4
-  %8 = load i32* %2, align 4
-  store i32 %8, i32* %j, align 4
-  br label %9
-
-; <label>:9                                       ; preds = %29, %0
-  %10 = load i32* %j, align 4
-  %11 = load i32* %3, align 4
-  %12 = icmp sle i32 %10, %11
-  br i1 %12, label %13, label %32
-
-; <label>:13                                      ; preds = %9
-  %14 = load i32* %i, align 4
-  %15 = load %struct.vector** %1, align 8
-  %16 = getelementptr inbounds %struct.vector* %15, i32 0, i32 1
-  %17 = load i32* %16, align 4
-  %18 = icmp sge i32 %14, %17
-  br i1 %18, label %19, label %20
-
-; <label>:19                                      ; preds = %13
-  br label %32
-
-; <label>:20                                      ; preds = %13
-  %21 = load i32* %j, align 4
-  %22 = load i32* %i, align 4
-  %23 = sext i32 %22 to i64
+  %8 = sext i32 %7 to i64
+  %9 = load %struct.vector** %1, align 8
+  %10 = getelementptr inbounds %struct.vector* %9, i32 0, i32 0
+  store i64 %8, i64* %10, align 8
+  %11 = load %struct.vector** %1, align 8
+  %12 = getelementptr inbounds %struct.vector* %11, i32 0, i32 0
+  %13 = load i64* %12, align 8
+  %14 = urem i64 %13, 32
+  %15 = icmp ne i64 %14, 0
+  %16 = select i1 %15, i32 1, i32 0
+  store i32 %16, i32* %additional, align 4
+  %17 = load %struct.vector** %1, align 8
+  %18 = getelementptr inbounds %struct.vector* %17, i32 0, i32 0
+  %19 = load i64* %18, align 8
+  %20 = udiv i64 %19, 32
+  %21 = load i32* %additional, align 4
+  %22 = sext i32 %21 to i64
+  %23 = add i64 %20, %22
   %24 = load %struct.vector** %1, align 8
-  %25 = getelementptr inbounds %struct.vector* %24, i32 0, i32 0
-  %26 = getelementptr inbounds \<32 x i32\>* %25, i32 0, i64 %23
-  store i32 %21, i32* %26, align 4
-  %27 = load i32* %i, align 4
-  %28 = add nsw i32 %27, 1
-  store i32 %28, i32* %i, align 4
-  br label %29
+  %25 = getelementptr inbounds %struct.vector* %24, i32 0, i32 1
+  store i64 %23, i64* %25, align 8
+  %26 = load %struct.vector** %1, align 8
+  %27 = getelementptr inbounds %struct.vector* %26, i32 0, i32 1
+  %28 = load i64* %27, align 8
+  %29 = call noalias i8* @calloc(i64 %28, i64 128) nounwind
+  %30 = bitcast i8* %29 to \<32 x i32\>*
+  %31 = load %struct.vector** %1, align 8
+  %32 = getelementptr inbounds %struct.vector* %31, i32 0, i32 2
+  store \<32 x i32\>* %30, \<32 x i32\>** %32, align 8
+  store i32 0, i32* %i, align 4
+  br label %33
 
-; <label>:29                                      ; preds = %20
-  %30 = load i32* %j, align 4
-  %31 = add nsw i32 %30, 1
-  store i32 %31, i32* %j, align 4
-  br label %9
+; label:33                                      ; preds = %54, %0
+  %34 = load i32* %i, align 4
+  %35 = sext i32 %34 to i64
+  %36 = load %struct.vector** %1, align 8
+  %37 = getelementptr inbounds %struct.vector* %36, i32 0, i32 0
+  %38 = load i64* %37, align 8
+  %39 = icmp ult i64 %35, %38
+  br i1 %39, label %40, label %57
 
-; <label>:32                                      ; preds = %19, %9
-  %33 = load i32* %tmp, align 4
-  %34 = icmp slt i32 %33, 32
-  br i1 %34, label %35, label %39
+; label:40                                      ; preds = %33
+  %41 = load i32* %2, align 4
+  %42 = add nsw i32 %41, 1
+  store i32 %42, i32* %2, align 4
+  %43 = load i32* %i, align 4
+  %44 = call i64 @getPos(i32 %43)
+  %45 = load i32* %i, align 4
+  %46 = call i64 @getIndex(i32 %45)
+  %47 = load %struct.vector** %1, align 8
+  %48 = getelementptr inbounds %struct.vector* %47, i32 0, i32 2
+  %49 = load \<32 x i32\>** %48, align 8
+  %50 = getelementptr inbounds \<32 x i32\>* %49, i64 %46
+  %51 = trunc i64 %44 to i32
+  %52 = load \<32 x i32\>* %50
+  %53 = insertelement \<32 x i32\> %52, i32 %41, i32 %51
+  store \<32 x i32\> %53, \<32 x i32\>* %50
+  br label %54
 
-; <label>:35                                      ; preds = %32
-  %36 = load i32* %tmp, align 4
-  %37 = load %struct.vector** %1, align 8
-  %38 = getelementptr inbounds %struct.vector* %37, i32 0, i32 1
-  store i32 %36, i32* %38, align 4
-  br label %42
+; label:54                                      ; preds = %40
+  %55 = load i32* %i, align 4
+  %56 = add nsw i32 %55, 1
+  store i32 %56, i32* %i, align 4
+  br label %33
 
-; <label>:39                                      ; preds = %32
-  %40 = load %struct.vector** %1, align 8
-  %41 = getelementptr inbounds %struct.vector* %40, i32 0, i32 1
-  store i32 32, i32* %41, align 4
-  br label %42
-
-; <label>:42                                      ; preds = %39, %35
+; label:57                                      ; preds = %33
   ret void
 }
 
 
-
-
-define void @.initVector(%struct.vector* %x) nounwind uwtable {
-  %1 = alloca %struct.vector*, align 8
-  store %struct.vector* %x, %struct.vector** %1, align 8
-  %2 = load %struct.vector** %1, align 8
-  %3 = bitcast %struct.vector* %2 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %3, i8* bitcast (%struct.vector* @init to i8*), i64 132, i32 4, i1 false)
-  ret void
-}
-
-declare void @llvm.memcpy.p0i8.p0i8.i64(i8* nocapture, i8* nocapture, i64, i32, i1) nounwind
-
-declare i32 @printf(i8*, ...)
+declare noalias i8* @calloc(i64, i64) nounwind
 
 define i32 @main() nounwind uwtable {
 %1 = alloca i32, align 4
 <intVars: {var | %<var> = alloca i32, align 4
 }>
-<vecVars: { var |   %<var> = alloca %struct.vector, align 4
+<vecVars: { var |   %<var> = alloca %struct.vector, align 8
 }>
 store i32 0, i32* %1
 <decls: {decl | <decl>
@@ -214,11 +220,30 @@ store i32 0, i32* %1
 >>
 
 
+
+// Vector Operations
 vecAssign(expr, var, size, label, label2, label3, labels, integers) ::= 
 <<
   ; clear the vector
-  call void @initVector(%struct.vector* %<var>)
+  ; call void @initVector(%struct.vector* %<var>)
 >>
+
+printVector(expr, counter) ::= 
+<<
+  <expr>
+  ; print
+  call void @.printVector(%struct.vector* %_<counter>)
+>>
+
+range(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
+<<
+<lhs>
+<rhs>
+%_<counter> = alloca %struct.vector, align 8
+call void @.range(%struct.vector* %_<counter>, i32 %<lhsLabel>, i32 %<rhsLabel>)
+>>
+
+// Integer Operations
 
 intAssign(expr, var, label) ::= 
 <<
@@ -258,14 +283,6 @@ printInteger(expr, counter) ::=
   ; print
   tail call void @.printInteger(i32 %<counter>)
 >>
-
-printVector(expr, counter) ::= 
-<<
-  <expr>
-  ; print
-  call void @.printVector(%struct.vector* %_<counter>)
->>
-
 
 divIntegers(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 <<
@@ -336,17 +353,6 @@ neIntegers(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
 ; addition !
 %<counter> = call i32 @.neIntegers(i32 %<rhsLabel>, i32 %<lhsLabel>)
 >>
-
-range(lhs, rhs, lhsLabel, rhsLabel, counter) ::=
-<<
-<lhs>
-<rhs>
-%_<counter> = alloca %struct.vector, align 4
-call void @.initVector(%struct.vector* %_<counter>)
-call void @.range(%struct.vector* %_<counter>, i32 %<lhsLabel>, i32 %<rhsLabel>)
->>
-
-
 
 loadVariable(var, counter) ::=
 <<
