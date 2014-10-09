@@ -68,16 +68,26 @@ expression returns [int label]
   | ^(PLUS='+'   op1=expression op2=expression) {$label = ++counter;}
         
         -> {$PLUS.evalType == SymbolTable._int }? addIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})   
-        -> {$op1.start.evalType == SymbolTable._vector  && $op2.start.evalType == SymbolTable._int  }? addVectorAndInt()
-        -> {$op2.start.evalType == SymbolTable._vector  && $op1.start.evalType == SymbolTable._int  }? addIntAndVector()
+        -> {$op1.start.evalType == SymbolTable._vector  && $op2.start.evalType == SymbolTable._int  }? addVectorAndInt(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})
+        -> {$op2.start.evalType == SymbolTable._vector  && $op1.start.evalType == SymbolTable._int  }? addVectorAndInt(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op2.label}, rhsLabel={$op1.label}, counter={$label})
         -> addVectors(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})
         
         
            
-  | ^('-'   op1=expression op2=expression) {$label = ++counter;}
-        -> subIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,counter={$label}) 
-  | ^('*'   op1=expression op2=expression) {$label = ++counter;}
-        -> multIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,counter={$label}) 
+  | ^(SUB='-'   op1=expression op2=expression) {$label = ++counter;}
+  
+        -> {$SUB.evalType == SymbolTable._int }? subIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,counter={$label}) 
+        -> {$op1.start.evalType == SymbolTable._vector  && $op2.start.evalType == SymbolTable._int  }? subVectorAndInt(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})
+        -> {$op2.start.evalType == SymbolTable._vector  && $op1.start.evalType == SymbolTable._int  }? subIntAndVector(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op2.label}, rhsLabel={$op1.label}, counter={$label})
+        -> subVectors(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})
+        
+  | ^(MULT='*'   op1=expression op2=expression) {$label = ++counter;}
+  
+        -> {$MULT.evalType == SymbolTable._int }? multIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,counter={$label}) 
+        -> {$op1.start.evalType == SymbolTable._vector  && $op2.start.evalType == SymbolTable._int  }? multVectorAndInt(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})
+        -> {$op2.start.evalType == SymbolTable._vector  && $op1.start.evalType == SymbolTable._int  }? multVectorAndInt(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op2.label}, rhsLabel={$op1.label}, counter={$label})
+        -> multVectors(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label}, counter={$label})
+        
   | ^('/'   op1=expression op2=expression) {$label = ++counter;}      
         -> divIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,counter={$label}) 
         

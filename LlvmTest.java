@@ -657,35 +657,35 @@ public class LlvmTest {
     }
    
     
-    @Test
-    public void vectorAssignTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-    	SampleFileWriter.destroy("Tests/16LLVMtest.vcalc");
-        SampleFileWriter.createFile("Tests/16LLVMtest.vcalc", 
-        		"vector x = 1..50;"
-        		+ "vector y = x;"
-        		+ "y = 1..20000;" +
-        		"print(x);"
-        		+ "print(y);"
-        		+ "print(1+2);" );
-        
-        String[] args = new String[] {"Tests/16LLVMtest.vcalc","llvm", "test"};
-        Vcalc_Test.main(args);
-
-        SampleFileWriter.destroy("Tests/02vector.ll");
-        SampleFileWriter.createFile("Tests/02vector.ll", outErrIntercept.toString());
-
-        Process p = Runtime.getRuntime().exec("./lli Tests/02vector.ll");
-        p.waitFor();
-        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-        
-        while ((line = reader.readLine()) != null) {input += line + "\n";}
-        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
-        
-        assertEquals("", errors.trim());
-        assertEquals("[ 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ]\n" +
-        		"[ 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 ]", input.trim());
-    }
+//    @Test
+//    public void vectorAssignTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
+//    	SampleFileWriter.destroy("Tests/16LLVMtest.vcalc");
+//        SampleFileWriter.createFile("Tests/16LLVMtest.vcalc", 
+//        		"vector x = 1..50;"
+//        		+ "vector y = x;"
+//        		+ "y = 1..20000;" +
+//        		"print(x);"
+//        		+ "print(y);"
+//        		+ "print(1+2);" );
+//        
+//        String[] args = new String[] {"Tests/16LLVMtest.vcalc","llvm", "test"};
+//        Vcalc_Test.main(args);
+//
+//        SampleFileWriter.destroy("Tests/02vector.ll");
+//        SampleFileWriter.createFile("Tests/02vector.ll", outErrIntercept.toString());
+//
+//        Process p = Runtime.getRuntime().exec("./lli Tests/02vector.ll");
+//        p.waitFor();
+//        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+//        
+//        while ((line = reader.readLine()) != null) {input += line + "\n";}
+//        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
+//        
+//        assertEquals("", errors.trim());
+//        assertEquals("[ 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ]\n" +
+//        		"[ 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 ]", input.trim());
+//    }
     
     // reassign vector with a smaller size
     // should generator through an error if start > end?
@@ -694,9 +694,12 @@ public class LlvmTest {
     public void addVectorTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
         SampleFileWriter.destroy("Tests/17LLVMtest.vcalc");
         SampleFileWriter.createFile("Tests/17LLVMtest.vcalc", 
-                "vector x = 1..5;"
-                + "vector y = 1..3;"
-                + "print(x+y);"
+                //"vector x = 1..5;"
+                //+ "vector y = 1..3;"
+                //+ "vector z = 1..3;"
+                 "print(1..5 + 1..3 + 1..3);" +
+                 "print(1..5+5);" +
+                 "print(5+1..5);"
                         );
         String[] args = new String[] {"Tests/17LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
@@ -711,7 +714,61 @@ public class LlvmTest {
         while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
         
         assertEquals("", errors.trim());
-        assertEquals("[ 2 4 6 4 5 ]", input.trim());
+        assertEquals("[ 3 6 9 4 5 ]\n" + "[ 6 7 8 9 10 ]\n"+ "[ 6 7 8 9 10 ]", input.trim());
+    }
+    
+    @Test // First llvm test, error stream should be empty
+    public void subVectorTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
+        SampleFileWriter.destroy("Tests/18LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/18LLVMtest.vcalc", 
+                //"vector x = 1..5;"
+                //+ "vector y = 1..3;"
+                //+ "vector z = 1..3;"
+                 "print(1..3 - 1..3 - 1..3);" +
+                "print(1..5 - 5);" +
+                 "print(5 - 1..5);"
+                        );
+        String[] args = new String[] {"Tests/18LLVMtest.vcalc","llvm", "test"};
+        Vcalc_Test.main(args);
+        SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
+
+        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        p.waitFor();
+        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        
+        while ((line = reader.readLine()) != null) {input += line + "\n";}
+        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
+        
+        assertEquals("", errors.trim());
+        assertEquals("[ -1 -2 -3 ]\n" + "[ -4 -3 -2 -1 0 ]\n" + "[ 4 3 2 1 0 ]", input.trim());
+    }
+    
+    @Test // First llvm test, error stream should be empty
+    public void multVectorTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
+        SampleFileWriter.destroy("Tests/19LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/19LLVMtest.vcalc", 
+                //"vector x = 1..5;"
+                //+ "vector y = 1..3;"
+                //+ "vector z = 1..3;"
+                 "print(1..3 * 1..3 * 1..3);" +
+                "print(1..5 * 2);" +
+                 "print(2 * 1..5);"
+                        );
+        String[] args = new String[] {"Tests/19LLVMtest.vcalc","llvm", "test"};
+        Vcalc_Test.main(args);
+        SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
+
+        Process p = Runtime.getRuntime().exec("./lli Tests/00temp.ll");
+        p.waitFor();
+        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        
+        while ((line = reader.readLine()) != null) {input += line + "\n";}
+        while ((line = errorReader.readLine()) != null) {errors += line + "\n";}     
+        
+        assertEquals("", errors.trim());
+        assertEquals("[ 1 8 27 ]\n" + "[ 2 4 6 8 10 ]\n" + "[ 2 4 6 8 10 ]" ,input.trim());
     }
 
 }
