@@ -1,7 +1,6 @@
 package node.vcalc;
 
 import errors.vcalc.InvalidAssignmentException;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import symbol.vcalc.IntType;
 import symbol.vcalc.VcalcValue;
 import symbol.vcalc.VectorType;
