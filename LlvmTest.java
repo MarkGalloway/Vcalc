@@ -669,13 +669,13 @@ public class LlvmTest {
         		+ "print(y);"
         		+ "print(1+2);" );
         
-        SampleFileWriter.destroy("Tests/01vector.ll");
         String[] args = new String[] {"Tests/16LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
 
+        SampleFileWriter.destroy("Tests/02vector.ll");
         SampleFileWriter.createFile("Tests/02vector.ll", outErrIntercept.toString());
 
-        Process p = Runtime.getRuntime().exec("lli Tests/01vector.ll");
+        Process p = Runtime.getRuntime().exec("lli Tests/02vector.ll");
         p.waitFor();
         reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
