@@ -114,7 +114,7 @@ public class Vcalc_Test {
             Interpreter interpreter = new Interpreter(nodes);
             interpreter.program().evaluate();
         }
-        else {
+        else if (args[1].equals("llvm")) {
         	
             // RESOLVE SYMBOLS, COMPUTE EXPRESSION TYPES
             nodes.reset();
@@ -124,7 +124,7 @@ public class Vcalc_Test {
             //System.out.println(symTable.toString());
             
             //Pass it all to the String templater!
-            String templateFile = args[1] +".stg";
+            String templateFile = "llvm.stg";
 
               // Load in string template from file
 			FileReader groupFileR = new FileReader(templateFile);
@@ -135,6 +135,9 @@ public class Vcalc_Test {
 			Templater templater = new Templater(nodes, symTable);
 			templater.setTemplateLib(stg);
 			System.out.println(templater.program().getTemplate().toString());
+        }
+        else {
+            System.out.println("unknown argument. use llvm or int.");
         }
     }
 
