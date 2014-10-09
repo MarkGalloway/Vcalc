@@ -1,0 +1,1 @@
+vector v = 1..5;vector j = [i in 1..2 | 2 - i];print(v);print(j);print(v + j);

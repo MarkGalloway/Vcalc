@@ -1,0 +1,1 @@
+int x = 2;int y = 0;int z = 100;loop ( x != 0)print (x);x = x - 1;loop( y < 2)y = y + 1;loop(z > 0)z = z - 5;pool;pool;print(y);pool;

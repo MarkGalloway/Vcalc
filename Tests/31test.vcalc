@@ -1,0 +1,1 @@
+int i = 5;vector v = [k in [j in 1..10 | j*i] | k*i];print(v);

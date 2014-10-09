@@ -1,0 +1,1 @@
+vector v = 1..10;print(v);

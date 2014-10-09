@@ -1,0 +1,1 @@
+int j = 1;vector p = [i in 1..5 | i];vector k = [i in j..p | i];

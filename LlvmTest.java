@@ -27,6 +27,7 @@ public class LlvmTest {
     private String input;
     private String errors;
 
+
     @Before
     public void setUp() throws Exception {
         out_backup = System.out;
@@ -44,7 +45,6 @@ public class LlvmTest {
     public void tearDown() throws Exception {
         System.setOut(out_backup);
         System.setErr(err_backup);
-        SampleFileWriter.destroy("Tests/00temp.vcalc");
         SampleFileWriter.destroy("Tests/00temp.ll");
         if(reader != null) reader.close();
         if(errorReader != null) errorReader.close();
@@ -60,11 +60,12 @@ public class LlvmTest {
 
     @Test // First llvm test, error stream should be empty
     public void printTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/01LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/01LLVMtest.vcalc", 
         		"print(1);"
         		+ "print(10);"
         		+ "print(2);");
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm"};
+        String[] args = new String[] {"Tests/01LLVMtest.vcalc","llvm"};
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
@@ -83,13 +84,14 @@ public class LlvmTest {
     
     @Test // First llvm test, error stream should be empty
     public void varTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/02LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/02LLVMtest.vcalc", 
         		"int x = 0;"
         		+ "int y = x;"
         		+ "print(x);"
         		+ "print(y);"
         				);
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/02LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
@@ -107,13 +109,14 @@ public class LlvmTest {
     
     @Test // First llvm test, error stream should be empty
     public void addTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/03LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/03LLVMtest.vcalc", 
         		"int x = 1 + 5 + 1;"
         		+ "int y = x + 7 + 4;"
         		+ "print(x);"
         		+ "print(y);"
         				);
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/03LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
@@ -131,13 +134,14 @@ public class LlvmTest {
     
     @Test // First llvm test, error stream should be empty
     public void subtractTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/04LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/04LLVMtest.vcalc", 
         		"int x = 1 - 1;"
         		+ "print(x);"
         		+ "print(x-5);"
         		
         				);
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/04LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
@@ -155,13 +159,14 @@ public class LlvmTest {
     
     @Test // First llvm test, error stream should be empty
     public void multTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/05LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/05LLVMtest.vcalc", 
         		"int x = 10 * 2 * 1;"
         		+ "print(x);"
         		+ "print(x*5);"
         		
         				);
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/05LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
@@ -179,14 +184,15 @@ public class LlvmTest {
     
     @Test // First llvm test, error stream should be empty
     public void divideTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/06LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/06LLVMtest.vcalc", 
         		"int x = 10 / 2 / 1;"
         		+ "int y = 0 - 5;"
         		+ "print(x);"
         		+ "print(x/y);"
         		
         				);
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/06LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
@@ -204,7 +210,8 @@ public class LlvmTest {
     
     @Test // First llvm test, error stream should be empty
     public void gtTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/07LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/07LLVMtest.vcalc", 
         		"int w = 4;"
         		+ "int x = 5;"
         		+ "int y = 0-1;"
@@ -218,7 +225,7 @@ public class LlvmTest {
         		+ "print(z>w>x);" // -2 > 4 > 5 // 0
         		
         				);
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/07LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
@@ -236,7 +243,8 @@ public class LlvmTest {
     
     @Test // First llvm test, error stream should be empty
     public void ltTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/08LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/08LLVMtest.vcalc", 
         		"int w = 4;"
         		+ "int x = 5;"
         		+ "int y = 0-1;"
@@ -250,7 +258,7 @@ public class LlvmTest {
         		+ "print(z<w<x);" // 1
         		
         				);
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/08LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
@@ -268,7 +276,8 @@ public class LlvmTest {
     
     @Test // First llvm test, error stream should be empty
     public void eqTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/09LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/09LLVMtest.vcalc", 
         		"int w = 4;"
         		+ "int x = 4;"
         		+ "int y = 0-1;"
@@ -284,7 +293,7 @@ public class LlvmTest {
         		+ "print(y==x==0);" // 1
         		
         				);
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/09LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
@@ -302,7 +311,8 @@ public class LlvmTest {
     
     @Test // First llvm test, error stream should be empty
     public void neTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/10LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/10LLVMtest.vcalc", 
         		"int w = 4;"
         		+ "int x = 4;"
         		+ "int y = 0-1;"
@@ -318,7 +328,7 @@ public class LlvmTest {
         		+ "print(y!=x!=1);" // 0
         		
         				);
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/10LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
@@ -336,7 +346,8 @@ public class LlvmTest {
     
     @Test // First llvm test, error stream should be empty
     public void whileTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/11LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/11LLVMtest.vcalc", 
         		"int x = 4;"
         		+ "loop (x>0)"
         		+ "print(x);"
@@ -347,7 +358,7 @@ public class LlvmTest {
         		+ "pool;"
         		+ "pool;" 
         				);
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/11LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
@@ -365,7 +376,8 @@ public class LlvmTest {
     
     @Test // First llvm test, error stream should be empty
     public void ifTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/12LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/12LLVMtest.vcalc", 
         		"int x = 4;"
         		+ "if (x)"
 	        		+ "print(x);"
@@ -376,7 +388,7 @@ public class LlvmTest {
 	    				+ "fi;"
 					+ "fi;"
         		+ "fi;");
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/12LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
 
@@ -394,10 +406,11 @@ public class LlvmTest {
     
     @Test(expected=RuntimeException.class)
     public void testLoopConditional() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/13LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/13LLVMtest.vcalc", 
         "loop(1..10)pool;print(2);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/13LLVMtest.vcalc","llvm", "test"};
         
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
@@ -415,10 +428,11 @@ public class LlvmTest {
     
     @Test(expected=RuntimeException.class)
     public void testIfConditional() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/14LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/14LLVMtest.vcalc", 
         "vector x = 1..10; if(x) fi;"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/14LLVMtest.vcalc","llvm", "test"};
         
         Vcalc_Test.main(args);
         SampleFileWriter.createFile("Tests/00temp.ll", outErrIntercept.toString());
@@ -620,12 +634,14 @@ public class LlvmTest {
 
     @Test
     public void vectorPrintTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/15LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/15LLVMtest.vcalc", 
         		"print(2..5);" +
-        		"print(50..65);" );
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        		"print(2..65);" );
+        String[] args = new String[] {"Tests/15LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
 
+        SampleFileWriter.destroy("Tests/00vector.ll");
         SampleFileWriter.createFile("Tests/00vector.ll", outErrIntercept.toString());
 
         Process p = Runtime.getRuntime().exec("lli Tests/00vector.ll");
@@ -644,17 +660,20 @@ public class LlvmTest {
     
     @Test
     public void vectorAssignTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException, InterruptedException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
-        		"vector x = 1..9;" +
+    	SampleFileWriter.destroy("Tests/16LLVMtest.vcalc");
+        SampleFileWriter.createFile("Tests/16LLVMtest.vcalc", 
+        		"vector x = 1..50;"
+        		+ "vector y = x;"
+        		+ "y = 1..20000;" +
         		"print(x);"
+        		+ "print(y);"
         		+ "print(1+2);" );
         
         SampleFileWriter.destroy("Tests/01vector.ll");
-        
-        String[] args = new String[] {"Tests/00temp.vcalc","llvm", "test"};
+        String[] args = new String[] {"Tests/16LLVMtest.vcalc","llvm", "test"};
         Vcalc_Test.main(args);
 
-        SampleFileWriter.createFile("Tests/01vector.ll", outErrIntercept.toString());
+        SampleFileWriter.createFile("Tests/02vector.ll", outErrIntercept.toString());
 
         Process p = Runtime.getRuntime().exec("lli Tests/01vector.ll");
         p.waitFor();

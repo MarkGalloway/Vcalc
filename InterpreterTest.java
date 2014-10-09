@@ -33,8 +33,7 @@ public class InterpreterTest {
     public void tearDown() throws Exception {
         System.setOut(out_backup);
         System.setErr(err_backup);
-        SampleFileWriter.destroy("Tests/00dummytest.vcalc");
-        SampleFileWriter.destroy("Tests/00temp.vcalc");
+        SampleFileWriter.destroy("Tests/00dummyINTERPRETERtest.vcalc");
     }
     
     /**
@@ -46,8 +45,8 @@ public class InterpreterTest {
 
     @Test // Just a dummy test to verify testing output actually works
     public void dummyTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00dummytest.vcalc", "print(256);");
-        String[] args = new String[] {"Tests/00dummytest.vcalc","int"};
+        SampleFileWriter.createFile("Tests/00dummyINTERPRETERtest.vcalc", "print(256);");
+        String[] args = new String[] {"Tests/00dummyINTERPRETERtest.vcalc","int"};
         
         Vcalc_Test.main(args);
         assertEquals("256\n", outErrIntercept.toString());
@@ -55,12 +54,13 @@ public class InterpreterTest {
     
     @Test // Expression Test: simple addition, brackets, and assignment
     public void additionTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/18INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/18INTERPRETERtest.vcalc", 
                   "int x = 1 + 1;"
                 + "int y = 1 + 1 + (1 + 1) + 1 + 1 + (((1))) + 1 + (1 + 1 + 1) + 0;"
                 + "int z = x + y;"
                 + "print(z);");
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/18INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("13\n", outErrIntercept.toString());
@@ -68,11 +68,12 @@ public class InterpreterTest {
     
     @Test // Expression Test: simple assignment
     public void assignmentTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/19INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/19INTERPRETERtest.vcalc", 
         		"int i = 1;"
         		+ "i = 2;"
                   + "print(i);");
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/19INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("2\n", outErrIntercept.toString());
@@ -80,8 +81,9 @@ public class InterpreterTest {
     
     @Test(expected=InvalidAssignmentException.class)
     public void assignmentVectorToInt() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc","vector i = 1;");
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+    	SampleFileWriter.destroy("Tests/20INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/20INTERPRETERtest.vcalc","vector i = 1;");
+        String[] args = new String[] {"Tests/20INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("2\n", outErrIntercept.toString());
@@ -89,8 +91,9 @@ public class InterpreterTest {
     
     @Test(expected=InvalidAssignmentException.class)
     public void assignmentIntToVector() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc","int i = 1..10;");
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+    	SampleFileWriter.destroy("Tests/21INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/21INTERPRETERtest.vcalc","int i = 1..10;");
+        String[] args = new String[] {"Tests/21INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("2\n", outErrIntercept.toString());
@@ -98,7 +101,8 @@ public class InterpreterTest {
     
     @Test // Expression Test: simple subtraction, brackets and, assignment
     public void subtractionTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/22INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/22INTERPRETERtest.vcalc", 
                   "int x = 1 - 1;"
                 + "int y = 1 - 1 - (1 - 1) - 1 - 1 - (((1))) - 1 - (1 - 1 - 1) - 0;"
                 + "int z = x + y;"
@@ -107,7 +111,7 @@ public class InterpreterTest {
                 + "y = 4 - 7;"
                 + "z = y - x;"
                 + "print(z);");
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/22INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("-3\n" + "1\n", outErrIntercept.toString());
@@ -115,7 +119,8 @@ public class InterpreterTest {
     
     @Test // Expression Test: simple multiplication, brackets, and assignment
     public void multiplicationTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/23INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/23INTERPRETERtest.vcalc", 
                   "int x = 1 * 1 * 1;"
                 + "int y = 10 * 0;"
                 + "int z = 6 * 2 - 6 * 2;" // Precedence
@@ -126,7 +131,7 @@ public class InterpreterTest {
                 + "y = 4 - 7;"
                 + "z = x * y;"
                 + "print(z);");
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/23INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("1\n" + "0\n" + "0\n" + "12\n", outErrIntercept.toString());
@@ -134,7 +139,8 @@ public class InterpreterTest {
     
     @Test // Expression Test: simple multiplication, brackets, and assignment
     public void divisionTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/24INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/24INTERPRETERtest.vcalc", 
                   "int x = 1 / 1 / 1;"
                 + "int y = 100 / 100;"
                 + "int z = 9 / 3 - 9 / 3;" // Precedence
@@ -145,7 +151,7 @@ public class InterpreterTest {
                 + "y = 4 - 7;"
                 + "z = x / y;"
                 + "print(z);");
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/24INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("1\n" + "1\n" + "0\n" + "1\n", outErrIntercept.toString());
@@ -153,7 +159,8 @@ public class InterpreterTest {
     
     @Test // Expression Test: simple comparison
     public void comparisonTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/25INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/25INTERPRETERtest.vcalc", 
                   "int x = 5;"
                 + "int y = 5;"
                 + "int z = 0;"
@@ -169,7 +176,7 @@ public class InterpreterTest {
                 + "print(x > y);"
                 + "print( 1 < 2 > 2 < 1);" // Precedence
                 + "print( 1 == 2 != 0 == 0);"); // Precedence 
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/25INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("1\n" + "1\n" + "0\n" 
@@ -180,7 +187,8 @@ public class InterpreterTest {
     
     @Test // Expression Test: simple nested ifs
     public void ifTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/26INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/26INTERPRETERtest.vcalc", 
                   "int x = 2;"
                 + "int y = 0;"
                 + "int z = 100;"
@@ -195,7 +203,7 @@ public class InterpreterTest {
                     + "fi;"
                     + "print(y);"
                 + "fi;");
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/26INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("2\n" + "1\n", outErrIntercept.toString());
@@ -203,7 +211,8 @@ public class InterpreterTest {
     
     @Test // Expression Test: simple nested loops
     public void loopTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/27INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/27INTERPRETERtest.vcalc", 
                   "int x = 2;"
                 + "int y = 0;"
                 + "int z = 100;"
@@ -218,7 +227,7 @@ public class InterpreterTest {
                     + "pool;"
                     + "print(y);"
                 + "pool;");
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/27INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("2\n" + "2\n" + "1\n" + "2\n", outErrIntercept.toString());
@@ -226,10 +235,11 @@ public class InterpreterTest {
     
     @Test // Vector Print Test
     public void vectorPrintTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/28INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/28INTERPRETERtest.vcalc", 
         		"vector v = 1..10;"
         		 + "print(v);");
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/28INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 1 2 3 4 5 6 7 8 9 10 ]", outErrIntercept.toString().trim());
@@ -237,7 +247,8 @@ public class InterpreterTest {
     
     @Test
     public void generatorTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/29INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/29INTERPRETERtest.vcalc", 
                 "int i = 666;" +  //global var should not be seen
                 "int j = 1;" +
                 "int k = 10;" +
@@ -248,7 +259,7 @@ public class InterpreterTest {
                 "print(s);" +
                 "print(z);"
                 );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/29INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 0 0 0 0 0 0 0 0 0 0 ]\n" + 
@@ -259,12 +270,13 @@ public class InterpreterTest {
     // Test that we retrieve local scope variables correctly
     @Test
     public void nestedScopeTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/30INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/30INTERPRETERtest.vcalc", 
                 "int i = 666;" +  
                 "vector v = [i in [i in 1..10 | 2 * i] | i * i];" +
                 "print(v);"
                 );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/30INTERPRETERtest.vcalc","int", "test"};
         Vcalc_Test.main(args);
         assertEquals("[ 4 16 36 64 100 144 196 256 324 400 ]" , outErrIntercept.toString().trim());
     }
@@ -272,12 +284,13 @@ public class InterpreterTest {
     // Test that we can access global variables if there are no corresponding local variables
     @Test
     public void scopeTestAccessEnclosingScope() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/31INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/31INTERPRETERtest.vcalc", 
                 "int i = 5;" +  
                 "vector v = [k in [j in 1..10 | j*i] | k*i];" +
                 "print(v);"
                 );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/31INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 25 50 75 100 125 150 175 200 225 250 ]" , outErrIntercept.toString().trim());
@@ -285,14 +298,15 @@ public class InterpreterTest {
     
     @Test
     public void generalScopeTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/32INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/32INTERPRETERtest.vcalc", 
         "int i = 0;" +
         "int j = 3;" +
         "vector v = [i in 1..3 | j * i * i];" +
         "print(i);" +
         "print(v);"
                 );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/32INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("0\n[ 3 12 27 ]" , outErrIntercept.toString().trim());
@@ -302,11 +316,12 @@ public class InterpreterTest {
     // Should have a runtime exception, variable i is not defined in j
     @Test(expected=RuntimeException.class)
     public void scopeTestAccessUndefinedEnclosingScope() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/33INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/33INTERPRETERtest.vcalc", 
                 "vector v = [i in [j in 1..2 | 1 * i] | i];" +
                 "print(v);"
                 );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/33INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
     }
@@ -314,12 +329,13 @@ public class InterpreterTest {
     
     @Test
     public void filterTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/34INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/34INTERPRETERtest.vcalc", 
         "vector v = [i in 95..100 | i];" +
         "v = filter(i in v | i > 95);" + 
          "print(v);"
                 );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/34INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 96 97 98 99 100 ]"
@@ -328,25 +344,27 @@ public class InterpreterTest {
     
     @Test(expected=RuntimeException.class)
     public void testIndexIntType() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/35INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/35INTERPRETERtest.vcalc", 
         "int i = 2;\n" +
         "print(i[2]);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/35INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
     }
     
     @Test
     public void testIndex() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/36INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/36INTERPRETERtest.vcalc", 
         "int i = 2;\n" +
         "vector j = [i in 1..2 | 2 - i];" +
         "print(j);" +
         "print([i in 1..2 | 2 - i][0]);" +
         "print([i in 1..2 | 2 - i][1]);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/36INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 1 0 ]\n1\n0" , outErrIntercept.toString().trim());
@@ -354,10 +372,11 @@ public class InterpreterTest {
     
     @Test
     public void testIndexFilter() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/37INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/37INTERPRETERtest.vcalc", 
         "print(filter(i in 1..10 | i > 5)[4]);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/37INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("10" , outErrIntercept.toString().trim());
@@ -365,14 +384,15 @@ public class InterpreterTest {
     
     @Test
     public void testIndexOutOfBounds() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/38INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/38INTERPRETERtest.vcalc", 
         "int v = [i in 1..5 | i ][3-6];" +
         "print(v);" +
         "print(filter(i in 1..10 | i > 5)[5-2]);"
         + "print(filter(i in 1..10 | i > 5)[11]);"
 
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/38INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("0\n9\n0" , outErrIntercept.toString().trim());
@@ -380,14 +400,15 @@ public class InterpreterTest {
     
     @Test
     public void testIndexingWithVectors() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/39INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/39INTERPRETERtest.vcalc", 
         	"vector v = 1..3;" +
         	"vector j = [i in 1..2 | 2 - i];"+
         	"print(v);" +
         	"print(j);" +
         	"print(v[j]);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/39INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 1 2 3 ]\n[ 1 0 ]\n[ 2 1 ]" , outErrIntercept.toString().trim());
@@ -395,14 +416,15 @@ public class InterpreterTest {
     
     @Test
     public void testAddVectors() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/40INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/40INTERPRETERtest.vcalc", 
         	"vector v = 1..5;" +
         	"vector j = [i in 1..2 | 2 - i];"+
         	"print(v);" +
         	"print(j);" +
         	"print(v + j);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/40INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 1 2 3 4 5 ]\n[ 1 0 ]\n[ 2 2 3 4 5 ]" , outErrIntercept.toString().trim());
@@ -410,14 +432,15 @@ public class InterpreterTest {
     
     @Test
     public void testAddVectorToInt() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/41INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/41INTERPRETERtest.vcalc", 
         	"vector v = 1..5;" +
         	"int j = 5;"+
         	"print(v);" +
         	"print(j);" +
         	"print(v + j);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/41INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 1 2 3 4 5 ]\n5\n[ 6 7 8 9 10 ]" , outErrIntercept.toString().trim());
@@ -425,14 +448,15 @@ public class InterpreterTest {
     
     @Test
     public void testAddIntToVector() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/42INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/42INTERPRETERtest.vcalc", 
         	"vector v = 1..5;" +
         	"int j = 5;"+
         	"print(v);" +
         	"print(j);" +
         	"print(j + v);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/42INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 1 2 3 4 5 ]\n5\n[ 6 7 8 9 10 ]" , outErrIntercept.toString().trim());
@@ -440,7 +464,8 @@ public class InterpreterTest {
     
     @Test
     public void testSubtractVectors() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/43INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/43INTERPRETERtest.vcalc", 
         	"vector v = 1..10;" +
         	"vector j = [i in 1..5 | 6];"+
         	"print(v);" +
@@ -449,7 +474,7 @@ public class InterpreterTest {
         	"print([i in 1..2 | 0-1] - [i in 1..5 | i]);"
         	+ "print(j);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/43INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 1 2 3 4 5 6 7 8 9 10 ]\n[ 6 6 6 6 6 ]\n[ -5 -4 -3 -2 -1 6 7 8 9 10 ]\n[ -2 -3 -3 -4 -5 ]\n[ 6 6 6 6 6 ]" , outErrIntercept.toString().trim());
@@ -457,13 +482,14 @@ public class InterpreterTest {
     
     @Test
     public void testSubtractIntVector() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/44INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/44INTERPRETERtest.vcalc", 
         	"int v = 1;" +
         	"vector j = [i in 1..5 | 6];"+
         	"print(j-v);" +
         	"print(v-j);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/44INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 5 5 5 5 5 ]\n[ -5 -5 -5 -5 -5 ]" , outErrIntercept.toString().trim());
@@ -471,7 +497,8 @@ public class InterpreterTest {
     
     @Test
     public void testMultVector() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/45INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/45INTERPRETERtest.vcalc", 
         	"int v = 2;" +
         	"vector j = [i in 1..3 | i];"+ 
         	"vector p = [i in 1..5 | i];" +
@@ -482,7 +509,7 @@ public class InterpreterTest {
         	+ "print(p*j);"
         	+ "print(p);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/45INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 2 4 6 ]\n[ 2 4 6 ]\n[ 1 2 3 ]\n[ 1 4 9 0 0 ]\n[ 1 4 9 0 0 ]\n[ 1 2 3 4 5 ]" , outErrIntercept.toString().trim());
@@ -490,7 +517,8 @@ public class InterpreterTest {
     
     @Test
     public void testDivideVector() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/46INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/46INTERPRETERtest.vcalc", 
         	"int v = 2;" +
         	"vector j = [i in 1..3 | i];"+ 
         	"vector p = [i in 1..5 | i];" +
@@ -501,7 +529,7 @@ public class InterpreterTest {
         	+ "print(p/j);" //1 1 1 4 5
         	+ "print(p);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/46INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 0 1 1 ]\n[ 2 1 0 ]\n[ 1 2 3 ]\n[ 1 1 1 0 0 ]\n[ 1 1 1 4 5 ]\n[ 1 2 3 4 5 ]" , outErrIntercept.toString().trim());
@@ -509,7 +537,8 @@ public class InterpreterTest {
 
     @Test
     public void equalityVectorTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/47INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/47INTERPRETERtest.vcalc", 
             "vector v = 1..3;" + 
             "vector s = 1..3;" +
             "vector x = 1..2;" +
@@ -522,7 +551,7 @@ public class InterpreterTest {
             "print(v==x);" + 
             "print([i in 1..5 | 1] == 1..5 == 2..6);" //left associativity test
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/47INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 1 1 1 ]\n" + 
@@ -536,7 +565,8 @@ public class InterpreterTest {
     
     @Test
     public void inequalityVectorTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/48INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/48INTERPRETERtest.vcalc", 
             "vector v = 1..3;" + 
             "vector s = 1..3;" +
             "vector x = 1..2;" +
@@ -549,7 +579,7 @@ public class InterpreterTest {
             "print(v!=x);" + 
             "print(1..3 != 1..3 != 5..7);" //left associativity test
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/48INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 0 0 0 ]\n" + 
@@ -564,7 +594,8 @@ public class InterpreterTest {
     
     @Test
     public void lessThanVectorTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/49INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/49INTERPRETERtest.vcalc", 
             "vector v = 1..3;" + 
             "vector s = 1..3;" +
             "vector x = 1..2;" +
@@ -578,7 +609,7 @@ public class InterpreterTest {
             "print(1..3 < 1..3 < [i in 1..3 | 1]);" //left associativity test
             
                 );
-	        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+	        String[] args = new String[] {"Tests/49INTERPRETERtest.vcalc","int", "test"};
 	        
 	        Vcalc_Test.main(args);
 	        assertEquals("[ 0 0 0 ]\n" + 
@@ -593,7 +624,8 @@ public class InterpreterTest {
     
     @Test
     public void greaterThanVectorTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/50INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/50INTERPRETERtest.vcalc", 
             "vector v = 1..3;" + 
             "vector s = 1..3;" +
             "vector x = 1..2;" +
@@ -607,7 +639,7 @@ public class InterpreterTest {
             "print(1..3 > 1..3 > [i in 1..3 | 1]);" //left associativity test
             
                 );
-            String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+            String[] args = new String[] {"Tests/50INTERPRETERtest.vcalc","int", "test"};
             
             Vcalc_Test.main(args);
             assertEquals("[ 0 0 0 ]\n" + 
@@ -624,45 +656,49 @@ public class InterpreterTest {
 
     @Test(expected=RuntimeException.class)
     public void testTypeCheckGeneratorBothVectors() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/51INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/51INTERPRETERtest.vcalc", 
         	"vector j = [i in 1..3 | i];"+ 
         	"vector p = [i in 1..5 | i];" +
         	"vector k = [i in j..p | i];");
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/51INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
     }
     
     @Test(expected=RuntimeException.class)
     public void testTypeCheckGeneratorLeftVector() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/52INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/52INTERPRETERtest.vcalc", 
         	"vector j = [i in 1..3 | i];"+ 
         	"int p = 1;" +
         	"vector k = [i in j..p | i];"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/52INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
     }
     
     @Test(expected=RuntimeException.class)
     public void testTypeCheckGeneratorRightVector() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/53INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/53INTERPRETERtest.vcalc", 
         	"int j = 1;"+ 
         	"vector p = [i in 1..5 | i];" +
         	"vector k = [i in j..p | i];"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/53INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
     }
     
     @Test(expected=RuntimeException.class)
     public void testFilterDomainVector() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/54INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/54INTERPRETERtest.vcalc", 
         "vector v = filter(i in (5+5) | i > 5);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/54INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("" , outErrIntercept.toString().trim());
@@ -670,10 +706,11 @@ public class InterpreterTest {
     
     @Test(expected=RuntimeException.class)
     public void testGeneratorDomainVector() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/55INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/55INTERPRETERtest.vcalc", 
         "vector v = filter(i in (5+5) | i > 5);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/55INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("" , outErrIntercept.toString().trim());
@@ -681,10 +718,11 @@ public class InterpreterTest {
     
     @Test(expected=RuntimeException.class)
     public void testFilterExpression() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/56INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/56INTERPRETERtest.vcalc", 
         "vector v = filter(i in 1..10 | (1..10));"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/56INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("" , outErrIntercept.toString().trim());
@@ -692,10 +730,11 @@ public class InterpreterTest {
     
     @Test(expected=RuntimeException.class)
     public void testGeneratorExpression() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/57INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/57INTERPRETERtest.vcalc", 
         "vector v = filter(i in 1..10 | 1..10);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/57INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("" , outErrIntercept.toString().trim());
@@ -703,10 +742,11 @@ public class InterpreterTest {
     
     @Test(expected=RuntimeException.class)
     public void testLoopConditional() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/58INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/58INTERPRETERtest.vcalc", 
         "loop(1..10) pool;"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/58INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("" , outErrIntercept.toString().trim());
@@ -714,10 +754,11 @@ public class InterpreterTest {
     
     @Test(expected=RuntimeException.class)
     public void testIfConditional() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/59INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/59INTERPRETERtest.vcalc", 
         "if(1..10) fi;"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/59INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("" , outErrIntercept.toString().trim());
@@ -725,7 +766,8 @@ public class InterpreterTest {
     
     @Test
     public void testForumExert() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/60INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/60INTERPRETERtest.vcalc", 
         "vector v1 = 1..10;" +
         "vector v2 = 2..8;" +
         "vector v3 = v1 * 2;" +
@@ -733,7 +775,7 @@ public class InterpreterTest {
         "vector v5 = filter(i in v4 | (i > 50) * (i < 100) );" +
         "print(v5);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/60INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 72 ]" , outErrIntercept.toString().trim());
@@ -741,13 +783,14 @@ public class InterpreterTest {
     
     @Test
     public void testSpecAssociativityExamples() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/610INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/61INTERPRETERtest.vcalc", 
         "vector v = 1..10;"
         + "print(v + 5);"
         + "print(5 + [i in 1..3 | 0] + 1..5);"
         + "print((5 + [i in 1..3 | 0]) + 1..5);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/61INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 6 7 8 9 10 11 12 13 14 15 ]\n[ 6 7 8 4 5 ]\n[ 6 7 8 4 5 ]" , outErrIntercept.toString().trim());
@@ -755,14 +798,15 @@ public class InterpreterTest {
     
     @Test
     public void testSpecScopeExamples() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/62INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/62INTERPRETERtest.vcalc", 
         "int i = 0;"
         + "int j = 3;"
         + "vector v = [i in 1..3 | j * i * i];"
         + "print(i);"
         + "print(v);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/62INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("0\n[ 3 12 27 ]" , outErrIntercept.toString().trim());
@@ -770,11 +814,12 @@ public class InterpreterTest {
     
     @Test
     public void rangeOperatorForumsTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/63INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/63INTERPRETERtest.vcalc", 
         "vector v = ([i in 1..3 | i * 2][1])..([j in 2..5 | j * 3][0]);"
         + "print(v);"
         );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/63INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 4 5 6 ]" , outErrIntercept.toString().trim());
@@ -975,11 +1020,12 @@ public class InterpreterTest {
     
     @Test(expected=RuntimeException.class)
     public void doubleDeclarationTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/64INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/64INTERPRETERtest.vcalc", 
         "vector v = [i in 1..10 | i];" +
         "vector v = [i in 1..10 | i];"
                 );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/64INTERPRETERtest.vcalc","int", "test"};
         
         Vcalc_Test.main(args);
         assertEquals("[ 6 7 8 9 10 ]"
@@ -989,11 +1035,12 @@ public class InterpreterTest {
     // test that we don't get output if we use an undeclared variable
     @Test
     public void undefinedVariableTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/65INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/65INTERPRETERtest.vcalc", 
         		"print(1);" +
         		"print(c);"
                 );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/65INTERPRETERtest.vcalc","int", "test"};
         
         try {
         	Vcalc_Test.main(args);
@@ -1007,13 +1054,14 @@ public class InterpreterTest {
     // test that we are warned if are declarations are after statements
     @Test (expected=ParserException.class)
     public void improperDeclarationPosition() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/66INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/66INTERPRETERtest.vcalc", 
         		"vector v = [i in 1..10 | i];\n" +
         		"print(1);\n" +
         		"int a = 2;\n" +
         		"print(1);\n"
                 );
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/66INTERPRETERtest.vcalc","int", "test"};
         Vcalc_Test.main(args);
         String expected = "Tests/00temp.vcalc line 3:0 - declaration of variables must be at the top of the input file";
         assertEquals(expected, outErrIntercept.toString().trim());
@@ -1024,12 +1072,13 @@ public class InterpreterTest {
     // test that we are warned if we forget a semicolon
     @Test(expected=ParserException.class)
     public void missingSemicolon() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/67INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/67INTERPRETERtest.vcalc", 
         		"vector v = [i in 1..10 | i];\n" +
         		"print(1)\n" +
         		"print(2);"
         				);
-        String[] args = new String[] {"Tests/00temp.vcalc","int", "test"};
+        String[] args = new String[] {"Tests/67INTERPRETERtest.vcalc","int", "test"};
         Vcalc_Test.main(args);
         String expected = "Tests/00temp.vcalc line 3:0 - expected semicolon before 'print'";
         assertEquals(expected, outErrIntercept.toString().trim());
@@ -1053,8 +1102,9 @@ public class InterpreterTest {
      */
     @Test // Test simple print statements
     public void astPrintTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", "print(128); print(256); print(512);");
-        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+    	SampleFileWriter.destroy("Tests/68INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/68INTERPRETERtest.vcalc", "print(128); print(256); print(512);");
+        String[] args = new String[] {"Tests/68INTERPRETERtest.vcalc","astDebug"};
         
         Vcalc_Test.main(args);
         
@@ -1063,7 +1113,8 @@ public class InterpreterTest {
     
     @Test // AST Test: simple print statements
     public void astComparisonTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/69INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/69INTERPRETERtest.vcalc", 
                 "int x = 5;"
               + "int y = 5;"
               + "int z = 0;"
@@ -1079,7 +1130,7 @@ public class InterpreterTest {
               + "print(x > y);"
               + "print( 1 < 2 > 2 < 1);" // Precedence
               + "print( 1 == 2 != 0 == 0);"); // Precedence 
-        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        String[] args = new String[] {"Tests/69INTERPRETERtest.vcalc","astDebug"};
         
         Vcalc_Test.main(args);
         
@@ -1092,7 +1143,8 @@ public class InterpreterTest {
     
     @Test // AST Test: simple nested if
     public void astIfTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/70INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/70INTERPRETERtest.vcalc", 
                   "int x = 2;"
                 + "int y = 0;"
                 + "int z = 100;"
@@ -1107,7 +1159,7 @@ public class InterpreterTest {
                     + "fi;"
                     + "print(y);"
                 + "fi;");
-        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        String[] args = new String[] {"Tests/70INTERPRETERtest.vcalc","astDebug"};
         
         Vcalc_Test.main(args);
         assertEquals("(PROGRAM (VAR int x 2) (VAR int y 0) (VAR int z 100) "+
@@ -1122,7 +1174,8 @@ public class InterpreterTest {
     
     @Test // AST Test: simple nested loops
     public void astLoopTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/71INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/71INTERPRETERtest.vcalc", 
                   "int x = 2;"
                 + "int y = 0;"
                 + "int z = 100;"
@@ -1137,7 +1190,7 @@ public class InterpreterTest {
                     + "pool;"
                     + "print(y);"
                 + "pool;");
-        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        String[] args = new String[] {"Tests/71INTERPRETERtest.vcalc","astDebug"};
         
         Vcalc_Test.main(args);
         assertEquals("(PROGRAM (VAR int x 2) (VAR int y 0) (VAR int z 100) " 
@@ -1152,33 +1205,15 @@ public class InterpreterTest {
     }
     
     
-    @Test
-    public void astPrimeTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-
-      String[] args = new String[] {"Tests/01prime.vcalc","astDebug"};
-      
-      Vcalc_Test.main(args);
-      System.out.println();
-      assertEquals("(PROGRAM (VAR int i 1) (VAR int p 1) (VAR int isPrime 1) " + 
-                       "(LOOP (< p 1000) (SLIST (= i 1) (= isPrime 1) (= p (+ p 1)) " + 
-                           "(LOOP (< i (/ p 2)) " + 
-                               "(SLIST (= i (+ i 1)) " + 
-                                   "(IF (== (* (/ p i) i) p) " + 
-                                       "(SLIST (= isPrime 0) (= i p))))) "+ 
-                           "(IF isPrime (SLIST (PRINT p)))"
-                          + ")"+ 
-                        ")" + 
-                    ")", outErrIntercept.toString().trim());
-    }
-    
     @Test // Test simple vector statements
     public void astRangeTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/72INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/72INTERPRETERtest.vcalc", 
                 "vector v = 1..10;" +
                 "vector w = 100..200;" +
                 "vector z = v + w;"
                 );
-        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        String[] args = new String[] {"Tests/72INTERPRETERtest.vcalc","astDebug"};
         
         Vcalc_Test.main(args);
         
@@ -1188,12 +1223,13 @@ public class InterpreterTest {
     
     @Test // Test simple vector statements
     public void astGeneratorTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/73INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/73INTERPRETERtest.vcalc", 
                 "vector z = 1..10;" +
                 "z = [i in 1..100 | i * i];" + // generator assignment
                 "z = [i in [j in 1..10 | 2 * j] | i * i];" // Nested Generator
                 );
-        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        String[] args = new String[] {"Tests/73INTERPRETERtest.vcalc","astDebug"};
         
         Vcalc_Test.main(args);
         
@@ -1205,12 +1241,13 @@ public class InterpreterTest {
     
     @Test // Test simple vector statements
     public void astFilterTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/74INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/74INTERPRETERtest.vcalc", 
                 "vector v = 1..10;" +
                 "v = filter(i in 1..10 | i > 5);" + //filter
                 "v = filter(i in filter(j in 1..20 | j < 11) | i > 5);" //nested filter
                 );
-        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        String[] args = new String[] {"Tests/74INTERPRETERtest.vcalc","astDebug"};
         
         Vcalc_Test.main(args);
         
@@ -1222,13 +1259,14 @@ public class InterpreterTest {
     
     @Test // Test simple vector statements
     public void astVectorIndexTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
-        SampleFileWriter.createFile("Tests/00temp.vcalc", 
+    	SampleFileWriter.destroy("Tests/75INTERPRETERtest.vcalc");
+        SampleFileWriter.createFile("Tests/75INTERPRETERtest.vcalc", 
                 "vector v = 1..10;" +
                 "print(v[5]);" +
                 "print([j in 1..3 | j * 2][1]);" + 
                 "print(filter(i in 1..10 | i > 5)[2]);"
                 );
-        String[] args = new String[] {"Tests/00temp.vcalc","astDebug"};
+        String[] args = new String[] {"Tests/75INTERPRETERtest.vcalc","astDebug"};
         
         Vcalc_Test.main(args);
         

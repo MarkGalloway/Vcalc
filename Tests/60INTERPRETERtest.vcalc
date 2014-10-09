@@ -1,0 +1,1 @@
+vector v1 = 1..10;vector v2 = 2..8;vector v3 = v1 * 2;vector v4 = [i in (v1 * v2) + (v3 / 2) | i * 3 ];vector v5 = filter(i in v4 | (i > 50) * (i < 100) );print(v5);

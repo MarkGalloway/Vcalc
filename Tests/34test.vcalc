@@ -1,0 +1,1 @@
+vector v = [i in 95..100 | i];v = filter(i in v | i > 95);print(v);

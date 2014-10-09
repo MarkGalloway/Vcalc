@@ -36,8 +36,8 @@ declaration
  //
 statement
   : ^(EQ='=' ID e=expression)
-    -> {$EQ.evalType == SymbolTable._vector}? vecAssign(var = {$ID.text}, expr = {$e.st}, label = {counter}) //TODO: fix args
-    -> intAssign(var = {$ID.text}, expr = {$e.st}, label = {counter})
+    -> {$EQ.evalType == SymbolTable._vector}?  vecAssign(var = {$ID.text}, expr = {$e.st}, veclabel = {$e.label})
+    -> intAssign(var = {$ID.text}, expr = {$e.st}, label = {$e.label})
     
   | ^(IF e=expression {counter+=2;} ^(SLIST s+=statement*) {++counter;})   
     -> ifStat(expr = {$e.st}, stats = {$s}, exprlabel={$e.label}, condition={$e.label+1}, ifbody={$e.label+2}, ifend={counter} )

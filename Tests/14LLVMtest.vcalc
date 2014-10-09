@@ -1,0 +1,1 @@
+vector x = 1..10; if(x) fi;

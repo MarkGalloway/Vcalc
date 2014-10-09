@@ -1,0 +1,1 @@
+vector v = 1..10;vector w = 100..200;vector z = v + w;

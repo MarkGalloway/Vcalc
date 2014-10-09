@@ -1,0 +1,1 @@
+int w = 4;int x = 5;int y = 0-1;int z = 0-2;print(x<4);print(4<x);print(x<w);print(w<x);print(y<z);print(z<y);print(z<w<x);

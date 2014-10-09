@@ -1,0 +1,4 @@
+vector v = [i in 1..10 | i];
+print(1);
+int a = 2;
+print(1);

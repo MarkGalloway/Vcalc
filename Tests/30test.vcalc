@@ -1,0 +1,1 @@
+int i = 666;vector v = [i in [i in 1..10 | 2 * i] | i * i];print(v);

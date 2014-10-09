@@ -1,0 +1,2 @@
+int i = 2;
+vector j = [i in 1..2 | 2 - i];print(j);print([i in 1..2 | 2 - i][0]);print([i in 1..2 | 2 - i][1]);

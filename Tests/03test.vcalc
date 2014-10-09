@@ -1,0 +1,1 @@
+int x = 1 + 5 + 1;int y = x + 7 + 4;print(x);print(y);

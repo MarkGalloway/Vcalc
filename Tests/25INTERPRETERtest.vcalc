@@ -1,0 +1,1 @@
+int x = 5;int y = 5;int z = 0;print(x == x);print(y == x);print(y == z);print(x != x);print(z != x);print(y != x);print(x < x);print(x < y);print(z < y);print(x > y);print( 1 < 2 > 2 < 1);print( 1 == 2 != 0 == 0);
