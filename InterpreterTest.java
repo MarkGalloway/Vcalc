@@ -828,7 +828,7 @@ public class InterpreterTest {
     @Test
     public void primeTest() throws IOException, RecognitionException, ParserException, InvalidAssignmentException {
 
-      String[] args = new String[] {"Tests/01prime.vcalc","int"};
+      String[] args = new String[] {"Tests/INTERPRETERprimes.vcalc","int"};
       
       Vcalc_Test.main(args);
       System.out.println();
