@@ -14,6 +14,7 @@ options {
 
 @members {
   int counter = 1;
+  int veccounter = 0;
   ArrayList<String> intVars = new ArrayList<String>();
   ArrayList<String> vecVars = new ArrayList<String>();
   
@@ -29,8 +30,8 @@ program
   ;
 
 declaration
-  : ^(VAR Int    ID e+=expression) {intVars.add($ID.text);} -> intAssign(var = {$ID.text}, expr = {$e}, label = {counter})
-  | ^(VAR Vector ID e+=expression)                -> vectorDeclaration(var = {$ID.text}, expr = {$e})
+  : ^(VAR Int    ID e=expression) {intVars.add($ID.text);} -> intAssign(var = {$ID.text}, expr = {$e.st}, label = {$e.label})
+  | ^(VAR Vector ID e=expression) {vecVars.add($ID.text);}               -> vecAssign(var = {$ID.text}, expr = {$e.st}, veclabel = {$e.label})
   ;
  //
 statement
@@ -74,11 +75,14 @@ expression returns [int label]
         -> divIntegers(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,counter={$label}) 
         
   | ^('..'  op1=expression op2=expression) {$label = counter;}      
-    -> range(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,counter={$label}) // to do
+    -> range(lhs = {$op1.st}, rhs = {$op2.st}, lhsLabel={$op1.label}, rhsLabel={$op2.label} ,veclabel={$label}) // to do
   //  | ^(INDEX op1=expression op+=expression)      -> loadIndex(vector = {$op1.text}, index = {$op2.text}) //to do
   
-  | ID {$label = ++counter;}                        -> loadVariable(var = {$ID.text}, counter={$label})
-  | INTEGER {counter+=2; $label = counter;}         -> loadConstant(value = {$INTEGER.text}, storecounter={$label-1}, loadcounter={$label})
+  | ID {$label = ++counter;}                             
+    -> {$ID.evalType == SymbolTable._vector}? loadVector(var = {$ID.text}, counter={$label})
+    -> loadVariable(var = {$ID.text}, counter={$label}) 
+  |
+   INTEGER {counter+=2; $label = counter;}         -> loadConstant(value = {$INTEGER.text}, storecounter={$label-1}, loadcounter={$label})
   
 //  | ^(GENERATOR ID op1+=expression op2+=expression) {$label = counter;}
  //     -> generator(var = {$ID.text}, lhs = {$op1}, rhs = {$op2}) // to do 
